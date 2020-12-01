@@ -1,6 +1,9 @@
 # AWESOME MOBILE GROWTH
+<p align="center">
+<img width="640" height="320" src="https://user-images.githubusercontent.com/9759771/100798434-42708900-33e9-11eb-8a46-71724f1516e8.png" alt="Awesome Mobile Growth">
+</p>
 
-Awesome Mobile Growth is a curated list of the best mobile growth related resources, blogs, & tools in one place. PRs welcome! Please help add more tools & great up-to-date mobile growth resources!
+**Awesome Mobile Growth** is a curated list of the best mobile growth related resources, blogs, & tools in one place. PRs welcome! Please help add more tools & great up-to-date mobile growth resources!
 
 Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mobile) - join us if you're making a mobile app!
 
