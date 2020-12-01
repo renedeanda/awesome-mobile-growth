@@ -71,3 +71,8 @@ Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mob
 ## EVENTS
 
 -   [MobileGrowth.org (by Branch.io)](https://events.mobilegrowth.org/)
+
+
+## Connect
+
+Feel free to connect with me on [LinkedIn](https://linkedin.com/in/renedeanda) & follow me on [Twitter](https://twitter.com/redeio). I'm currently looking for full-time work as a product manager.
