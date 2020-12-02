@@ -11,6 +11,17 @@ Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mob
 
 -   [ASOChecklist.com](https://asochecklist.com/) - An Indie Hacker overview of ASO
 
+## Blogs
+
+- [Hey, I Make Apps!](https://heyimakeapps.com/blog/)
+- [Curtis Herbert](https://blog.curtisherbert.com/)
+- [Indie Hackers iOS, Android & Mobile interviews](https://www.indiehackers.com/interviews/page/1?platform=ios%2Candroid%2Cmobile)
+- [AppBot Stories](https://stories.appbot.co/)
+
+## Podcasts
+
+- [SubClub Podcast (by RevenueCat)](https://www.subclub.co/)
+
 ## App Store Intelligence & ASO Analytics
 
 -   [App Annie](https://www.appannie.com/en/)
@@ -60,6 +71,7 @@ Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mob
 ## IAP & Subscription Tools
 
 -   [RevenueCat](https://www.revenuecat.com/)
+    -   [Blog](https://www.revenuecat.com/blog)
 -   [ChartMogul](https://chartmogul.com/product/mobile-analytics/)
 
 ## Mobile Attribution
@@ -71,7 +83,6 @@ Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mob
 ## EVENTS
 
 -   [MobileGrowth.org (by Branch.io)](https://events.mobilegrowth.org/)
-
 
 ## Connect
 
