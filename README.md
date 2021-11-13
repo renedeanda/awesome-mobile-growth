@@ -9,7 +9,7 @@ Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mob
 
 ## Resources
 
--   [ASOChecklist.com](https://asochecklist.com/) - An Indie Hacker overview of ASO
+-   [ASO Checklist: A guide to App Store Optimization for iOS & Android](https://rede.io/aso-checklist-for-apple-app-store-google-play-store/) - An Indie Hacker overview of ASO
 
 ## Blogs
 
