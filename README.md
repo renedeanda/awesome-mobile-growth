@@ -37,6 +37,8 @@ Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mob
 -   [Appfigures](https://appfigures.com)
     -   [Blog](https://appfigures.com/resources/aso)
     -   [App Teardowns](https://appfigures.com/resources/teardowns)
+-   [GetAppNiche](https://getappniche.com/)
+    -   [App Revenue Checker](https://getappniche.com/tools/app-revenue-checker)
 -   [TheTool](https://thetool.io/)
     -   [Blog](https://thetool.io/blog)
 -   [Storemaven](https://www.storemaven.com/aso-tool-box/)
