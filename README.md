@@ -17,6 +17,7 @@ Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mob
 - [Curtis Herbert](https://blog.curtisherbert.com/)
 - [Indie Hackers iOS, Android & Mobile interviews](https://www.indiehackers.com/interviews/page/1?platform=ios%2Candroid%2Cmobile)
 - [AppBot Stories](https://stories.appbot.co/)
+- [Storefront Brief](https://fortune-insight.onrender.com/shop/) - Weekly App Store policy, pricing, and indie launch intel. Free sample on Telegram.
 
 ## Podcasts
 
