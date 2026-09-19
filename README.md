@@ -47,6 +47,8 @@ Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mob
     -   [Blog](https://appfollow.io/blog)
 -   [Metrikal](https://metrikal.io)
     -   [Blog](https://metrikal.io/blog)
+-   [ASOScan](https://asoscan.com)
+    -   [Blog](https://asoscan.com/blog)
 
 ## A/B TESTING
 
