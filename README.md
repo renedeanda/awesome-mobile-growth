@@ -66,6 +66,7 @@ Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mob
 -   [Firebase Dynamic Links by Google](https://firebase.google.com/products/dynamic-links)
 -   [Branch.io](https://branch.io/what-is-deep-linking/)
 -   [AppsFlyer](https://www.appsflyer.com/product/one-link-deep-linking/)
+-   [LinkTrail](https://linktrail.io/)
     
 
 ## IAP & Subscription Tools
@@ -79,6 +80,7 @@ Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mob
 -   [Adjust](https://www.adjust.com/)
 -   [Branch.io](https://branch.io)
 -   [AppsFlyer](https://www.appsflyer.com)
+-   [LinkTrail](https://linktrail.io/)
 
 ## EVENTS
 
