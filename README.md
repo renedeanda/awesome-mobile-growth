@@ -82,7 +82,7 @@ Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mob
 
 ## Launch & Creative Services
 
--   [Ignura](https://ignura.com) - London launch studio for apps: launch films, App Store screenshots, landing pages, UGC.
+-   [Ignura](https://ignura.com) - a launch studio for consumer apps, prosumer tools and B2B: launch films, App Store screenshots, landing pages, UGC.
 
 ## EVENTS
 
