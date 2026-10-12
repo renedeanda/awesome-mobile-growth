@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { PodcastExplorer } from "@/components/PodcastExplorer";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Best mobile growth podcasts", description: "An actively reviewed guide to thoughtful podcasts about ASO, subscriptions, app marketing, acquisition, and mobile product growth.", alternates: { canonical: "/podcasts/" } };
+export const metadata: Metadata = pageMetadata({ title: "Best mobile growth podcasts", description: "An actively reviewed guide to thoughtful podcasts about ASO, subscriptions, app marketing, acquisition, and mobile product growth.", path: "/podcasts/" });
 
 export default function PodcastsPage() { return <>
   <header className="index-head"><p className="eyebrow">Listen with a notebook</p><h1>Mobile growth podcasts worth your attention.</h1><p>A small, actively reviewed collection for app builders. Ongoing shows need recent episodes; an exceptional seasonal show needs a durable archive. Every selection should help someone make better mobile decisions.</p></header>

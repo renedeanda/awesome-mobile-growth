@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { podcasts } from "@/lib/podcasts";
-import { site } from "@/lib/site";
+import { pageMetadata, site } from "@/lib/site";
 
 export function generateStaticParams() { return podcasts.map(({ slug }) => ({ slug })); }
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> { const { slug } = await params; const podcast = podcasts.find((item) => item.slug === slug); return podcast ? { title: `${podcast.name} podcast guide`, description: podcast.description, alternates: { canonical: `/podcasts/${slug}/` } } : {}; }
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> { const { slug } = await params; const podcast = podcasts.find((item) => item.slug === slug); return podcast ? pageMetadata({ title: `${podcast.name} podcast guide`, description: podcast.description, path: `/podcasts/${slug}/`, type: "article" }) : {}; }
 
 export default async function PodcastPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params; const podcast = podcasts.find((item) => item.slug === slug); if (!podcast) notFound();

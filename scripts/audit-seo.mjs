@@ -1,2 +1,59 @@
-import fs from "node:fs";import path from "node:path";
-if(!fs.existsSync("out")){console.error("Build out/ first.");process.exit(1)}const html=[];const walk=d=>fs.readdirSync(d,{withFileTypes:true}).forEach(e=>{const p=path.join(d,e.name);e.isDirectory()?walk(p):e.name.endsWith(".html")&&html.push(p)});walk("out");const errors=[];for(const file of html){const x=fs.readFileSync(file,"utf8");const h1=(x.match(/<h1/g)||[]).length;if(file.endsWith("404.html")){if(!/noindex/.test(x))errors.push(`${file}: 404 must be noindex`);continue}if(h1!==1)errors.push(`${file}: expected one h1, got ${h1}`);if(!/<title>[^<]+<\/title>/.test(x))errors.push(`${file}: missing title`);if(!/rel="canonical"/.test(x))errors.push(`${file}: missing canonical`);if(!/property="og:image"/.test(x))errors.push(`${file}: missing social image`)}if(errors.length){console.error(errors.join("\n"));process.exit(1)}console.log(`SEO audit passed: ${html.length} HTML pages.`)
+import fs from "node:fs";
+import path from "node:path";
+
+if (!fs.existsSync("out")) {
+  console.error("Build out/ first.");
+  process.exit(1);
+}
+
+const html = [];
+const walk = (directory) => fs.readdirSync(directory, { withFileTypes: true }).forEach((entry) => {
+  const file = path.join(directory, entry.name);
+  entry.isDirectory() ? walk(file) : entry.name.endsWith(".html") && html.push(file);
+});
+walk("out");
+
+const errors = [];
+const seenTitles = new Map();
+const seenDescriptions = new Map();
+const meta = (source, key, attribute = "name") => source.match(new RegExp(`<meta ${attribute}="${key}" content="([^"]+)"`))?.[1];
+
+for (const file of html) {
+  const source = fs.readFileSync(file, "utf8");
+  if (file.endsWith("404.html") || file.includes(`${path.sep}404${path.sep}`) || file.includes(`${path.sep}_not-found${path.sep}`)) {
+    if (!/noindex/.test(source)) errors.push(`${file}: 404 must be noindex`);
+    continue;
+  }
+
+  const title = source.match(/<title>([^<]+)<\/title>/)?.[1];
+  const description = meta(source, "description");
+  const canonical = source.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
+  const h1 = (source.match(/<h1/g) || []).length;
+
+  if (h1 !== 1) errors.push(`${file}: expected one h1, got ${h1}`);
+  if (!title) errors.push(`${file}: missing title`);
+  if (!description) errors.push(`${file}: missing meta description`);
+  if (!canonical?.startsWith("https://mobile.productbuilder.net/")) errors.push(`${file}: missing production canonical`);
+  if (!meta(source, "og:title", "property")) errors.push(`${file}: missing og:title`);
+  if (!meta(source, "og:description", "property")) errors.push(`${file}: missing og:description`);
+  if (!meta(source, "og:image", "property")) errors.push(`${file}: missing og:image`);
+  if (!meta(source, "og:image:alt", "property")) errors.push(`${file}: missing og:image:alt`);
+  if (!meta(source, "twitter:card")) errors.push(`${file}: missing twitter:card`);
+  if (!source.includes('type="application/ld+json"')) errors.push(`${file}: missing structured data`);
+  if (!source.includes('<html lang="en"')) errors.push(`${file}: missing document language`);
+
+  if (title) {
+    if (seenTitles.has(title)) errors.push(`${file}: duplicate title also used by ${seenTitles.get(title)}`);
+    seenTitles.set(title, file);
+  }
+  if (description) {
+    if (seenDescriptions.has(description)) errors.push(`${file}: duplicate description also used by ${seenDescriptions.get(description)}`);
+    seenDescriptions.set(description, file);
+  }
+}
+
+if (errors.length) {
+  console.error(errors.join("\n"));
+  process.exit(1);
+}
+console.log(`SEO audit passed: ${html.length} HTML pages with unique metadata, social cards, canonicals, and structured data.`);

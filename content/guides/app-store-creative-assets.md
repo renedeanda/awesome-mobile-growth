@@ -8,10 +8,10 @@ Apple introduced an Asset Library in App Store Connect for creative assets that 
 
 | Placement | Still image | Video |
 | --- | --- | --- |
-| Product-page header | 21:9 at 3840 × 1646, JPEG/JPG/PNG; or 16:9 at 5244 × 2950, PNG | 5–30 seconds, 30 or 60 fps |
-| Search results | 3:2, minimum 1920 × 1280 and maximum 3840 × 2560, JPEG/JPG/PNG; or 16:9 at 5244 × 2950, PNG | 5–30 seconds, 30 or 60 fps |
+| Product-page header | 21:9 at 3840 × 1646, JPEG/JPG/PNG; or 16:9 at 5244 × 2950, PNG | 21:9 at 3840 × 1646, 5–30 seconds, 30 or 60 fps, MOV/M4V/MP4 |
+| Search results | 3:2, minimum 1920 × 1280 and maximum 3840 × 2560, JPEG/JPG/PNG; or 16:9 at 5244 × 2950, PNG | 3:2, minimum 1920 × 1280 and maximum 3840 × 2560, 5–30 seconds, 30 or 60 fps, MOV/M4V/MP4 |
 
-Search-result videos play muted and people cannot unmute them there. Build the idea so it works silently. Apple can choose a still frame and may crop or place the asset differently across surfaces, so keep essential subjects and text away from edges.
+Search-result videos play muted and people cannot unmute them there; product-page videos start muted but can be unmuted. Both loop continuously. Build the idea so it works silently, then set the poster frame deliberately in Asset Library. Keep essential subjects and text away from edges so the composition survives different placements.
 
 ## Compose for three distances
 

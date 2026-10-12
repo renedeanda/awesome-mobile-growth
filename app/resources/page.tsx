@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { sources } from "@/lib/content";
 import { resourceGroups, transitions } from "@/lib/resources";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Mobile growth and ASO tools", description: "A maintained, independent guide to ASO tools, analytics, attribution, subscriptions, learning resources, and retired products.", alternates: { canonical: "/resources/" } };
+export const metadata: Metadata = pageMetadata({ title: "Mobile growth and ASO tools", description: "A maintained, independent guide to ASO tools, analytics, attribution, subscriptions, learning resources, and retired products.", path: "/resources/" });
 
 export default function Resources() { return <>
   <header className="index-head"><p className="eyebrow">A working shelf, not a logo wall</p><h1>Tools for the decision in front of you.</h1><p>Start with the question, then evaluate the product. Inclusion is unpaid and editorial; it is not an endorsement, ranking, or promise that a vendor fits your app.</p></header>
