@@ -1,0 +1,2 @@
+import Link from "next/link";
+export function SiteHeader() { return <header className="site-header"><Link className="brand" href="/" aria-label="Awesome Mobile Growth home"><span className="brand-mark">AMG</span><span>Awesome Mobile Growth</span></Link><nav aria-label="Primary"><Link href="/aso-checklist/">Checklist</Link><Link href="/guides/">Guides</Link><Link href="/podcasts/">Podcasts</Link><Link href="/resources/">Resources</Link><Link href="/workbench/">Workbench</Link></nav></header> }

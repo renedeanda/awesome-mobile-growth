@@ -1,0 +1,36 @@
+name: Factual correction
+description: Report a precise, source-backed error or outdated platform claim.
+title: "Correction: "
+labels: ["correction"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping keep the field guide accurate. Use a current primary source whenever one exists.
+  - type: input
+    id: location
+    attributes:
+      label: Page and claim
+      description: Link the page and quote the shortest passage needed to identify the claim.
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What should change?
+      description: Explain the correction and why the current wording is inaccurate or stale.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Current primary source
+      description: Direct Apple, Google, or other first-party documentation URL.
+    validations:
+      required: true
+  - type: checkboxes
+    id: intent
+    attributes:
+      label: Editorial fit
+      options:
+        - label: This report is a factual correction, not a promotional request.
+          required: true

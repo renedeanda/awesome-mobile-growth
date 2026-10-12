@@ -1,0 +1,35 @@
+{
+  "name": "awesome-mobile-growth",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22 <25"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "node --experimental-strip-types --test lib/*.test.ts",
+    "test:e2e": "playwright test",
+    "audit:content": "node scripts/audit-content.mjs",
+    "audit:seo": "node scripts/audit-seo.mjs",
+    "audit:links": "node scripts/audit-links.mjs",
+    "content:new": "node scripts/new-content.mjs",
+    "verify": "npm run typecheck && npm run test && npm run build && npm run audit:content && npm run audit:seo && npm run audit:links && npm run test:e2e"
+  },
+  "dependencies": {
+    "next": "16.4.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "react-markdown": "^10.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.1",
+    "@types/node": "^24.7.2",
+    "@types/react": "^19.1.16",
+    "@types/react-dom": "^19.1.9",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,89 +1,56 @@
-# AWESOME MOBILE GROWTH
-<p align="center">
-<img width="640" height="320" src="https://user-images.githubusercontent.com/9759771/100798434-42708900-33e9-11eb-8a46-71724f1516e8.png" alt="Awesome Mobile Growth">
-</p>
+# Awesome Mobile Growth
 
-**Awesome Mobile Growth** is a curated list of the best mobile growth related resources, blogs, & tools in one place. PRs welcome! Please help add more tools & great up-to-date mobile growth resources!
+**A current, evidence-aware field guide and private-by-default ASO workbench for people building better mobile products.**
 
-Made for the [Indie Hackers Mobile Group](https://www.indiehackers.com/group/mobile) - join us if you're making a mobile app!
+[Visit the field guide](https://mobile.productbuilder.net) · [Read the guides](https://mobile.productbuilder.net/guides/) · [Use the checklist](https://mobile.productbuilder.net/aso-checklist/) · [Open the workbench](https://mobile.productbuilder.net/workbench/)
 
-## Resources
+Awesome Mobile Growth began as a link collection. It is now a maintained field manual: practical guides, current platform sources, a curated mobile podcast shelf, a transparent tool map, and a browser-local workspace for turning strategy into a release brief.
 
--   [ASO Checklist: A guide to App Store Optimization for iOS & Android](https://rede.io/aso-checklist-for-apple-app-store-google-play-store/) - An Indie Hacker overview of ASO
+## What is here
 
-## Blogs
+- Nine iOS-first, Android-aware guides spanning metadata, creative, testing, App Store Connect, tooling, and retention
+- Current coverage of Apple’s October 2026 Asset Library, product-page headers, search creative, custom product pages, app tags, analytics, and featuring nominations
+- A focused Google Play companion covering listing fields, custom listings, and experiment constraints
+- A practical ASO checklist from product truth through post-launch learning
+- A local-only metadata workbench with Apple and Google Play limits, JSON import/export, and Markdown export
+- An editorially selected podcast guide and a maintained resource shelf with retired-product transitions
+- Explicit evidence labels, primary-source links, and visible review dates
 
-- [Hey, I Make Apps!](https://heyimakeapps.com/blog/)
-- [Curtis Herbert](https://blog.curtisherbert.com/)
-- [Indie Hackers iOS, Android & Mobile interviews](https://www.indiehackers.com/interviews/page/1?platform=ios%2Candroid%2Cmobile)
-- [AppBot Stories](https://stories.appbot.co/)
+## Editorial policy
 
-## Podcasts
+This is an owner-maintained publication, not an open promotional directory. Unsolicited listings, paid placements, affiliate rankings, link swaps, and promotional pull requests are not accepted. Focused factual corrections with current primary sources are welcome. Resource nominations may be considered but never create an obligation to list a product.
 
-- [SubClub Podcast (by RevenueCat)](https://www.subclub.co/)
+Official Apple and Google documentation outranks industry folklore. Observations, experiments, hypotheses, and opinions are labeled. The project does not invent search volume, conversion, revenue, or platform behavior.
 
-## App Store Intelligence & ASO Analytics
+Read [the full editorial policy](docs/EDITORIAL.md).
 
--   [App Annie](https://www.appannie.com/en/)
-    -   [Blog](https://www.appannie.com/en/insights/)
--   [Sensor Tower](https://sensortower.com/)
-    -   [Blog](https://sensortower.com/blog)
--   [MobileAction](https://www.mobileaction.co/)
-    -   [Blog](https://www.mobileaction.co/blog/)
--   [AppTweak](https://www.apptweak.com/en)
-    -   [Blog](https://www.apptweak.com/en/aso-blog)
--   [App Radar](https://appradar.com)
-    -   [Blog](https://appradar.com/on-the-radar)
--   [Appfigures](https://appfigures.com)
-    -   [Blog](https://appfigures.com/resources/aso)
-    -   [App Teardowns](https://appfigures.com/resources/teardowns)
--   [TheTool](https://thetool.io/)
-    -   [Blog](https://thetool.io/blog)
--   [Storemaven](https://www.storemaven.com/aso-tool-box/)
-    -   [Blog](https://www.storemaven.com/aso-blog/)
--   [ASOdesk](https://asodesk.com/app-store-optimization)
-    -   [Blog](https://asodesk.com/blog/)
--   [AppFollow](https://appfollow.io/)
-    -   [Blog](https://appfollow.io/blog)
--   [Metrikal](https://metrikal.io)
-    -   [Blog](https://metrikal.io/blog)
+## Develop locally
 
-## A/B TESTING
+Requires Node 22–24.
 
--   [SplitMetrics](https://splitmetrics.com/)
--   [Firebase A/B Testing by Google](https://firebase.google.com/products/ab-testing)
-    
+```bash
+npm install
+npm run dev
+```
 
-## Analytics
+Run the complete verification suite:
 
--   [Firebase Analytics by Google](https://firebase.google.com/products/analytics)
--   [Mixpanel](https://mixpanel.com/)
--   [Segment](https://segment.com/industry/mobile/)
-    
+```bash
+npm run verify
+```
 
-## Deep Linking
+The production build is a static export in `out/`. Verification includes TypeScript, unit tests, the production export, content/SEO/internal-link audits, and Playwright coverage in desktop Chromium and mobile WebKit. On a new machine, install those browsers once with `npx playwright install chromium webkit`.
 
--   [Firebase Dynamic Links by Google](https://firebase.google.com/products/dynamic-links)
--   [Branch.io](https://branch.io/what-is-deep-linking/)
--   [AppsFlyer](https://www.appsflyer.com/product/one-link-deep-linking/)
-    
+## Contributing
 
-## IAP & Subscription Tools
+Corrections and resource nominations should follow the contribution policy. A good correction identifies the exact sentence, explains what changed, and links directly to current Apple or Google documentation. Pull requests are reserved for the maintainer and invited collaborators; please do not open “add my tool” pull requests.
 
--   [RevenueCat](https://www.revenuecat.com/)
-    -   [Blog](https://www.revenuecat.com/blog)
--   [ChartMogul](https://chartmogul.com/product/mobile-analytics/)
+Read [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the [Code of Conduct](CODE_OF_CONDUCT.md) before participating.
 
-## Mobile Attribution
+## About the maintainer
 
--   [Adjust](https://www.adjust.com/)
--   [Branch.io](https://branch.io)
--   [AppsFlyer](https://www.appsflyer.com)
+Awesome Mobile Growth is built and edited by [René DeAnda](https://www.linkedin.com/in/renedeanda/). The site’s [About page](https://mobile.productbuilder.net/about/) explains the editorial model and discloses related first-party publishing projects without inserting them into unrelated recommendations.
 
-## EVENTS
+## License
 
--   [MobileGrowth.org (by Branch.io)](https://events.mobilegrowth.org/)
-
-## Connect
-
-Feel free to connect with me on [LinkedIn](https://linkedin.com/in/renedeanda).
+Code and original editorial material are available under the [MIT License](LICENSE). Third-party names and linked materials remain the property of their respective owners.

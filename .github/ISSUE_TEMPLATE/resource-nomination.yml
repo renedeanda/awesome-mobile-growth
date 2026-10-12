@@ -1,0 +1,44 @@
+name: Resource nomination
+description: Suggest a durable resource for editorial consideration—not guaranteed inclusion.
+title: "Resource: "
+labels: ["resource-review"]
+body:
+  - type: markdown
+    attributes:
+      value: Inclusion is unpaid, editorial, and uncommon. Promotional copy will be closed.
+  - type: input
+    id: url
+    attributes:
+      label: Canonical URL
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: What specific mobile-growth decision does this help someone make?
+      description: Describe the practitioner value in your own words. Do not paste a marketing description.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence of maintenance and usefulness
+      description: Include recent update dates, current episodes, documentation, or a durable archive.
+    validations:
+      required: true
+  - type: dropdown
+    id: relationship
+    attributes:
+      label: Your relationship
+      options: ["No relationship", "User or customer", "Employee, owner, investor, or paid partner"]
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Editorial terms
+      options:
+        - label: I understand this nomination may be declined or closed without listing.
+          required: true
+        - label: I am not offering payment, a link exchange, or another incentive.
+          required: true

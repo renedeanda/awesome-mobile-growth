@@ -1,0 +1,47 @@
+"use client";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { LIMITS, WorkbenchData, duplicates, emptyWorkbench, parseLocaleBundle, toMarkdown, utf8Bytes, warnings } from "@/lib/workbench";
+
+const STORAGE = "awesome-mobile-growth-workbench.v1";
+const fields = [
+  ["appleName", "App name", "The distinctive name people see in the store.", LIMITS.appleName, false],
+  ["appleSubtitle", "Subtitle", "One clear use or benefit—not a slogan.", LIMITS.appleSubtitle, false],
+  ["applePromotional", "Promotional text", "A timely message above the description; not a ranking field.", LIMITS.applePromotional, false],
+  ["appleKeywords", "Keywords", "Comma-separated, no spaces; this meter counts UTF-8 bytes.", LIMITS.appleKeywords, true],
+  ["appleDescription", "Description", "Lead with the app, the audience, and a concrete outcome.", undefined, false],
+  ["appleWhatsNew", "What’s New", "Tell people what changed and why it matters.", undefined, false],
+] as const;
+const googleFields = [
+  ["googleName", "App name", LIMITS.googleName], ["googleShort", "Short description", LIMITS.googleShort], ["googleFull", "Full description", LIMITS.googleFull]
+] as const;
+
+function download(name: string, content: string, type: string) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([content], { type })); a.download = name; a.click(); URL.revokeObjectURL(a.href); }
+
+export function Workbench() {
+  const [data, setData] = useState<WorkbenchData>(emptyWorkbench);
+  const [saveLocal, setSaveLocal] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [tab, setTab] = useState<"apple" | "google" | "planning">("apple");
+  useEffect(() => { const raw = localStorage.getItem(STORAGE); if (raw) { try { setData(JSON.parse(raw)); setSaveLocal(true); } catch {} } setHydrated(true); }, []);
+  useEffect(() => { if (saveLocal) localStorage.setItem(STORAGE, JSON.stringify({ ...data, updatedAt: new Date().toISOString() })); }, [data, saveLocal]);
+  useEffect(() => { const warn = (event: BeforeUnloadEvent) => { if (!saveLocal && Object.values(data.fields).some(Boolean)) event.preventDefault(); }; addEventListener("beforeunload", warn); return () => removeEventListener("beforeunload", warn); }, [data, saveLocal]);
+  const updateField = (key: keyof WorkbenchData["fields"], value: string) => setData(d => ({ ...d, fields: { ...d.fields, [key]: value }, updatedAt: new Date().toISOString() }));
+  const allWarnings = useMemo(() => [...new Set(Object.values(data.fields).flatMap(warnings))], [data.fields]);
+  const handleImport = async (e: ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0]; if (!file) return; try { const parsed = JSON.parse(await file.text()); if (parsed.version === 1 && parsed.fields) setData(parsed); else setData(d => ({ ...d, fields: { ...d.fields, ...parseLocaleBundle(parsed) } })); setNotice("Imported into this browser. Nothing was published."); } catch (error) { setNotice(error instanceof Error ? error.message : "Could not read that file."); } e.target.value = ""; };
+  const toggleSave = () => { if (saveLocal) { localStorage.removeItem(STORAGE); setSaveLocal(false); setNotice("Local saving is off and the saved draft was deleted."); } else { setSaveLocal(true); setNotice("Draft saving is on for this browser."); } };
+  const reset = () => { if (!confirm("Clear every field in this browser?")) return; localStorage.removeItem(STORAGE); setData(emptyWorkbench()); setSaveLocal(false); setNotice("Workbench cleared."); };
+  return <div className="workbench-shell" data-testid="workbench" data-ready={hydrated}>
+    <div className="workbench-toolbar">
+      <div className="tabs" role="tablist" aria-label="Workbench sections">{(["apple", "google", "planning"] as const).map(t => <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}>{t === "planning" ? "Plan & learn" : t === "apple" ? "Apple" : "Google Play"}</button>)}</div>
+      <div className="tool-actions"><label className="file-button">Import JSON<input type="file" accept="application/json,.json" onChange={handleImport}/></label><button onClick={() => download("aso-workbench.json", JSON.stringify(data, null, 2), "application/json")}>Export JSON</button><button onClick={() => download("aso-brief.md", toMarkdown(data), "text/markdown")}>Export Markdown</button></div>
+    </div>
+    <div className="privacy-strip"><label className="switch"><input type="checkbox" checked={saveLocal} onChange={toggleSave}/><span>Save draft in this browser</span></label><span>Private by default. Your copy never leaves this page.</span><button className="text-button" onClick={reset}>Reset</button></div>
+    {notice && <p className="notice" role="status">{notice}</p>}
+    {tab === "apple" && <div className="workbench-grid"><section className="fields" aria-label="Apple metadata fields">{fields.map(([key, label, help, limit, bytes]) => { const value = data.fields[key]; const count = bytes ? utf8Bytes(value) : value.length; const bad = limit !== undefined && count > limit; return <label className="field" key={key}><span className="field-label">{label}{limit && <small className={bad ? "over" : ""}>{count}/{limit}{bytes ? " bytes" : ""}</small>}</span><span className="field-help">{help}</span>{limit && limit <= 170 ? <input value={value} onChange={e => updateField(key, e.target.value)} aria-invalid={bad}/> : <textarea rows={key === "appleDescription" ? 12 : 5} value={value} onChange={e => updateField(key, e.target.value)} aria-invalid={bad}/>}</label>})}</section><Preview name={data.fields.appleName} subtitle={data.fields.appleSubtitle} promo={data.fields.applePromotional} description={data.fields.appleDescription}/></div>}
+    {tab === "google" && <div className="workbench-grid"><section className="fields" aria-label="Google Play metadata fields">{googleFields.map(([key, label, limit]) => { const value=data.fields[key]; return <label className="field" key={key}><span className="field-label">{label}<small className={value.length > limit ? "over" : ""}>{value.length}/{limit}</small></span>{limit > 100 ? <textarea rows={14} value={value} onChange={e=>updateField(key,e.target.value)} aria-invalid={value.length > limit}/> : <input value={value} onChange={e=>updateField(key,e.target.value)} aria-invalid={value.length > limit}/>}</label>})}</section><Preview name={data.fields.googleName} subtitle={data.fields.googleShort} description={data.fields.googleFull}/></div>}
+    {tab === "planning" && <section className="planning-grid">{([['keywordMap','Keyword map','Intent → phrase → page promise → proof'],['screenshotPlan','Screenshot plan','Frame → message → product evidence → asset status'],['experimentLog','Experiment log','Decision, hypothesis, primary measure, dates, result, next move'],['launchRetro','Launch retrospective','What changed, what we learned, and what deserves another look']] as const).map(([key,label,placeholder]) => <label className="field" key={key}><span className="field-label">{label}</span><textarea rows={9} placeholder={placeholder} value={data[key]} onChange={e => setData(d=>({...d,[key]:e.target.value,updatedAt:new Date().toISOString()}))}/></label>)}</section>}
+    {(duplicates(data.fields.appleKeywords).length > 0 || allWarnings.length > 0) && <aside className="advisor" aria-label="Metadata review"><p className="eyebrow">Review, don’t obey blindly</p>{duplicates(data.fields.appleKeywords).length > 0 && <p><strong>Duplicate keywords:</strong> {duplicates(data.fields.appleKeywords).join(", ")}</p>}{allWarnings.map(w => <p key={w}>{w}</p>)}</aside>}
+  </div>
+}
+function Preview({name,subtitle,promo,description}:{name:string;subtitle:string;promo?:string;description:string}) { return <aside className="preview"><p className="eyebrow">Illustrative preview</p><div className="phone"><div className="preview-hero"><div className="app-icon">A</div><div><strong>{name || "Your app name"}</strong><p>{subtitle || "A clear, useful subtitle"}</p><button tabIndex={-1}>GET</button></div></div>{promo && <p className="promo">{promo}</p>}<p className="preview-copy">{description || "Your opening sentence should make the product, person, and outcome easy to understand."}</p></div><p className="fine-print">Not a pixel-perfect store replica. Use this to review hierarchy and clarity; verify final assets in the live store tooling.</p></aside> }
