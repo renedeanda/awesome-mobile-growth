@@ -1,0 +1,30 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import { podcasts, podcastTopics } from "@/lib/podcasts";
+
+export function PodcastExplorer() {
+  const [query, setQuery] = useState("");
+  const [topic, setTopic] = useState("all");
+  const results = useMemo(() => podcasts.filter((podcast) => {
+    const haystack = `${podcast.name} ${podcast.publisher} ${podcast.description} ${podcast.bestFor} ${podcast.topics.join(" ")}`.toLowerCase();
+    return (topic === "all" || podcast.topics.includes(topic)) && haystack.includes(query.trim().toLowerCase());
+  }), [query, topic]);
+
+  return <>
+    <div className="filter-bar" aria-label="Filter podcasts">
+      <label><span>Search</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="ASO, subscriptions, creative…" /></label>
+      <label><span>Topic</span><select value={topic} onChange={(event) => setTopic(event.target.value)}><option value="all">All topics</option>{podcastTopics.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+      <p aria-live="polite">{results.length} of {podcasts.length}</p>
+    </div>
+    <div className="podcast-grid">
+      {results.map((podcast) => <article className="podcast-card" key={podcast.slug}>
+        <p className="eyebrow">{podcast.publisher}</p><h2><Link href={`/podcasts/${podcast.slug}/`}>{podcast.name}</Link></h2>
+        <p>{podcast.description}</p><div className="tag-row">{podcast.topics.map((item) => <span key={item}>{item}</span>)}</div>
+        <Link className="text-link" href={`/podcasts/${podcast.slug}/`}>Why it earns a listen →</Link>
+      </article>)}
+    </div>
+    {!results.length && <div className="empty-state"><h2>No exact match.</h2><p>Try a broader term or select all topics.</p></div>}
+  </>;
+}

@@ -7,10 +7,11 @@ Awesome Mobile Growth is an owner-maintained publication. It is intentionally no
 - Precise factual corrections backed by a current Apple or Google primary source
 - Accessibility, privacy, security, and broken-link fixes
 - Focused code fixes with a clear reproduction
+- Resource nominations that disclose the submitter’s relationship and explain a specific practitioner decision; nomination never guarantees inclusion
 
 ## Not accepted
 
-- Product or tool submissions
+- Promotional “add my product” pull requests or issues that do not use the nomination form
 - Promotional articles, guest posts, paid placement, affiliate links, or link swaps
 - Bulk AI-generated copy or SEO pages
 - Claims based on invented search volume, conversion, revenue, or testimonials

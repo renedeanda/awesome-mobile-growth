@@ -1,25 +1,26 @@
 # Awesome Mobile Growth
 
-**A practical, evidence-aware field guide and private-by-default ASO workbench for people building better mobile products.**
+**A current, evidence-aware field guide and private-by-default ASO workbench for people building better mobile products.**
 
-[Visit the field guide](https://mobile.productbuilder.net) · [Open the workbench](https://mobile.productbuilder.net/workbench/) · [Use the checklist](https://mobile.productbuilder.net/aso-checklist/)
+[Visit the field guide](https://mobile.productbuilder.net) · [Read the guides](https://mobile.productbuilder.net/guides/) · [Use the checklist](https://mobile.productbuilder.net/aso-checklist/) · [Open the workbench](https://mobile.productbuilder.net/workbench/)
 
-Awesome Mobile Growth began as a link collection. It is now René DeAnda’s maintained operating system for App Store Optimization: opinionated guides, primary sources, reusable briefs, and a browser-local workspace for metadata and experiments.
+Awesome Mobile Growth began as a link collection. It is now a maintained field manual: practical guides, current platform sources, a curated mobile podcast shelf, a transparent tool map, and a browser-local workspace for turning strategy into a release brief.
 
 ## What is here
 
-- An iOS-first, Android-aware ASO field guide
-- A practical checklist from product truth through post-launch learning
-- A local-only metadata workbench with Apple and Google Play limits
-- JSON and Markdown export, plus Kindling/iBootstrap locale import
-- Explicit evidence labels and visible review dates
-- A deliberately small resource shelf with first-party relationships disclosed
+- Nine iOS-first, Android-aware guides spanning metadata, creative, testing, App Store Connect, tooling, and retention
+- Current coverage of Apple’s October 2026 Asset Library, product-page headers, search creative, custom product pages, app tags, analytics, and featuring nominations
+- A focused Google Play companion covering listing fields, custom listings, and experiment constraints
+- A practical ASO checklist from product truth through post-launch learning
+- A local-only metadata workbench with Apple and Google Play limits, JSON import/export, and Markdown export
+- An editorially selected podcast guide and a maintained resource shelf with retired-product transitions
+- Explicit evidence labels, primary-source links, and visible review dates
 
 ## Editorial policy
 
-This is an owner-maintained publication, not an open promotional directory. Unsolicited product listings, paid placements, affiliate rankings, link swaps, and promotional pull requests are not accepted. Factual corrections with primary sources are welcome by email or a focused patch from an established collaborator.
+This is an owner-maintained publication, not an open promotional directory. Unsolicited listings, paid placements, affiliate rankings, link swaps, and promotional pull requests are not accepted. Focused factual corrections with current primary sources are welcome. Resource nominations may be considered but never create an obligation to list a product.
 
-Official platform documentation outranks industry folklore. Observations, experiments, hypotheses, and opinions are labeled. No search-volume estimate, conversion claim, or performance result is presented as fact without evidence.
+Official Apple and Google documentation outranks industry folklore. Observations, experiments, hypotheses, and opinions are labeled. The project does not invent search volume, conversion, revenue, or platform behavior.
 
 Read [the full editorial policy](docs/EDITORIAL.md).
 
@@ -38,21 +39,18 @@ Run the complete verification suite:
 npm run verify
 ```
 
-The production build is a static export in `out/`.
+The production build is a static export in `out/`. Verification includes TypeScript, unit tests, the production export, content/SEO/internal-link audits, and Playwright coverage in desktop Chromium and mobile WebKit. On a new machine, install those browsers once with `npx playwright install chromium webkit`.
 
-The full verification command includes TypeScript, unit tests, the production export, content/SEO/internal-link audits, and Playwright coverage in desktop Chromium and mobile WebKit. On a new machine, install those browsers once with `npx playwright install chromium webkit`.
+## Contributing
 
-## Connected projects
+Use the issue forms for a sourced correction or a resource nomination. A good correction identifies the exact sentence, explains what changed, and links directly to current Apple or Google documentation. Please do not open “add my tool” pull requests.
 
-- [Productbuilder](https://www.productbuilder.net) — field notes and systems for building products
-- [makr.io mobile tools](https://www.makr.io/design/mobile) — useful design utilities for app makers
-- [Kindling](https://github.com/renedeanda/kindling) — a reusable starter for shipping thoughtful apps
-- [Delightful Apps](https://delightfulapps.com) — René’s independent app studio
+Read [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the [Code of Conduct](CODE_OF_CONDUCT.md) before participating.
 
-These are René’s own projects and are labeled as first-party throughout the site.
+## About the maintainer
+
+Awesome Mobile Growth is built and edited by [René DeAnda](https://www.linkedin.com/in/renedeanda/). The site’s [About page](https://mobile.productbuilder.net/about/) explains the editorial model and discloses related first-party publishing projects without inserting them into unrelated recommendations.
 
 ## License
 
 Code and original editorial material are available under the [MIT License](LICENSE). Third-party names and linked materials remain the property of their respective owners.
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the [Code of Conduct](CODE_OF_CONDUCT.md) before participating.

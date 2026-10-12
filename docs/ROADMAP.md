@@ -5,7 +5,7 @@
 - Publish the editorial field guide and browser-local workbench
 - Establish `mobile.productbuilder.net` as the sole canonical origin
 - Replace open-directory contribution language and close promotional backlog
-- Add contextual links from Productbuilder, makr.io, and Kindling
+- Earn contextual links from relevant public writing after the site is deployed
 
 ## 30 days
 

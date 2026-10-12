@@ -26,4 +26,4 @@ Factual corrections should identify the precise claim and link to a current prim
 
 ## First-party disclosure
 
-Productbuilder, makr.io, Kindling, Delightful Apps, and Awesome Mobile Growth share an author. These relationships are labeled wherever the projects are recommended.
+ProductBuilder, MarkdownNotes.net, and Awesome Mobile Growth share an author. Those relationships belong in the About page or in genuinely relevant context, never as disguised resource recommendations.

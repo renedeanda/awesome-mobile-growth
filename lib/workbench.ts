@@ -15,7 +15,7 @@ export const warnings = (value: string) => {
   ] as const;
   return patterns.filter(([pattern]) => pattern.test(value)).map(([, message]) => message);
 };
-export function parsePortfolioLocale(input: unknown): Partial<ListingFields> {
+export function parseLocaleBundle(input: unknown): Partial<ListingFields> {
   if (!input || typeof input !== "object") throw new Error("That file does not contain a metadata object.");
   const root = input as Record<string, unknown>;
   const candidate = (root.localizations && typeof root.localizations === "object" ? Object.values(root.localizations as Record<string, unknown>)[0] : root) as Record<string, unknown>;

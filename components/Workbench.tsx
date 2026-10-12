@@ -1,6 +1,6 @@
 "use client";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
-import { LIMITS, WorkbenchData, duplicates, emptyWorkbench, parsePortfolioLocale, toMarkdown, utf8Bytes, warnings } from "@/lib/workbench";
+import { LIMITS, WorkbenchData, duplicates, emptyWorkbench, parseLocaleBundle, toMarkdown, utf8Bytes, warnings } from "@/lib/workbench";
 
 const STORAGE = "awesome-mobile-growth-workbench.v1";
 const fields = [
@@ -28,7 +28,7 @@ export function Workbench() {
   useEffect(() => { const warn = (event: BeforeUnloadEvent) => { if (!saveLocal && Object.values(data.fields).some(Boolean)) event.preventDefault(); }; addEventListener("beforeunload", warn); return () => removeEventListener("beforeunload", warn); }, [data, saveLocal]);
   const updateField = (key: keyof WorkbenchData["fields"], value: string) => setData(d => ({ ...d, fields: { ...d.fields, [key]: value }, updatedAt: new Date().toISOString() }));
   const allWarnings = useMemo(() => [...new Set(Object.values(data.fields).flatMap(warnings))], [data.fields]);
-  const handleImport = async (e: ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0]; if (!file) return; try { const parsed = JSON.parse(await file.text()); if (parsed.version === 1 && parsed.fields) setData(parsed); else setData(d => ({ ...d, fields: { ...d.fields, ...parsePortfolioLocale(parsed) } })); setNotice("Imported into this browser. Nothing was published."); } catch (error) { setNotice(error instanceof Error ? error.message : "Could not read that file."); } e.target.value = ""; };
+  const handleImport = async (e: ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0]; if (!file) return; try { const parsed = JSON.parse(await file.text()); if (parsed.version === 1 && parsed.fields) setData(parsed); else setData(d => ({ ...d, fields: { ...d.fields, ...parseLocaleBundle(parsed) } })); setNotice("Imported into this browser. Nothing was published."); } catch (error) { setNotice(error instanceof Error ? error.message : "Could not read that file."); } e.target.value = ""; };
   const toggleSave = () => { if (saveLocal) { localStorage.removeItem(STORAGE); setSaveLocal(false); setNotice("Local saving is off and the saved draft was deleted."); } else { setSaveLocal(true); setNotice("Draft saving is on for this browser."); } };
   const reset = () => { if (!confirm("Clear every field in this browser?")) return; localStorage.removeItem(STORAGE); setData(emptyWorkbench()); setSaveLocal(false); setNotice("Workbench cleared."); };
   return <div className="workbench-shell" data-testid="workbench" data-ready={hydrated}>

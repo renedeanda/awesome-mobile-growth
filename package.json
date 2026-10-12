@@ -11,7 +11,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test lib/workbench.test.ts",
+    "test": "node --experimental-strip-types --test lib/*.test.ts",
     "test:e2e": "playwright test",
     "audit:content": "node scripts/audit-content.mjs",
     "audit:seo": "node scripts/audit-seo.mjs",
