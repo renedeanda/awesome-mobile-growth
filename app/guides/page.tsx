@@ -1,0 +1,3 @@
+import type { Metadata } from "next"; import { GuideCard } from "@/components/GuideCard"; import { guides } from "@/lib/content";
+export const metadata: Metadata = { title: "ASO guides", description: "Evidence-aware guides to app metadata, keywords, localization, screenshots, testing, ratings, and retention.", alternates: { canonical: "/guides/" } };
+export default function Guides(){return <><header className="index-head"><p className="eyebrow">Field manual</p><h1>ASO guides for the whole product page.</h1><p>Platform rules where they exist. Careful experiments where they do not. No magic rankings, fake volume, or cargo-cult checklists.</p></header><div className="card-grid">{guides.map(g=><GuideCard key={g.slug} guide={g}/>)}</div></>}

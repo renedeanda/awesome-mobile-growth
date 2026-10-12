@@ -1,0 +1,3 @@
+import type { Metadata } from "next"; import { Workbench } from "@/components/Workbench";
+export const metadata:Metadata={title:"Private ASO workbench",description:"Draft, validate, preview, plan, import, and export App Store and Google Play metadata entirely in your browser.",alternates:{canonical:"/workbench/"}};
+export default function WorkbenchPage(){return <><header className="workbench-intro"><p className="eyebrow">Browser-local tool</p><h1>Your ASO working desk.</h1><p>Draft Apple and Google Play metadata, catch mechanical mistakes, map keywords, plan screenshots, and keep an experiment log. Nothing is uploaded or published.</p></header><Workbench/></>}

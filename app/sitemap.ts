@@ -1,0 +1,3 @@
+import type { MetadataRoute } from "next"; import { guides } from "@/lib/content"; import { absolute } from "@/lib/site";
+export const dynamic="force-static";
+export default function sitemap():MetadataRoute.Sitemap{const fixed=["","aso-checklist","guides","google-play","resources","field-notes","projects","workbench","about","privacy"];const pages:MetadataRoute.Sitemap=fixed.map(p=>({url:absolute(`/${p}${p?'/':''}`),lastModified:new Date("2026-10-11"),changeFrequency:p==="field-notes"?"monthly":"weekly",priority:p===""?1:.7}));const guidePages:MetadataRoute.Sitemap=guides.map(g=>({url:absolute(`/guides/${g.slug}/`),lastModified:new Date(g.reviewed),changeFrequency:"monthly",priority:.8}));return [...pages,...guidePages]}

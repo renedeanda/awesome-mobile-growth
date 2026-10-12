@@ -1,0 +1,4 @@
+import { ImageResponse } from "next/og";
+export const dynamic="force-static";
+export const alt="Awesome Mobile Growth — the evidence-aware ASO field guide";export const size={width:1200,height:630};export const contentType="image/png";
+export default function Image(){return new ImageResponse(<div style={{width:"100%",height:"100%",display:"flex",background:"#f7f5ef",color:"#10213a",padding:"70px",fontFamily:"Georgia",flexDirection:"column",justifyContent:"space-between"}}><div style={{display:"flex",fontFamily:"monospace",fontSize:22,letterSpacing:3,color:"#075fd8"}}>AWESOME MOBILE GROWTH · FIELD NOTES 01</div><div style={{display:"flex",fontSize:76,lineHeight:1.02,maxWidth:950}}>Make the store page earn its place.</div><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",fontFamily:"sans-serif",fontSize:24}}><span>Clarity × proof × iteration</span><span style={{color:"#e65f45"}}>mobile.productbuilder.net</span></div></div>,size)}

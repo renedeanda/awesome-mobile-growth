@@ -1,0 +1,2 @@
+import fs from "node:fs";import path from "node:path";
+const guides=fs.readdirSync("content/guides").filter(x=>x.endsWith(".md"));const bad=[];for(const file of guides){const text=fs.readFileSync(path.join("content/guides",file),"utf8");if(text.length<600)bad.push(`${file}: thin (${text.length} chars)`);if(!text.includes("## "))bad.push(`${file}: no sections`)}if(bad.length){console.error(bad.join("\n"));process.exit(1)}console.log(`Content audit passed: ${guides.length} substantive guides.`)

@@ -1,0 +1,2 @@
+import Link from "next/link"; import type { Guide } from "@/lib/content";
+export function GuideCard({ guide }: { guide: Guide }) { return <article className="guide-card"><p className="eyebrow">{guide.eyebrow}</p><h3><Link href={`/guides/${guide.slug}/`}>{guide.title}</Link></h3><p>{guide.description}</p><footer><span>{guide.reading}</span><span>Reviewed {guide.reviewed}</span></footer></article> }
