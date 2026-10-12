@@ -20,9 +20,10 @@ function download(name: string, content: string, type: string) { const a = docum
 export function Workbench() {
   const [data, setData] = useState<WorkbenchData>(emptyWorkbench);
   const [saveLocal, setSaveLocal] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
   const [notice, setNotice] = useState("");
   const [tab, setTab] = useState<"apple" | "google" | "planning">("apple");
-  useEffect(() => { const raw = localStorage.getItem(STORAGE); if (raw) { try { setData(JSON.parse(raw)); setSaveLocal(true); } catch {} } }, []);
+  useEffect(() => { const raw = localStorage.getItem(STORAGE); if (raw) { try { setData(JSON.parse(raw)); setSaveLocal(true); } catch {} } setHydrated(true); }, []);
   useEffect(() => { if (saveLocal) localStorage.setItem(STORAGE, JSON.stringify({ ...data, updatedAt: new Date().toISOString() })); }, [data, saveLocal]);
   useEffect(() => { const warn = (event: BeforeUnloadEvent) => { if (!saveLocal && Object.values(data.fields).some(Boolean)) event.preventDefault(); }; addEventListener("beforeunload", warn); return () => removeEventListener("beforeunload", warn); }, [data, saveLocal]);
   const updateField = (key: keyof WorkbenchData["fields"], value: string) => setData(d => ({ ...d, fields: { ...d.fields, [key]: value }, updatedAt: new Date().toISOString() }));
@@ -30,7 +31,7 @@ export function Workbench() {
   const handleImport = async (e: ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0]; if (!file) return; try { const parsed = JSON.parse(await file.text()); if (parsed.version === 1 && parsed.fields) setData(parsed); else setData(d => ({ ...d, fields: { ...d.fields, ...parsePortfolioLocale(parsed) } })); setNotice("Imported into this browser. Nothing was published."); } catch (error) { setNotice(error instanceof Error ? error.message : "Could not read that file."); } e.target.value = ""; };
   const toggleSave = () => { if (saveLocal) { localStorage.removeItem(STORAGE); setSaveLocal(false); setNotice("Local saving is off and the saved draft was deleted."); } else { setSaveLocal(true); setNotice("Draft saving is on for this browser."); } };
   const reset = () => { if (!confirm("Clear every field in this browser?")) return; localStorage.removeItem(STORAGE); setData(emptyWorkbench()); setSaveLocal(false); setNotice("Workbench cleared."); };
-  return <div className="workbench-shell">
+  return <div className="workbench-shell" data-testid="workbench" data-ready={hydrated}>
     <div className="workbench-toolbar">
       <div className="tabs" role="tablist" aria-label="Workbench sections">{(["apple", "google", "planning"] as const).map(t => <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}>{t === "planning" ? "Plan & learn" : t === "apple" ? "Apple" : "Google Play"}</button>)}</div>
       <div className="tool-actions"><label className="file-button">Import JSON<input type="file" accept="application/json,.json" onChange={handleImport}/></label><button onClick={() => download("aso-workbench.json", JSON.stringify(data, null, 2), "application/json")}>Export JSON</button><button onClick={() => download("aso-brief.md", toMarkdown(data), "text/markdown")}>Export Markdown</button></div>
