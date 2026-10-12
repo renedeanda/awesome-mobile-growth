@@ -10,7 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "node --experimental-strip-types --test lib/*.test.ts",
     "test:e2e": "playwright test",
     "audit:content": "node scripts/audit-content.mjs",

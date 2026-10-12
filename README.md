@@ -43,7 +43,7 @@ The production build is a static export in `out/`. Verification includes TypeScr
 
 ## Contributing
 
-Use the issue forms for a sourced correction or a resource nomination. A good correction identifies the exact sentence, explains what changed, and links directly to current Apple or Google documentation. Please do not open “add my tool” pull requests.
+Corrections and resource nominations should follow the contribution policy. A good correction identifies the exact sentence, explains what changed, and links directly to current Apple or Google documentation. Pull requests are reserved for the maintainer and invited collaborators; please do not open “add my tool” pull requests.
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the [Code of Conduct](CODE_OF_CONDUCT.md) before participating.
 
