@@ -1,0 +1,8 @@
+{
+  "redirects": [
+    { "source": "/growth/mobile-app-growth-strategy/", "destination": "/growth/app-growth-loop/", "permanent": true },
+    { "source": "/growth/acquisition-to-retention/", "destination": "/growth/app-growth-loop/", "permanent": true },
+    { "source": "/growth/app-referral-loop/", "destination": "/guides/ratings-retention/", "permanent": true },
+    { "source": "/ai/guides/verify-ai-generated-aso/", "destination": "/ai/guides/aso-with-ai/", "permanent": true }
+  ]
+}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { podcasts, podcastTopics } from "@/lib/podcasts";
 
 export function PodcastExplorer() {
@@ -22,9 +21,10 @@ export function PodcastExplorer() {
     </div>
     <div className="podcast-grid">
       {results.map((podcast) => <article className="podcast-card" key={podcast.slug}>
-        <p className="eyebrow">{podcast.publisher}</p><h2><Link href={`/podcasts/${podcast.slug}/`}>{podcast.name}</Link></h2>
-        <p>{podcast.description}</p><div className="tag-row">{podcast.topics.map((item) => <span key={item}>{item}</span>)}</div>
-        <Link className="text-link" href={`/podcasts/${podcast.slug}/`}>Why it earns a listen →</Link>
+        <p className="eyebrow">{podcast.publisher}</p><h2><a href={podcast.href}>{podcast.name} ↗</a></h2>
+        <p>{podcast.description}</p><p><strong>Best for:</strong> {podcast.bestFor}</p><p className="fine-print">{podcast.cadenceNote} · checked {podcast.latestChecked}</p>
+        {podcast.episodes?.length ? <div className="episode-picks"><h3>Start here</h3>{podcast.episodes.map(episode => <div key={episode.href}><a href={episode.href}><strong>{episode.title} ↗</strong></a><small>{episode.published}</small><p>{episode.why}</p></div>)}</div> : null}
+        <div className="tag-row">{podcast.topics.map((item) => <span key={item}>{item}</span>)}</div>
       </article>)}
     </div>
     {!results.length && <div className="empty-state"><h2>No exact match.</h2><p>Try a broader term or select all topics.</p></div>}

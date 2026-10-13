@@ -12,6 +12,11 @@ export type FieldEntry = {
   sources: FieldSource[];
 };
 
+export function fieldReadingTime(entry: FieldEntry) {
+  const text = [entry.title, entry.description, entry.answer, ...entry.sections.flatMap((section) => [section.title, ...section.paragraphs, ...(section.bullets ?? [])])].join(" ");
+  return `${Math.max(2, Math.ceil(text.trim().split(/\s+/).length / 180))} min`;
+}
+
 export const reviewed = "2026-10-12";
 
 const appleMetrics = "https://developer.apple.com/help/app-store-connect-analytics/reference/metrics-definitions";
@@ -37,7 +42,7 @@ const metric = (slug: string, title: string, description: string, answer: string
   sources: [{ label: "Apple · Metric definitions", href: source }],
 });
 
-export const referenceEntries: FieldEntry[] = [
+const allReferenceEntries: FieldEntry[] = [
   metric("impressions", "App Store impressions", "What Apple counts as an impression, where the metric appears, and what it cannot prove.", "An App Store impression is counted when an app is viewed on the Today, Games, Apps, or Search tabs for more than one second. Apple includes product page views in the total.", "Apple defines Impressions as the number of times an app was viewed on App Store discovery surfaces for more than one second. Unique Device Impressions deduplicate those views by device.", "Impressions are exposure, not necessarily intentional consideration. Search, Browse, featuring, ads, and repeated exposure can represent very different levels of intent.", "Use impressions to locate changes in visibility and to compare source mix. Do not use them alone to judge listing quality or product-market fit."),
   metric("product-page-views", "Product page views", "Understand what a product page view means in App Store Connect and why it is not the denominator in Apple’s standard conversion rate.", "Product Page Views count visits to the App Store product page, including pages loaded with StoreKit. They are a useful consideration signal, but Apple’s standard Conversion Rate uses unique impressions instead.", "Apple counts the total number of times the product page was accessed. A separate Unique Devices version deduplicates by device.", "Downloads divided by product page views can be a useful custom diagnostic, but it is not Apple’s standard Conversion Rate. Label that ratio clearly if you calculate it.", "Use page views to understand movement from discovery into deeper consideration and to compare external campaigns that send people directly to a listing."),
   metric("conversion-rate", "App Store conversion rate", "Use Apple’s actual formula and avoid comparing incompatible benchmark definitions.", "Apple’s App Store conversion rate is total downloads and pre-orders divided by unique device impressions. It is not downloads divided by product page views.", "The numerator includes first-time downloads, redownloads, and applicable pre-orders. The denominator is unique device impressions for the selected period.", "Many third-party reports call downloads divided by product page views a conversion rate. Comparing that value with Apple’s metric produces a false benchmark.", "Segment Apple’s rate by source and compare with Apple’s own peer groups. Use product page views as a separate diagnostic, not a replacement denominator."),
@@ -111,6 +116,8 @@ export const referenceEntries: FieldEntry[] = [
   },
 ];
 
+export const referenceEntries = allReferenceEntries.filter((entry) => !["custom-store-listings", "store-listing-experiments"].includes(entry.slug));
+
 export const googleGuides: FieldEntry[] = [
   {
     slug: "android-app-launch-checklist", label: "Launch", title: "Android app launch checklist", description: "Move from product truth through Play Console setup, listing, testing, policy, rollout, and post-launch learning.", reviewed, reading: "12 min",
@@ -143,8 +150,8 @@ export const googleGuides: FieldEntry[] = [
       { id: "truth", title: "Show what exists", paragraphs: ["Use real UI or clearly disclosed illustrative elements. Do not depict unavailable features, fabricated reviews, impossible results, or a visual quality the shipped experience does not support."] },
     ], sources: [{ label: "Google Play · Graphic assets", href: googleGraphics }, { label: "Google Play · Preview assets policy", href: "https://support.google.com/googleplay/android-developer/answer/1078870" }],
   },
-  referenceEntries.find((entry) => entry.slug === "custom-store-listings")!,
-  referenceEntries.find((entry) => entry.slug === "store-listing-experiments")!,
+  allReferenceEntries.find((entry) => entry.slug === "custom-store-listings")!,
+  allReferenceEntries.find((entry) => entry.slug === "store-listing-experiments")!,
   {
     slug: "localization", label: "Markets", title: "Google Play listing localization", description: "Adapt the product promise, search language, and creative to each market instead of translating an English page literally.", reviewed, reading: "8 min",
     answer: "Google Play localization is a market workflow: rebuild relevant vocabulary, adapt the promise and visuals, respect local policy and product availability, and require native review before treating generated copy as final.",
@@ -166,7 +173,7 @@ export const growthStages = [
   { id: "compound", title: "Compound", question: "Does learning and advocacy improve the next cycle?", metric: "Referrals, reviews, repeat demand", failure: "Growth lessons disappear between releases" },
 ] as const;
 
-export const growthGuides: FieldEntry[] = [
+const allGrowthGuides: FieldEntry[] = [
   {
     slug: "app-growth-loop", label: "Framework", title: "The App Growth Loop", description: "Connect discovery, conversion, activation, monetization, retention, and advocacy without pretending one channel creates the whole result.", reviewed, reading: "10 min",
     answer: "Sustainable app growth is a connected loop: reach the right people, make an honest promise, deliver first value, support the business model, retain customers, and carry what you learn into the next acquisition cycle.",
@@ -246,7 +253,9 @@ export const growthGuides: FieldEntry[] = [
   },
 ];
 
-export const aiGuides: FieldEntry[] = [
+export const growthGuides = allGrowthGuides.filter((entry) => !["mobile-app-growth-strategy", "acquisition-to-retention", "app-referral-loop"].includes(entry.slug));
+
+const allAiGuides: FieldEntry[] = [
   {
     slug: "aso-with-ai", label: "AI field guide", title: "ASO with AI, without invented certainty", description: "Use a model for synthesis, critique, and drafts while keeping facts, product truth, and final judgment human-verifiable.", reviewed, reading: "10 min",
     answer: "AI can organize evidence, propose alternatives, validate mechanics, and expose inconsistencies. It cannot know private store algorithms, ground-truth keyword volume, your unshared product behavior, or whether generated copy is true.",
@@ -255,6 +264,7 @@ export const aiGuides: FieldEntry[] = [
       { id: "jobs", title: "Use AI for bounded jobs", paragraphs: ["Good jobs include clustering language, finding duplicated terms, generating alternatives, checking consistency, drafting a screenshot brief, or turning an experiment note into a structured record."] },
       { id: "limits", title: "Keep uncertainty visible", paragraphs: ["A model can suggest search phrases but cannot supply authoritative search volume or ranking causality. It can draft localization but cannot replace an informed native reviewer."] },
       { id: "review", title: "Review as a diff", paragraphs: ["Preserve the original, inspect each proposed change, trace claims to product evidence, validate limits, and reject generic wording that erases the brand voice."] },
+      { id: "verification", title: "Run six checks before anything ships", paragraphs: ["Verify product truth, private-data separation, current platform policy, field and asset mechanics, brand voice, and market context. A fluent draft is not evidence that a claim is true."], bullets: ["Trace every capability and outcome to the shipped product.", "Keep credentials, reviewer notes, private analytics, and customer data out of public output.", "Validate characters, UTF-8 bytes, formats, locales, and the live console preview.", "Require a human to approve the diff and record unresolved unknowns."] },
     ], sources: [{ label: "Apple · Product page", href: appleProductPage }, { label: "Google Play · Store listing", href: googleListing }],
   },
   {
@@ -311,38 +321,7 @@ export const aiGuides: FieldEntry[] = [
   },
 ];
 
-export const teardownEntries: FieldEntry[] = [
-  {
-    slug: "alltrails", label: "Public listing anatomy", title: "AllTrails: intent across web and store", description: "A dated, public-evidence review of how a recognizable outdoor job can travel from search intent into product proof.", reviewed, reading: "7 min",
-    answer: "AllTrails is useful to study because the product category contains concrete jobs—finding, evaluating, navigating, and sharing routes. This teardown examines message continuity, not private performance or ranking causes.",
-    sections: [
-      { id: "observe", title: "What is publicly observable", paragraphs: ["The public web and store presence can be reviewed for category language, route discovery, maps, safety or planning proof, subscription context, and continuity between acquisition surfaces."] },
-      { id: "interpret", title: "What that might mean", paragraphs: ["A clear outdoor job can support both non-branded discovery and feature-specific landing experiences. Recognizable map and trail evidence can reduce the distance between promise and product."] },
-      { id: "unknown", title: "What remains unknown", paragraphs: ["The private keyword field, ranking inputs, experiment history, source mix, conversion, retention, and economics are not visible and must not be inferred from the listing."] },
-      { id: "test", title: "A testable lesson", paragraphs: ["For an app with multiple customer jobs, map each high-intent job to one page promise, one first creative proof, and one relevant first-use destination. Test downstream activation, not downloads alone."] },
-    ], sources: [{ label: "AllTrails · App Store listing", href: "https://apps.apple.com/us/app/alltrails-hike-bike-run/id405075943" }, { label: "AllTrails · Website", href: "https://www.alltrails.com/" }],
-  },
-  {
-    slug: "duolingo", label: "Public listing anatomy", title: "Duolingo: recognition before explanation", description: "A public-evidence review of brand recognition, creative hierarchy, product proof, and the limits of copying a category leader.", reviewed, reading: "7 min",
-    answer: "Duolingo demonstrates how a recognizable brand and character can compress the decision, but its scale makes it a poor template for an unknown app. Study the hierarchy and continuity; do not copy the surface style.",
-    sections: [
-      { id: "observe", title: "What is publicly observable", paragraphs: ["The public listing can be reviewed for brand prominence, character use, language-learning promise, UI evidence, social proof, subscription context, and continuity with the app’s broader marketing."] },
-      { id: "interpret", title: "What that might mean", paragraphs: ["Existing recognition can let creative spend less space classifying the product. An unfamiliar app usually needs more explicit category and outcome language in the same positions."] },
-      { id: "unknown", title: "What remains unknown", paragraphs: ["Public creative cannot reveal the causal contribution of ASO, paid acquisition, brand demand, notifications, product loops, or experiment history."] },
-      { id: "test", title: "A testable lesson", paragraphs: ["Ask whether screenshot one works for someone who has never heard of the brand. Compare explicit product classification with brand-led creative and watch activation quality as well as store conversion."] },
-    ], sources: [{ label: "Duolingo · App Store listing", href: "https://apps.apple.com/us/app/duolingo-language-lessons/id570060128" }, { label: "Duolingo · Website", href: "https://www.duolingo.com/" }],
-  },
-  {
-    slug: "gentler-streak", label: "Public listing anatomy", title: "Gentler Streak: focused Apple-platform positioning", description: "A public-evidence review of a specific product philosophy, health context, and platform-shaped creative.", reviewed, reading: "7 min",
-    answer: "Gentler Streak is useful to study as an Apple-platform product with a focused relationship to fitness and recovery. The lesson is message discipline and platform fit—not an inferred growth formula.",
-    sections: [
-      { id: "observe", title: "What is publicly observable", paragraphs: ["The public listing can be inspected for its fitness and recovery framing, Apple-device context, UI evidence, health-data language, awards or editorial recognition that are publicly documented, and subscription presentation."] },
-      { id: "interpret", title: "What that might mean", paragraphs: ["A clear product philosophy can differentiate an app in a crowded category when the screenshots and onboarding consistently demonstrate it."] },
-      { id: "unknown", title: "What remains unknown", paragraphs: ["The listing does not reveal private keywords, acquisition mix, experiment results, retention cohorts, or the relative impact of platform recognition."] },
-      { id: "test", title: "A testable lesson", paragraphs: ["Write the product’s relationship to the customer in one sentence, then audit every store frame and onboarding step for contradictions. Test a philosophy-led opening against a feature-led one."] },
-    ], sources: [{ label: "Gentler Streak · App Store listing", href: "https://apps.apple.com/us/app/gentler-streak-fitness-tracker/id1576857102" }, { label: "Gentler Streak · Website", href: "https://gentler.app/" }],
-  },
-];
+export const aiGuides = allAiGuides.filter((entry) => entry.slug !== "verify-ai-generated-aso");
 
 export const updates: FieldEntry[] = [
   {
@@ -361,7 +340,6 @@ export const fieldCollections = {
   google: googleGuides,
   growth: growthGuides,
   ai: aiGuides,
-  teardowns: teardownEntries,
   updates,
 };
 

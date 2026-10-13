@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 import { guides } from "@/lib/content";
-import { podcasts } from "@/lib/podcasts";
 import { absolute } from "@/lib/site";
 import { applePlatformGuides } from "@/lib/applePlatforms";
 import { fieldCollections } from "@/lib/fieldLab";
@@ -18,7 +17,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "google-play",
     "growth",
     "reference",
-    "teardowns",
     "updates",
     "tools",
     "ai",
@@ -39,16 +37,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: absolute(`/guides/${guide.slug}/`),
     lastModified: new Date(guide.modified),
   }));
-  const podcastPages: MetadataRoute.Sitemap = podcasts.map((podcast) => ({
-    url: absolute(`/podcasts/${podcast.slug}/`),
-    lastModified: new Date(podcast.latestChecked),
-  }));
   const applePlatformPages: MetadataRoute.Sitemap = applePlatformGuides.map((guide) => ({
     url: absolute(`/apple-platforms/${guide.slug}/`),
     lastModified: new Date("2026-10-12"),
   }));
-  const bases = { reference: "reference", google: "google-play", growth: "growth", ai: "ai/guides", teardowns: "teardowns", updates: "updates" } as const;
+  const bases = { reference: "reference", google: "google-play", growth: "growth", ai: "ai/guides", updates: "updates" } as const;
   const fieldPages: MetadataRoute.Sitemap = Object.entries(fieldCollections).flatMap(([collection, entries]) => entries.map((entry) => ({ url: absolute(`/${bases[collection as keyof typeof bases]}/${entry.slug}/`), lastModified: new Date(entry.reviewed) })));
   const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({ url: absolute(`/tools/${tool.slug}/`), lastModified: new Date("2026-10-12") }));
-  return [...pages, ...applePlatformPages, ...guidePages, ...podcastPages, ...fieldPages, ...toolPages];
+  return [...pages, ...applePlatformPages, ...guidePages, ...fieldPages, ...toolPages];
 }

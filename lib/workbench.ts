@@ -1,16 +1,16 @@
 import { LIMITS } from "./platform.ts";
 export { LIMITS } from "./platform.ts";
-export type ListingFields = Record<keyof typeof LIMITS | "appleDescription" | "appleWhatsNew", string>;
+export type ListingFields = Record<keyof typeof LIMITS, string>;
 export const emptyFields: ListingFields = { appleName: "", appleSubtitle: "", applePromotional: "", appleKeywords: "", appleDescription: "", appleWhatsNew: "", googleName: "", googleShort: "", googleFull: "" };
 export type StrategyBrief = { product: string; audience: string; job: string; promise: string; proof: string; exclusions: string };
-export type WorkbenchData = { version: 2; updatedAt: string; brief: StrategyBrief; fields: ListingFields; keywordMap: string; screenshotPlan: string; experimentLog: string; launchRetro: string };
+export type WorkbenchData = { version: 3; updatedAt: string; brief: StrategyBrief; fields: ListingFields; keywordMap: string; screenshotPlan: string; experimentLog: string; launchRetro: string; monthlyReview: string };
 const emptyBrief: StrategyBrief = { product: "", audience: "", job: "", promise: "", proof: "", exclusions: "" };
-export const emptyWorkbench = (): WorkbenchData => ({ version: 2, updatedAt: new Date().toISOString(), brief: { ...emptyBrief }, fields: { ...emptyFields }, keywordMap: "", screenshotPlan: "", experimentLog: "", launchRetro: "" });
+export const emptyWorkbench = (): WorkbenchData => ({ version: 3, updatedAt: new Date().toISOString(), brief: { ...emptyBrief }, fields: { ...emptyFields }, keywordMap: "", screenshotPlan: "", experimentLog: "", launchRetro: "", monthlyReview: "" });
 export function migrateWorkbench(input: unknown): WorkbenchData {
   const fresh = emptyWorkbench();
   if (!input || typeof input !== "object") return fresh;
   const source = input as Partial<WorkbenchData> & { version?: number };
-  return { ...fresh, ...source, version: 2, updatedAt: typeof source.updatedAt === "string" ? source.updatedAt : fresh.updatedAt, brief: { ...emptyBrief, ...(source.brief ?? {}) }, fields: { ...emptyFields, ...(source.fields ?? {}) } };
+  return { ...fresh, ...source, version: 3, updatedAt: typeof source.updatedAt === "string" ? source.updatedAt : fresh.updatedAt, brief: { ...emptyBrief, ...(source.brief ?? {}) }, fields: { ...emptyFields, ...(source.fields ?? {}) } };
 }
 export const utf8Bytes = (value: string) => new TextEncoder().encode(value).length;
 export const keywordTokens = (value: string) => value.split(",").map((v) => v.trim().toLocaleLowerCase()).filter(Boolean);
@@ -33,5 +33,5 @@ export function parseLocaleBundle(input: unknown): Partial<ListingFields> {
 }
 export function toMarkdown(data: WorkbenchData) {
   const f = data.fields;
-  return `# ASO working brief\n\n_Exported ${data.updatedAt.slice(0, 10)} from Awesome Mobile Growth._\n\n## Product strategy\n\n- **Product:** ${data.brief.product}\n- **Audience:** ${data.brief.audience}\n- **Job to be done:** ${data.brief.job}\n- **Promise:** ${data.brief.promise}\n- **Proof:** ${data.brief.proof}\n- **Not for:** ${data.brief.exclusions}\n\n## Apple metadata\n\n- **Name:** ${f.appleName}\n- **Subtitle:** ${f.appleSubtitle}\n- **Promotional text:** ${f.applePromotional}\n- **Keywords:** ${f.appleKeywords}\n\n### Description\n\n${f.appleDescription}\n\n### What’s New\n\n${f.appleWhatsNew}\n\n## Google Play metadata\n\n- **App name:** ${f.googleName}\n- **Short description:** ${f.googleShort}\n\n### Full description\n\n${f.googleFull}\n\n## Keyword map\n\n${data.keywordMap}\n\n## Screenshot plan\n\n${data.screenshotPlan}\n\n## Experiment log\n\n${data.experimentLog}\n\n## Launch retrospective\n\n${data.launchRetro}\n`;
+  return `# ASO working brief\n\n_Exported ${data.updatedAt.slice(0, 10)} from Awesome Mobile Growth._\n\n## Product strategy\n\n- **Product:** ${data.brief.product}\n- **Audience:** ${data.brief.audience}\n- **Job to be done:** ${data.brief.job}\n- **Promise:** ${data.brief.promise}\n- **Proof:** ${data.brief.proof}\n- **Not for:** ${data.brief.exclusions}\n\n## Apple metadata\n\n- **Name:** ${f.appleName}\n- **Subtitle:** ${f.appleSubtitle}\n- **Promotional text:** ${f.applePromotional}\n- **Keywords:** ${f.appleKeywords}\n\n### Description\n\n${f.appleDescription}\n\n### What’s New\n\n${f.appleWhatsNew}\n\n## Google Play metadata\n\n- **App name:** ${f.googleName}\n- **Short description:** ${f.googleShort}\n\n### Full description\n\n${f.googleFull}\n\n## Keyword map\n\n${data.keywordMap}\n\n## Screenshot plan\n\n${data.screenshotPlan}\n\n## Experiment log\n\n${data.experimentLog}\n\n## Launch retrospective\n\n${data.launchRetro}\n\n## Monthly ASO review\n\n${data.monthlyReview}\n`;
 }

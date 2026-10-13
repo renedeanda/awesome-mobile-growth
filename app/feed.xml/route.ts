@@ -10,7 +10,7 @@ export function GET() {
     const url = absolute(`/guides/${guide.slug}/`);
     return `<entry><title>${xml(guide.title)}</title><id>${xml(url)}</id><link href="${xml(url)}"/><updated>${guide.modified}T12:00:00Z</updated><summary>${xml(guide.description)}</summary></entry>`;
   });
-  const bases = { reference: "reference", google: "google-play", growth: "growth", ai: "ai/guides", teardowns: "teardowns", updates: "updates" } as const;
+  const bases = { reference: "reference", google: "google-play", growth: "growth", ai: "ai/guides", updates: "updates" } as const;
   const fieldEntries = Object.entries(fieldCollections).flatMap(([collection, items]) => items.map((item) => { const url=absolute(`/${bases[collection as keyof typeof bases]}/${item.slug}/`); return `<entry><title>${xml(item.title)}</title><id>${xml(url)}</id><link href="${xml(url)}"/><updated>${item.reviewed}T12:00:00Z</updated><summary>${xml(item.description)}</summary></entry>`; }));
   const entries=[...guideEntries,...fieldEntries].join("");
   const updated = [...guides].sort((a, b) => b.modified.localeCompare(a.modified))[0]?.modified ?? "2026-10-12";

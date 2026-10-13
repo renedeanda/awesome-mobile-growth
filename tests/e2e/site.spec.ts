@@ -2,10 +2,10 @@ import { test, expect } from "@playwright/test";
 
 test("home presents a useful route into the field guide", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("store page");
-  await expect(page.getByRole("link", { name: /private workbench/i })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Understand the store");
+  await expect(page.getByRole("link", { name: /Open the workbench/i })).toBeVisible();
   await expect(page.getByText("What are they trying to find?")).toBeVisible();
-  await expect(page.getByRole("link", { name: /Start with ASO/i })).toHaveAttribute("href", "/app-store-optimization/");
+  await expect(page.getByRole("link", { name: /Find a guide/i })).toHaveAttribute("href", "/guides/");
 });
 
 test("MDX guide renders semantic comparison content instead of markdown syntax", async ({ page }) => {
@@ -21,7 +21,7 @@ test("mobile navigation and hero remain usable", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await page.getByText("Menu", { exact: true }).click();
-  await expect(page.getByRole("navigation", { name: "Mobile primary" }).getByRole("link", { name: "Library", exact: true })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Mobile primary" }).getByRole("link", { name: "Guides", exact: true })).toBeVisible();
 });
 
 test("Apple launch desk connects the platform guides", async ({ page }) => {
@@ -41,15 +41,13 @@ test("Universal Purchase guide makes the irreversible decisions explicit", async
   await expect(page.getByLabel("Universal Purchase app record model")).toBeVisible();
 });
 
-test("podcast shelf filters and links to editorial pages", async ({ page }) => {
+test("podcast shelf filters and offers current editorial picks", async ({ page }) => {
   await page.goto("/podcasts/");
   await expect(page.locator(".podcast-explorer")).toHaveAttribute("data-ready", "true");
   await page.getByLabel("Search").fill("subscription");
-  await expect(page.getByRole("link", { name: "Sub Club" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Launched" })).toBeHidden();
-  await page.getByRole("link", { name: "Sub Club" }).click();
-  await expect(page.getByRole("heading", { level: 1, name: "Sub Club" })).toBeVisible();
-  await expect(page.getByRole("link", { name: /official show/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Sub Club/ }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: /Launched/ })).toBeHidden();
+  await expect(page.getByRole("link", { name: /Nancy Anderson/ })).toHaveAttribute("href", /revenuecat\.com/);
 });
 
 test("workbench validates, stays local, and supports contextual deep links", async ({ page }) => {
@@ -59,7 +57,7 @@ test("workbench validates, stays local, and supports contextual deep links", asy
   await page.getByLabel("App name").first().fill("A name that is deliberately far too long");
   await expect(page.getByLabel("App name").first()).toHaveAttribute("aria-invalid", "true");
   await page.getByText("Save draft in this browser").click();
-  await expect.poll(() => page.evaluate(() => localStorage.getItem("awesome-mobile-growth-workbench.v2"))).toBeTruthy();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("awesome-mobile-growth-workbench.v3"))).toBeTruthy();
 });
 
 test("Google Play desk, growth loop, and reference library are connected", async ({ page }) => {

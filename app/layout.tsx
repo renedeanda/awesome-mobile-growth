@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { site, absolute } from "@/lib/site";
 import "./globals.css";
 
@@ -28,10 +29,6 @@ export const metadata: Metadata = {
   openGraph: { type: "website", title: site.name, description: site.description, url: site.origin, siteName: site.name, images: [image] },
   twitter: { card: "summary_large_image", title: site.name, description: site.description, images: [image.url] },
   robots: { index: true, follow: true },
-  verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
-    other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } : undefined,
-  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -41,6 +38,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   ];
   return <html lang="en" data-scroll-behavior="smooth"><body>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
-    <a className="skip" href="#main">Skip to content</a><SiteHeader/><main id="main" className="page">{children}</main><SiteFooter/>
+    <a className="skip" href="#main">Skip to content</a><SiteHeader/><main id="main" className="page">{children}</main><SiteFooter/><GoogleAnalytics/>
   </body></html>;
 }
