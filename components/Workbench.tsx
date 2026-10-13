@@ -1,8 +1,9 @@
 "use client";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
-import { LIMITS, WorkbenchData, duplicates, emptyWorkbench, parseLocaleBundle, toMarkdown, utf8Bytes, warnings } from "@/lib/workbench";
+import { LIMITS, WorkbenchData, duplicates, emptyWorkbench, migrateWorkbench, parseLocaleBundle, toMarkdown, utf8Bytes, warnings } from "@/lib/workbench";
 
-const STORAGE = "awesome-mobile-growth-workbench.v1";
+const STORAGE = "awesome-mobile-growth-workbench.v2";
+const LEGACY_STORAGE = "awesome-mobile-growth-workbench.v1";
 const fields = [
   ["appleName", "App name", "The distinctive name people see in the store.", LIMITS.appleName, false],
   ["appleSubtitle", "Subtitle", "One clear use or benefit—not a slogan.", LIMITS.appleSubtitle, false],
@@ -22,10 +23,10 @@ export function Workbench() {
   const [saveLocal, setSaveLocal] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [notice, setNotice] = useState("");
-  const [tab, setTab] = useState<"apple" | "google" | "planning">("apple");
+  const [tab, setTab] = useState<"brief" | "apple" | "google" | "planning">("brief");
   useEffect(() => {
-    const raw = localStorage.getItem(STORAGE);
-    if (raw) { try { setData(JSON.parse(raw)); setSaveLocal(true); } catch {} }
+    const raw = localStorage.getItem(STORAGE) ?? localStorage.getItem(LEGACY_STORAGE);
+    if (raw) { try { setData(migrateWorkbench(JSON.parse(raw))); setSaveLocal(true); localStorage.removeItem(LEGACY_STORAGE); } catch {} }
     const params = new URLSearchParams(window.location.search);
     const platform = params.get("platform");
     const template = params.get("template");
@@ -42,16 +43,17 @@ export function Workbench() {
   useEffect(() => { const warn = (event: BeforeUnloadEvent) => { if (!saveLocal && Object.values(data.fields).some(Boolean)) event.preventDefault(); }; addEventListener("beforeunload", warn); return () => removeEventListener("beforeunload", warn); }, [data, saveLocal]);
   const updateField = (key: keyof WorkbenchData["fields"], value: string) => setData(d => ({ ...d, fields: { ...d.fields, [key]: value }, updatedAt: new Date().toISOString() }));
   const allWarnings = useMemo(() => [...new Set(Object.values(data.fields).flatMap(warnings))], [data.fields]);
-  const handleImport = async (e: ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0]; if (!file) return; try { const parsed = JSON.parse(await file.text()); if (parsed.version === 1 && parsed.fields) setData(parsed); else setData(d => ({ ...d, fields: { ...d.fields, ...parseLocaleBundle(parsed) } })); setNotice("Imported into this browser. Nothing was published."); } catch (error) { setNotice(error instanceof Error ? error.message : "Could not read that file."); } e.target.value = ""; };
+  const handleImport = async (e: ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0]; if (!file) return; try { const parsed = JSON.parse(await file.text()); if ((parsed.version === 1 || parsed.version === 2) && parsed.fields) setData(migrateWorkbench(parsed)); else setData(d => ({ ...d, fields: { ...d.fields, ...parseLocaleBundle(parsed) } })); setNotice("Imported into this browser. Nothing was published."); } catch (error) { setNotice(error instanceof Error ? error.message : "Could not read that file."); } e.target.value = ""; };
   const toggleSave = () => { if (saveLocal) { localStorage.removeItem(STORAGE); setSaveLocal(false); setNotice("Local saving is off and the saved draft was deleted."); } else { setSaveLocal(true); setNotice("Draft saving is on for this browser."); } };
   const reset = () => { if (!confirm("Clear every field in this browser?")) return; localStorage.removeItem(STORAGE); setData(emptyWorkbench()); setSaveLocal(false); setNotice("Workbench cleared."); };
   return <div className="workbench-shell" data-testid="workbench" data-ready={hydrated}>
     <div className="workbench-toolbar">
-      <div className="tabs" role="tablist" aria-label="Workbench sections">{(["apple", "google", "planning"] as const).map(t => <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}>{t === "planning" ? "Plan & learn" : t === "apple" ? "Apple" : "Google Play"}</button>)}</div>
+      <div className="tabs" role="tablist" aria-label="Workbench sections">{(["brief", "apple", "google", "planning"] as const).map(t => <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}>{t === "planning" ? "Plan & learn" : t === "brief" ? "Product truth" : t === "apple" ? "Apple" : "Google Play"}</button>)}</div>
       <div className="tool-actions"><label className="file-button">Import JSON<input type="file" accept="application/json,.json" onChange={handleImport}/></label><button onClick={() => download("aso-workbench.json", JSON.stringify(data, null, 2), "application/json")}>Export JSON</button><button onClick={() => download("aso-brief.md", toMarkdown(data), "text/markdown")}>Export Markdown</button></div>
     </div>
     <div className="privacy-strip"><label className="switch"><input type="checkbox" checked={saveLocal} onChange={toggleSave}/><span>Save draft in this browser</span></label><span>Private by default. Your copy never leaves this page.</span><button className="text-button" onClick={reset}>Reset</button></div>
     {notice && <p className="notice" role="status">{notice}</p>}
+    {tab === "brief" && <section className="brief-grid" aria-label="Product truth brief"><div><p className="eyebrow">Start before keywords</p><h2>Make the listing answerable.</h2><p>Describe the product truth once, then use it to judge every field and frame. Specific proof beats an inflated promise.</p></div><div>{([['product','Product','What is it, in plain language?'],['audience','Audience','Who is it genuinely for?'],['job','Job to be done','What progress is that person trying to make?'],['promise','Promise','What concrete outcome can the listing responsibly promise?'],['proof','Proof','What product behavior, screen, result, or trust signal substantiates it?'],['exclusions','Not for','Who or what should the listing avoid attracting?']] as const).map(([key,label,placeholder]) => <label className="field" key={key}><span className="field-label">{label}</span><textarea rows={3} placeholder={placeholder} value={data.brief[key]} onChange={e => setData(d=>({...d,brief:{...d.brief,[key]:e.target.value},updatedAt:new Date().toISOString()}))}/></label>)}</div></section>}
     {tab === "apple" && <div className="workbench-grid"><section className="fields" aria-label="Apple metadata fields">{fields.map(([key, label, help, limit, bytes]) => { const value = data.fields[key]; const count = bytes ? utf8Bytes(value) : value.length; const bad = limit !== undefined && count > limit; return <label className="field" key={key}><span className="field-label">{label}{limit && <small className={bad ? "over" : ""}>{count}/{limit}{bytes ? " bytes" : ""}</small>}</span><span className="field-help">{help}</span>{limit && limit <= 170 ? <input value={value} onChange={e => updateField(key, e.target.value)} aria-invalid={bad}/> : <textarea rows={key === "appleDescription" ? 12 : 5} value={value} onChange={e => updateField(key, e.target.value)} aria-invalid={bad}/>}</label>})}</section><Preview name={data.fields.appleName} subtitle={data.fields.appleSubtitle} promo={data.fields.applePromotional} description={data.fields.appleDescription}/></div>}
     {tab === "google" && <div className="workbench-grid"><section className="fields" aria-label="Google Play metadata fields">{googleFields.map(([key, label, limit]) => { const value=data.fields[key]; return <label className="field" key={key}><span className="field-label">{label}<small className={value.length > limit ? "over" : ""}>{value.length}/{limit}</small></span>{limit > 100 ? <textarea rows={14} value={value} onChange={e=>updateField(key,e.target.value)} aria-invalid={value.length > limit}/> : <input value={value} onChange={e=>updateField(key,e.target.value)} aria-invalid={value.length > limit}/>}</label>})}</section><Preview name={data.fields.googleName} subtitle={data.fields.googleShort} description={data.fields.googleFull}/></div>}
     {tab === "planning" && <section className="planning-grid">{([['keywordMap','Keyword map','Intent → phrase → page promise → proof'],['screenshotPlan','Screenshot plan','Frame → message → product evidence → asset status'],['experimentLog','Experiment log','Decision, hypothesis, primary measure, dates, result, next move'],['launchRetro','Launch retrospective','What changed, what we learned, and what deserves another look']] as const).map(([key,label,placeholder]) => <label className="field" key={key}><span className="field-label">{label}</span><textarea rows={9} placeholder={placeholder} value={data[key]} onChange={e => setData(d=>({...d,[key]:e.target.value,updatedAt:new Date().toISOString()}))}/></label>)}</section>}

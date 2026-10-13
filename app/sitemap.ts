@@ -3,6 +3,8 @@ import { guides } from "@/lib/content";
 import { podcasts } from "@/lib/podcasts";
 import { absolute } from "@/lib/site";
 import { applePlatformGuides } from "@/lib/applePlatforms";
+import { fieldCollections } from "@/lib/fieldLab";
+import { tools } from "@/lib/tools";
 
 export const dynamic = "force-static";
 
@@ -14,6 +16,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "aso-checklist",
     "guides",
     "google-play",
+    "growth",
+    "reference",
+    "teardowns",
+    "updates",
+    "tools",
+    "ai",
+    "ai/skills",
+    "ai/skills/app-store-growth",
     "podcasts",
     "resources",
     "workbench",
@@ -37,5 +47,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: absolute(`/apple-platforms/${guide.slug}/`),
     lastModified: new Date("2026-10-12"),
   }));
-  return [...pages, ...applePlatformPages, ...guidePages, ...podcastPages];
+  const bases = { reference: "reference", google: "google-play", growth: "growth", ai: "ai/guides", teardowns: "teardowns", updates: "updates" } as const;
+  const fieldPages: MetadataRoute.Sitemap = Object.entries(fieldCollections).flatMap(([collection, entries]) => entries.map((entry) => ({ url: absolute(`/${bases[collection as keyof typeof bases]}/${entry.slug}/`), lastModified: new Date(entry.reviewed) })));
+  const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({ url: absolute(`/tools/${tool.slug}/`), lastModified: new Date("2026-10-12") }));
+  return [...pages, ...applePlatformPages, ...guidePages, ...podcastPages, ...fieldPages, ...toolPages];
 }

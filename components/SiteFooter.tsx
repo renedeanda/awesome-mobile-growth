@@ -6,7 +6,12 @@ export function SiteFooter() {
     <nav aria-label="Footer">
       <Link href="/about/">About</Link>
       <Link href="/apple-platforms/">Launch guides</Link>
-      <Link href="/field-notes/rebuilding-awesome-mobile-growth/">Field note</Link>
+      <Link href="/google-play/">Google Play</Link>
+      <Link href="/growth/">Growth</Link>
+      <Link href="/tools/">Tools</Link>
+      <Link href="/ai/">AI skills</Link>
+      <Link href="/reference/">Reference</Link>
+      <Link href="/updates/">Updates</Link>
       <Link href="/podcasts/">Podcasts</Link>
       <Link href="/privacy/">Privacy</Link>
       <Link href="/feed.xml">Feed</Link>

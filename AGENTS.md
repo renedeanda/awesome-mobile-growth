@@ -17,6 +17,8 @@ Never commit:
 
 Public operational documentation is welcome when it is reproducible and useful to any maintainer or contributor: local setup, verification, architecture, deployment mechanics, contribution rules, security reporting, and editorial standards. Phrase it for the public role, never for one person’s private account or workflow.
 
+Public agent skills are also welcome when the skill itself is a visitor-facing artifact. Keep the canonical package under `skills/`, make its instructions inspectable on the site, include only generic examples, and run the skill audit before shipping. Never copy a private skill verbatim: clean-room the reusable method and remove portfolio details, identifiers, paths, credentials, private schemas, internal voice rules, and owner-only operations.
+
 If a task produces useful private follow-up, report it to the maintainer in the conversation instead of writing it into this repository. If a private destination has not been explicitly provided, stop there; do not invent one and do not copy material into another repository.
 
 Before shipping, inspect `git diff` and search new tracked prose for private paths, owner-only instructions, unpublished product details, and accidental self-promotion. The content audit should remain a backstop, not the first time this boundary is considered.

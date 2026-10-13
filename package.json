@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build:assets": "node scripts/build-skill-package.mjs",
+    "build": "npm run build:assets && next build --webpack",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "node --experimental-strip-types --test lib/*.test.ts",
@@ -16,8 +17,9 @@
     "audit:content": "node scripts/audit-content.mjs",
     "audit:seo": "node scripts/audit-seo.mjs",
     "audit:links": "node scripts/audit-links.mjs",
+    "audit:skills": "node scripts/audit-skills.mjs",
     "content:new": "node scripts/new-content.mjs",
-    "verify": "npm run typecheck && npm run test && npm run build && npm run audit:content && npm run audit:seo && npm run audit:links && npm run test:e2e"
+    "verify": "npm run typecheck && npm run test && npm run build && npm run audit:content && npm run audit:seo && npm run audit:links && npm run audit:skills && npm run test:e2e"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

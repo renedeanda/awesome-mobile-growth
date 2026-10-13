@@ -28,6 +28,10 @@ export const metadata: Metadata = {
   openGraph: { type: "website", title: site.name, description: site.description, url: site.origin, siteName: site.name, images: [image] },
   twitter: { card: "summary_large_image", title: site.name, description: site.description, images: [image.url] },
   robots: { index: true, follow: true },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } : undefined,
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -4,7 +4,7 @@ export const site = {
   name: "Awesome Mobile Growth",
   shortName: "AMG",
   origin: "https://mobile.productbuilder.net",
-  description: "A practical, evidence-aware field guide and private-by-default ASO workbench for people building better mobile products.",
+  description: "Evidence-aware App Store Optimization, Apple and Google Play launch guides, free browser-local tools, mobile growth strategy, and an open AI skill.",
   author: "René DeAnda",
   github: "https://github.com/renedeanda/awesome-mobile-growth",
   reviewed: "October 12, 2026",

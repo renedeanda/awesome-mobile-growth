@@ -21,7 +21,7 @@ test("mobile navigation and hero remain usable", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await page.getByText("Menu", { exact: true }).click();
-  await expect(page.getByRole("navigation", { name: "Mobile primary" }).getByRole("link", { name: "ASO guides", exact: true })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Mobile primary" }).getByRole("link", { name: "Library", exact: true })).toBeVisible();
 });
 
 test("Apple launch desk connects the platform guides", async ({ page }) => {
@@ -59,5 +59,31 @@ test("workbench validates, stays local, and supports contextual deep links", asy
   await page.getByLabel("App name").first().fill("A name that is deliberately far too long");
   await expect(page.getByLabel("App name").first()).toHaveAttribute("aria-invalid", "true");
   await page.getByText("Save draft in this browser").click();
-  await expect.poll(() => page.evaluate(() => localStorage.getItem("awesome-mobile-growth-workbench.v1"))).toBeTruthy();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("awesome-mobile-growth-workbench.v2"))).toBeTruthy();
+});
+
+test("Google Play desk, growth loop, and reference library are connected", async ({ page }) => {
+  await page.goto("/google-play/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Play on its own terms");
+  await expect(page.getByRole("link", { name: /Android launch/i })).toBeVisible();
+  await page.goto("/growth/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("larger system");
+  await expect(page.getByText("Discover", { exact: true })).toBeVisible();
+  await page.goto("/reference/keyword-field/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("keyword field");
+});
+
+test("keyword checker counts UTF-8 bytes without sending copy away", async ({ page }) => {
+  await page.goto("/tools/app-store-keyword-field/");
+  await page.getByLabel("Keywords").fill("café,notes,notes");
+  await expect(page.getByText("Repeated tokens: notes.")).toBeVisible();
+  await expect(page.getByText(/bytes available/)).toBeVisible();
+});
+
+test("open AI skill explains its trust boundary and exposes complete source", async ({ page }) => {
+  await page.goto("/ai/skills/app-store-growth/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("not permission to guess");
+  await expect(page.getByText("Invented search volume")).toBeVisible();
+  await page.getByText("Read the raw SKILL.md").click();
+  await expect(page.locator(".skill-source pre code")).toContainText("# App Store Growth");
 });

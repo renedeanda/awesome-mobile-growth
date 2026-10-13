@@ -1,0 +1,4 @@
+interface:
+  display_name: "App Store Growth"
+  short_description: "Audit and improve Apple and Google Play listings"
+  default_prompt: "Use $app-store-growth to audit this store listing against product truth, current platform rules, and an evidence-aware growth plan."

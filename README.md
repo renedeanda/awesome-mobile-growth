@@ -1,19 +1,20 @@
 # Awesome Mobile Growth
 
-**A current, evidence-aware field guide and private-by-default ASO workbench for people building better mobile products.**
+**Evidence-aware App Store Optimization, Apple and Google Play launch guidance, private browser tools, and open AI workflows for people building better mobile products.**
 
-[Visit the field guide](https://mobile.productbuilder.net) · [Choose an Apple launch guide](https://mobile.productbuilder.net/apple-platforms/) · [Read the ASO guides](https://mobile.productbuilder.net/guides/) · [Open the workbench](https://mobile.productbuilder.net/workbench/)
+[Visit the field guide](https://mobile.productbuilder.net) · [Apple launch desk](https://mobile.productbuilder.net/apple-platforms/) · [Google Play desk](https://mobile.productbuilder.net/google-play/) · [Free tools](https://mobile.productbuilder.net/tools/) · [Open AI skill](https://mobile.productbuilder.net/ai/skills/app-store-growth/)
 
 Awesome Mobile Growth began as a link collection. It is now a maintained field manual: practical guides, current platform sources, a curated mobile podcast shelf, a transparent tool map, and a browser-local workspace for turning strategy into a release brief.
 
 ## What is here
 
 - Apple launch guides for iPhone, iPad, Mac, Universal Purchase, and cross-platform delivery requirements
-- Nine iOS-first, Android-aware ASO guides spanning metadata, creative, testing, App Store Connect, tooling, and retention
+- Platform-specific Apple and Google Play guides spanning launch, metadata, creative, localization, testing, and product outcomes
 - Current coverage of Apple’s October 2026 Asset Library, product-page headers, search creative, custom product pages, app tags, analytics, and featuring nominations
-- A focused Google Play companion covering listing fields, custom listings, and experiment constraints
+- An App Growth Loop connecting acquisition and store conversion to activation, monetization, retention, and advocacy
 - A practical ASO checklist from product truth through post-launch learning
-- A local-only metadata workbench with Apple and Google Play limits, JSON import/export, and Markdown export
+- Local-only keyword, metadata, screenshot-reference, experiment, and working-brief tools
+- A public App Store Growth AI skill with focused references, a deterministic validator, and strict evidence and permission boundaries
 - An editorially selected podcast guide and a maintained resource shelf with retired-product transitions
 - Explicit evidence labels, primary-source links, and visible review dates
 
@@ -40,7 +41,7 @@ Run the complete verification suite:
 npm run verify
 ```
 
-The production build is a static export in `out/`. Verification includes TypeScript, unit tests, the production export, content/SEO/internal-link audits, and Playwright coverage in desktop Chromium and mobile WebKit. On a new machine, install those browsers once with `npx playwright install chromium webkit`.
+The production build is a static export in `out/`. Verification includes TypeScript, unit tests, the production export, content/SEO/internal-link/skill-package audits, and Playwright coverage in desktop Chromium and mobile WebKit. On a new machine, install those browsers once with `npx playwright install chromium webkit`.
 
 ## Contributing
 
