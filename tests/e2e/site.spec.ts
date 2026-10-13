@@ -21,7 +21,24 @@ test("mobile navigation and hero remain usable", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await page.getByText("Menu", { exact: true }).click();
-  await expect(page.getByRole("navigation", { name: "Mobile primary" }).getByRole("link", { name: "Guides" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Mobile primary" }).getByRole("link", { name: "ASO guides", exact: true })).toBeVisible();
+});
+
+test("Apple launch desk connects the platform guides", async ({ page }) => {
+  await page.goto("/apple-platforms/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Three very different launches");
+  await expect(page.getByRole("link", { name: /Plan a Mac launch/i })).toBeVisible();
+  await page.getByRole("link", { name: /Plan a Mac launch/i }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("macOS app");
+  await expect(page.getByText("1280 × 800")).toBeVisible();
+  await expect(page.getByRole("link", { name: /Apple · Add platforms/i })).toBeVisible();
+});
+
+test("Universal Purchase guide makes the irreversible decisions explicit", async ({ page }) => {
+  await page.goto("/apple-platforms/universal-purchase/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Universal Purchase");
+  await expect(page.getByText("Existing records cannot be merged later. Stop before creating a second record if one relationship is the goal.", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Universal Purchase app record model")).toBeVisible();
 });
 
 test("podcast shelf filters and links to editorial pages", async ({ page }) => {

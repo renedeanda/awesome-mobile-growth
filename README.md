@@ -2,13 +2,14 @@
 
 **A current, evidence-aware field guide and private-by-default ASO workbench for people building better mobile products.**
 
-[Visit the field guide](https://mobile.productbuilder.net) · [Read the guides](https://mobile.productbuilder.net/guides/) · [Use the checklist](https://mobile.productbuilder.net/aso-checklist/) · [Open the workbench](https://mobile.productbuilder.net/workbench/)
+[Visit the field guide](https://mobile.productbuilder.net) · [Choose an Apple launch guide](https://mobile.productbuilder.net/apple-platforms/) · [Read the ASO guides](https://mobile.productbuilder.net/guides/) · [Open the workbench](https://mobile.productbuilder.net/workbench/)
 
 Awesome Mobile Growth began as a link collection. It is now a maintained field manual: practical guides, current platform sources, a curated mobile podcast shelf, a transparent tool map, and a browser-local workspace for turning strategy into a release brief.
 
 ## What is here
 
-- Nine iOS-first, Android-aware guides spanning metadata, creative, testing, App Store Connect, tooling, and retention
+- Apple launch guides for iPhone, iPad, Mac, Universal Purchase, and cross-platform delivery requirements
+- Nine iOS-first, Android-aware ASO guides spanning metadata, creative, testing, App Store Connect, tooling, and retention
 - Current coverage of Apple’s October 2026 Asset Library, product-page headers, search creative, custom product pages, app tags, analytics, and featuring nominations
 - A focused Google Play companion covering listing fields, custom listings, and experiment constraints
 - A practical ASO checklist from product truth through post-launch learning
@@ -40,16 +41,6 @@ npm run verify
 ```
 
 The production build is a static export in `out/`. Verification includes TypeScript, unit tests, the production export, content/SEO/internal-link audits, and Playwright coverage in desktop Chromium and mobile WebKit. On a new machine, install those browsers once with `npx playwright install chromium webkit`.
-
-## After deployment
-
-These owner-only steps cannot be encoded safely in the public site:
-
-- Verify `mobile.productbuilder.net` in Google Search Console and Bing Webmaster Tools, then submit `https://mobile.productbuilder.net/sitemap.xml`.
-- Inspect the homepage, the ASO cornerstone guide, and one guide URL after each substantial release; request re-indexing only for important changes.
-- Confirm the generated social card with LinkedIn Post Inspector and any networks you actively use.
-- Keep GitHub branch protection and required quality checks enabled for `main`. Public repositories cannot fully prevent fork-based pull requests, so close unsolicited promotional PRs without merging or running untrusted changes locally.
-- Review the dated platform claims and podcast activity on a regular cadence. A visible review date is useful only when it reflects a real review.
 
 ## Contributing
 

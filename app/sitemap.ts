@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { guides } from "@/lib/content";
 import { podcasts } from "@/lib/podcasts";
 import { absolute } from "@/lib/site";
+import { applePlatformGuides } from "@/lib/applePlatforms";
 
 export const dynamic = "force-static";
 
@@ -9,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const fixed = [
     "",
     "app-store-optimization",
+    "apple-platforms",
     "aso-checklist",
     "guides",
     "google-play",
@@ -31,5 +33,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: absolute(`/podcasts/${podcast.slug}/`),
     lastModified: new Date(podcast.latestChecked),
   }));
-  return [...pages, ...guidePages, ...podcastPages];
+  const applePlatformPages: MetadataRoute.Sitemap = applePlatformGuides.map((guide) => ({
+    url: absolute(`/apple-platforms/${guide.slug}/`),
+    lastModified: new Date("2026-10-12"),
+  }));
+  return [...pages, ...applePlatformPages, ...guidePages, ...podcastPages];
 }
