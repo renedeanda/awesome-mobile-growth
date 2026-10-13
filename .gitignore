@@ -18,6 +18,7 @@
 .env*
 !.env.example
 /.vercel/
+/public/downloads/
 
 # TypeScript
 *.tsbuildinfo

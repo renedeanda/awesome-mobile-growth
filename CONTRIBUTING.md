@@ -14,6 +14,7 @@ Awesome Mobile Growth is an owner-maintained publication. It is intentionally no
 - Promotional “add my product” pull requests or issues that do not use the nomination form
 - Promotional articles, guest posts, paid placement, affiliate links, or link swaps
 - Bulk AI-generated copy or SEO pages
+- Unsolicited prompt packs, agent skills, generated “teardowns,” or workflow bundles
 - Claims based on invented search volume, conversion, revenue, or testimonials
 
 To propose a correction, use a maintainer contact on the site’s [About page](https://mobile.productbuilder.net/about/) and include the exact claim, page URL, and current primary source. Pull requests are reserved for the maintainer and invited collaborators so unsolicited promotional branches do not create review or CI work.

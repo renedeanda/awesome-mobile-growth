@@ -1,0 +1,24 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { applePlatformGuides, applePlatformsReviewed, platformComparison } from "@/lib/applePlatforms";
+import { absolute, pageMetadata } from "@/lib/site";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Apple App Store launch guides for iPhone, iPad, and Mac",
+  description: "Plan and ship an iPhone, iPad, or Mac App Store launch with current Apple requirements, Universal Purchase guidance, platform-specific creative, review preparation, and ASO decisions.",
+  path: "/apple-platforms/",
+  imagePath: "/apple-platforms/opengraph-image",
+  imageAlt: "Apple App Store launch guides for iPhone, iPad, Mac, and Universal Purchase",
+});
+
+export default function ApplePlatformsPage() {
+  const jsonLd = { "@context": "https://schema.org", "@type": "CollectionPage", name: "Apple App Store launch guides", description: metadata.description, url: absolute("/apple-platforms/"), dateModified: applePlatformsReviewed };
+  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+    <header className="platform-hub-hero"><div><p className="eyebrow">The Apple launch desk · Verified {applePlatformsReviewed}</p><h1>One ecosystem. Three very different launches.</h1><p>Choose the device you are shipping, then work from architecture through App Review. Every requirement links back to Apple; every recommendation is shaped around the way the product is actually used.</p><div className="actions"><Link className="button" href="/apple-platforms/macos-app-store-launch/">Plan a Mac launch</Link><Link className="button-secondary" href="/apple-platforms/app-store-launch-requirements/">Compare requirements</Link></div></div><div className="platform-orbit" aria-label="Apple platform relationship"><span className="platform-orbit__core">One app<br/>record</span><span>iPhone<small>fast proof</small></span><span>iPad<small>large canvas</small></span><span>Mac<small>desktop depth</small></span></div></header>
+    <section className="signal-strip" aria-label="Editorial promises"><span>Official Apple sources</span><span>No invented search volume</span><span>Submission-ready checklists</span></section>
+    <section className="section"><div className="section-heading"><div><p className="eyebrow">Choose your release</p><h2>Start where the risk is highest.</h2></div><p>A launch is not a metadata form. Architecture, entitlement, device behavior, creative, review context, and measurement all shape whether the store promise holds.</p></div><div className="launch-card-grid">{applePlatformGuides.slice(0, 4).map((guide, index) => <Link key={guide.slug} href={`/apple-platforms/${guide.slug}/`}><span>0{index + 1} · {guide.reading}</span><h3>{guide.title}</h3><p>{guide.description}</p><strong>Open the guide →</strong></Link>)}</div></section>
+    <section className="section platform-compare-preview"><div><p className="eyebrow">The mental model</p><h2>Shared identity does not mean identical delivery.</h2><p>iPhone and iPad live inside one iOS platform version. A Mac app is another platform on the same record when you use Universal Purchase. Product-page assets, builds, testing, and customer expectations still diverge.</p><Link className="text-link" href="/apple-platforms/universal-purchase/">Understand Universal Purchase →</Link></div><div className="mini-matrix">{platformComparison.slice(0, 4).map((row) => <div key={row.topic}><strong>{row.topic}</strong><span>{row.iphone}</span><span>{row.ipad}</span><span>{row.mac}</span></div>)}</div></section>
+    <section className="section launch-sequence"><div className="section-heading"><div><p className="eyebrow">A durable launch sequence</p><h2>Make the irreversible decisions first.</h2></div><p>The store page comes after product and account architecture, not before it.</p></div><ol><li><span>01</span><strong>Architecture</strong><p>Choose targets, records, bundle identifiers, commerce, and platform availability.</p></li><li><span>02</span><strong>Product truth</strong><p>Test the real device experience, accessibility, privacy, and purchase continuity.</p></li><li><span>03</span><strong>Store proof</strong><p>Write platform-aware copy and build an honest visual argument.</p></li><li><span>04</span><strong>Delivery</strong><p>Test signed builds, brief App Review, release deliberately, and watch product outcomes.</p></li></ol></section>
+    <section className="section closing-cta"><p className="eyebrow">Launching a Universal Purchase Mac app?</p><h2>Begin with the record—not the screenshots.</h2><div className="actions"><Link className="button" href="/apple-platforms/macos-app-store-launch/">Open the Mac launch guide</Link><Link className="button-secondary" href="/workbench/">Draft the listing</Link></div></section>
+  </>;
+}

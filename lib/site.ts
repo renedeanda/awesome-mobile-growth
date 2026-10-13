@@ -4,7 +4,7 @@ export const site = {
   name: "Awesome Mobile Growth",
   shortName: "AMG",
   origin: "https://mobile.productbuilder.net",
-  description: "A practical, evidence-aware field guide and private-by-default ASO workbench for people building better mobile products.",
+  description: "Evidence-aware App Store Optimization, Apple and Google Play launch guides, free browser-local tools, mobile growth strategy, and an open AI skill.",
   author: "René DeAnda",
   github: "https://github.com/renedeanda/awesome-mobile-growth",
   reviewed: "October 12, 2026",
@@ -20,12 +20,15 @@ const socialImage = {
   type: "image/png",
 };
 
-export function pageMetadata({ title, description, path, type = "website" }: {
+export function pageMetadata({ title, description, path, type = "website", imagePath, imageAlt }: {
   title: string;
   description: string;
   path: string;
   type?: "website" | "article";
+  imagePath?: string;
+  imageAlt?: string;
 }): Metadata {
+  const image = imagePath ? { ...socialImage, url: absolute(imagePath), alt: imageAlt ?? socialImage.alt } : socialImage;
   const socialTitle = `${title} · ${site.name}`;
   return {
     title,
@@ -37,13 +40,13 @@ export function pageMetadata({ title, description, path, type = "website" }: {
       description,
       url: absolute(path),
       siteName: site.name,
-      images: [socialImage],
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: socialTitle,
       description,
-      images: [socialImage.url],
+      images: [image.url],
     },
   };
 }

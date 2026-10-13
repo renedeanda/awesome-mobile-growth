@@ -1,0 +1,4 @@
+import Link from "next/link";
+import { pageMetadata } from "@/lib/site";
+export const metadata=pageMetadata({title:"Open AI skills for app store growth",description:"Portable, inspectable AI workflows for evidence-aware App Store and Google Play work.",path:"/ai/skills/",imagePath:"/ai/opengraph-image",imageAlt:"AI for ASO with evidence and human judgment"});
+export default function SkillsPage(){return <><header className="index-head"><p className="eyebrow">Open workflow</p><h1>AI skills you can inspect before you trust.</h1><p>Each package is public, portable, deliberately bounded, and written to keep product truth and explicit human approval at the center.</p></header><Link className="skill-card" href="/ai/skills/app-store-growth/"><span>Skill 01 · v1.0.0</span><h2>App Store Growth</h2><p>Audit, draft, localize, plan creative, structure experiments, and review launch readiness across Apple and Google Play.</p><strong>Read and install →</strong></Link></>}

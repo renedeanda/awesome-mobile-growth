@@ -6,10 +6,21 @@ Apple introduced an Asset Library in App Store Connect for creative assets that 
 
 ## The current delivery matrix
 
-| Placement | Still image | Video |
-| --- | --- | --- |
-| Product-page header | 21:9 at 3840 × 1646, JPEG/JPG/PNG; or 16:9 at 5244 × 2950, PNG | 21:9 at 3840 × 1646, 5–30 seconds, 30 or 60 fps, MOV/M4V/MP4 |
-| Search results | 3:2, minimum 1920 × 1280 and maximum 3840 × 2560, JPEG/JPG/PNG; or 16:9 at 5244 × 2950, PNG | 3:2, minimum 1920 × 1280 and maximum 3840 × 2560, 5–30 seconds, 30 or 60 fps, MOV/M4V/MP4 |
+<SpecGrid
+  label="Apple creative asset delivery matrix"
+  items={[
+    { label: "Product-page header", values: [
+      { label: "Still image", value: "21:9 at 3840 × 1646, JPEG/JPG/PNG; or 16:9 at 5244 × 2950, PNG" },
+      { label: "Video", value: "21:9 at 3840 × 1646, 5–30 seconds, 30 or 60 fps, MOV/M4V/MP4" },
+    ] },
+    { label: "Search results", values: [
+      { label: "Still image", value: "3:2, 1920 × 1280 through 3840 × 2560, JPEG/JPG/PNG; or 16:9 at 5244 × 2950, PNG" },
+      { label: "Video", value: "3:2, 1920 × 1280 through 3840 × 2560, 5–30 seconds, 30 or 60 fps, MOV/M4V/MP4" },
+    ] },
+  ]}
+/>
+
+Images cannot include alpha channels or transparency. Apple also supports a universal creative asset that can serve both the product-page header and search results; otherwise, upload dedicated assets for each placement. Dedicated assets give you more compositional control, while the universal option reduces production and review overhead.
 
 Search-result videos play muted and people cannot unmute them there; product-page videos start muted but can be unmuted. Both loop continuously. Build the idea so it works silently, then set the poster frame deliberately in Asset Library. Keep essential subjects and text away from edges so the composition survives different placements.
 
@@ -23,7 +34,7 @@ Do not bake a call to action, price, ranking, award, or unsupported superlative 
 
 Apple still allows one to ten screenshots. Screenshot files should be JPEG or PNG with no alpha channel. Use them to explain the product in sequence; use the new header or search asset to establish a memorable premise. A gorgeous hero that says nothing should not displace a screenshot that proves the app’s value.
 
-The new iPhone Duo display class also changes capture planning. Apple says any apps or games submitted will require iPhone Duo screenshots beginning in April 2027. That is a future requirement, not a current universal upload mandate. Keep the editable source and device-safe layout ready, and use Xcode 27.1 when preparing an optimized build for the new device.
+The new iPhone Duo display class also changes capture planning. Apple says apps and games built with the iOS 27.1 SDK or later will require iPhone Duo screenshots beginning in April 2027. That is a future, build-dependent requirement—not a current universal upload mandate. Keep the editable source and device-safe layout ready, and use Xcode 27.1 when preparing an optimized build for the new device.
 
 ## A practical review pass
 
@@ -37,7 +48,11 @@ The new iPhone Duo display class also changes capture planning. Apple says any a
 
 ### Primary sources
 
-- [Apple: Manage App Store assets](https://developer.apple.com/help/app-store-connect/manage-app-information/manage-your-app-store-assets)
-- [Apple: Creative asset specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/creative-assets-specifications)
-- [Apple: Screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications/)
-- [Apple: Upcoming requirements](https://developer.apple.com/news/upcoming-requirements/)
+<SourceList items={[
+  { label: "Apple: Manage App Store assets", href: "https://developer.apple.com/help/app-store-connect/manage-app-information/manage-your-app-store-assets" },
+  { label: "Apple: Creative asset specifications", href: "https://developer.apple.com/help/app-store-connect/reference/app-information/creative-assets-specifications" },
+  { label: "Apple: Screenshot specifications", href: "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications/" },
+  { label: "Apple: Upcoming requirements", href: "https://developer.apple.com/news/upcoming-requirements/" },
+]}/>
+
+<RevisionHistory items={[{ date: "2026-10-12", note: "Added Apple’s Asset Library, product-page header, search-result creative, and iPhone Duo planning guidance." }]}/>
