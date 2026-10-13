@@ -43,6 +43,7 @@ test("Universal Purchase guide makes the irreversible decisions explicit", async
 
 test("podcast shelf filters and links to editorial pages", async ({ page }) => {
   await page.goto("/podcasts/");
+  await expect(page.locator(".podcast-explorer")).toHaveAttribute("data-ready", "true");
   await page.getByLabel("Search").fill("subscription");
   await expect(page.getByRole("link", { name: "Sub Club" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Launched" })).toBeHidden();
