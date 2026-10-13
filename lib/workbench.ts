@@ -1,4 +1,5 @@
-export const LIMITS = { appleName: 30, appleSubtitle: 30, applePromotional: 170, appleKeywords: 100, googleName: 30, googleShort: 80, googleFull: 4000 } as const;
+import { LIMITS } from "./platform.ts";
+export { LIMITS } from "./platform.ts";
 export type ListingFields = Record<keyof typeof LIMITS | "appleDescription" | "appleWhatsNew", string>;
 export const emptyFields: ListingFields = { appleName: "", appleSubtitle: "", applePromotional: "", appleKeywords: "", appleDescription: "", appleWhatsNew: "", googleName: "", googleShort: "", googleFull: "" };
 export type WorkbenchData = { version: 1; updatedAt: string; fields: ListingFields; keywordMap: string; screenshotPlan: string; experimentLog: string; launchRetro: string };

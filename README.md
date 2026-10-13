@@ -41,6 +41,16 @@ npm run verify
 
 The production build is a static export in `out/`. Verification includes TypeScript, unit tests, the production export, content/SEO/internal-link audits, and Playwright coverage in desktop Chromium and mobile WebKit. On a new machine, install those browsers once with `npx playwright install chromium webkit`.
 
+## After deployment
+
+These owner-only steps cannot be encoded safely in the public site:
+
+- Verify `mobile.productbuilder.net` in Google Search Console and Bing Webmaster Tools, then submit `https://mobile.productbuilder.net/sitemap.xml`.
+- Inspect the homepage, the ASO cornerstone guide, and one guide URL after each substantial release; request re-indexing only for important changes.
+- Confirm the generated social card with LinkedIn Post Inspector and any networks you actively use.
+- Keep GitHub branch protection and required quality checks enabled for `main`. Public repositories cannot fully prevent fork-based pull requests, so close unsolicited promotional PRs without merging or running untrusted changes locally.
+- Review the dated platform claims and podcast activity on a regular cadence. A visible review date is useful only when it reflects a real review.
+
 ## Contributing
 
 Corrections and resource nominations should follow the contribution policy. A good correction identifies the exact sentence, explains what changed, and links directly to current Apple or Google documentation. Pull requests are reserved for the maintainer and invited collaborators; please do not open “add my tool” pull requests.

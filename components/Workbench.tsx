@@ -23,7 +23,21 @@ export function Workbench() {
   const [hydrated, setHydrated] = useState(false);
   const [notice, setNotice] = useState("");
   const [tab, setTab] = useState<"apple" | "google" | "planning">("apple");
-  useEffect(() => { const raw = localStorage.getItem(STORAGE); if (raw) { try { setData(JSON.parse(raw)); setSaveLocal(true); } catch {} } setHydrated(true); }, []);
+  useEffect(() => {
+    const raw = localStorage.getItem(STORAGE);
+    if (raw) { try { setData(JSON.parse(raw)); setSaveLocal(true); } catch {} }
+    const params = new URLSearchParams(window.location.search);
+    const platform = params.get("platform");
+    const template = params.get("template");
+    if (template === "screenshots" || template === "experiment") {
+      setTab("planning");
+      setNotice(template === "screenshots" ? "Screenshot planning is ready." : "The experiment log is ready.");
+    } else if (platform === "google-play") {
+      setTab("google");
+      setNotice("Google Play metadata is ready.");
+    }
+    setHydrated(true);
+  }, []);
   useEffect(() => { if (saveLocal) localStorage.setItem(STORAGE, JSON.stringify({ ...data, updatedAt: new Date().toISOString() })); }, [data, saveLocal]);
   useEffect(() => { const warn = (event: BeforeUnloadEvent) => { if (!saveLocal && Object.values(data.fields).some(Boolean)) event.preventDefault(); }; addEventListener("beforeunload", warn); return () => removeEventListener("beforeunload", warn); }, [data, saveLocal]);
   const updateField = (key: keyof WorkbenchData["fields"], value: string) => setData(d => ({ ...d, fields: { ...d.fields, [key]: value }, updatedAt: new Date().toISOString() }));
