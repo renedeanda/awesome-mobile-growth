@@ -7,7 +7,7 @@ import "./globals.css";
 
 const image = {
   url: absolute("/opengraph-image"), width: 1200, height: 630,
-  alt: `${site.name} — a practical, evidence-aware ASO field guide`, type: "image/png",
+  alt: `${site.name}: App Store and Google Play guides`, type: "image/png",
 };
 
 export const viewport: Viewport = {
@@ -21,7 +21,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.origin),
-  title: { default: `${site.name} — ASO field guide & workbench`, template: `%s · ${site.name}` },
+  title: { default: `${site.name}: App Store and Google Play launch and ASO guides`, template: `%s · ${site.name}` },
   description: site.description,
   authors: [{ name: site.author, url: "https://productbuilder.net" }],
   creator: site.author,

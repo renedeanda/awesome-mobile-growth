@@ -1,0 +1,72 @@
+## iPad shares the iOS listing with iPhone
+
+You do not add iPad as a separate platform in App Store Connect. iPhone and iPad share one iOS platform version, so they share the app name, subtitle, description, keywords and promotional text. What differs is the screenshots and previews, and the bar the product has to clear.
+
+If your app runs on iPad, Apple requires at least one screenshot in the **iPad 13-inch display** set: 2064 × 2752 or 2048 × 2732 pixels in portrait. Smaller iPads fall back to scaled 13-inch screenshots, so one good set covers every model.
+
+<AppleScreenshotTable devices={["iPad"]} />
+
+Because the text is shared, write the description so it reads well on both devices. Put iPad-specific value in the iPad screenshots, where it does not crowd the iPhone story.
+
+## Decide what iPad does better
+
+Before you design anything, write down the jobs that are genuinely easier on a big screen. Common ones:
+
+- **Overview:** seeing a whole week, board or document at once.
+- **Comparison:** two items side by side with Split View.
+- **Creation:** drawing with Apple Pencil, editing with a keyboard.
+- **Presentation:** showing something to another person across a table.
+
+If you cannot name one, your iPad screenshots will be blown-up iPhone screens, and people will notice. Ship a better iPad layout first, then market it.
+
+## Design screenshots for the big canvas
+
+<BeforeAfter
+  before={<p>An iPhone screenshot centered on a white 13-inch canvas with the caption "Now on iPad".</p>}
+  after={<p>The full iPad layout in landscape: sidebar, list and detail view all visible, captioned "See every project at once".</p>}
+  note="The second frame proves the iPad version was designed for iPad. The first suggests it wasn't."
+/>
+
+A few rules that hold up:
+
+1. **Show the whole layout.** Sidebar, content and inspector, not one floating panel.
+2. **Use landscape when the app is better in landscape.** Most productivity apps are.
+3. **Show the input.** A visible keyboard shortcut, Pencil stroke or pointer hover is proof.
+4. **Check text at real size.** A 2752-pixel source still becomes a small card on the store.
+5. **Leave room for translation.** German and French captions often run 20–30% longer than English.
+
+## Test it like an iPad owner
+
+Run these on a physical iPad with the signed build:
+
+1. Resize the window through every supported size, including Stage Manager if you support it.
+2. Rotate mid-task and check that the selection, scroll position and typed text survive.
+3. Use a hardware keyboard: tab order, Return, Escape and the shortcuts menu (hold ⌘).
+4. Use a trackpad or mouse: hover states, right-click menus, scrolling.
+5. Run beside another app in Split View, then drag content between them if you support it.
+6. Complete your main tasks with VoiceOver and larger text before you declare accessibility support.
+
+Accessibility Nutrition Labels are declared per device, so answer them for iPad based on what works on iPad.
+
+## Submit and measure iPad separately
+
+You submit iPad as part of the iOS version. In review notes, mention anything iPad-only: Pencil features, keyboard shortcuts, or a layout that appears only in landscape.
+
+After launch, filter App Analytics by device to compare iPad conversion and retention with iPhone. A useful question is "Did iPad visitors become iPad users?" If iPad conversion is high but retention is low, the screenshots promise a desktop-class app the iPad version does not deliver yet.
+
+## Ask AI to help
+
+<AskAI
+  prompt={`My app runs on iPhone and iPad. On iPad it adds: [list real iPad-only features, e.g. sidebar, split view, keyboard shortcuts, Pencil].
+Suggest a 5-frame iPad screenshot sequence. For each frame give: the one claim, the exact screen and state to capture, and a caption under 6 words. Only use features from my list.`}
+  checks={["Remove any frame that shows a feature not in the shipped build.", "Capture the real screens yourself; don't use generated UI.", "Read every caption at thumbnail size on an actual iPad."]}
+/>
+
+<DoToday>
+
+1. Write down the one job your app does better on iPad.
+2. Capture that screen in landscape at 2752 × 2064 with realistic data.
+3. Spend ten minutes with a hardware keyboard and fix the first thing that feels wrong.
+4. Add any iPad-only features to your review notes.
+
+</DoToday>

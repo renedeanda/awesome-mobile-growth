@@ -1,0 +1,87 @@
+## Write the decision before the test
+
+A store test is worth running only if its result will change what you do. Before you design anything, write one sentence:
+
+> If the treatment wins, we will **[do this]**. If it loses or is inconclusive, we will **[do that]**.
+
+Then write the hypothesis in a form that can be wrong:
+
+<Example title="A testable hypothesis">
+<p>People who search for "habit tracker" don't realize the app takes two minutes a day. Leading with "Build routines in 2 minutes a day" in screenshot 1 will raise conversion from search, because it answers the time objection first.</p>
+</Example>
+
+Change one idea per test. If the treatment has a new icon, new screenshots and a new caption style, a win teaches you nothing you can reuse.
+
+## Test on the App Store with Product Page Optimization
+
+Product Page Optimization (PPO) compares up to **three treatments** against your original product page.
+
+| Rule | Detail |
+| --- | --- |
+| What you can change | App icon, screenshots and app previews |
+| Treatments | Up to 3 against the original |
+| Duration | Up to 90 days, or until you stop it |
+| Tests at once | One |
+| Traffic | You choose the share; e.g. 40% split across two treatments gives each 20% |
+| Who sees it | Randomly selected people on iOS and iPadOS 15 or later |
+| Localization | All languages or a subset you choose |
+| Review | New assets need App Review; tests without icon changes can be submitted without a new app version |
+
+Alternate icons must be included in the binary of your published app before you can test them. Once a test starts you can't edit it.
+
+**Reading results.** App Analytics shows impressions, conversion rate, improvement and confidence for each treatment. Apple recommends waiting until a treatment is shown as performing better or worse than the original with **at least 90% confidence** before you apply it. Applying a treatment ends the test.
+
+## Test on Google Play with store listing experiments
+
+Google Play offers two kinds of experiment:
+
+- **Default graphics experiments** test the icon, feature graphic, screenshots and promo video in your default language. You can run one at a time.
+- **Localized experiments** can also test the short and full descriptions, in up to five languages at once.
+
+People who see your listing in a language with its own localized graphics are excluded from default graphics experiments. Pick the experiment type that matches where your traffic comes from.
+
+Google Play's listing reports changed in mid-2026 to count unique users who tap **Install**, **Open** or **Pre-register**. If you compare experiments across that date, compare like with like.
+
+## Keep the result honest
+
+Things that quietly break a test:
+
+- **Traffic changes during the test:** featuring, a press mention, a paid campaign or a holiday.
+- **App changes during the test:** a new version, a price change or an outage.
+- **Stopping early** because the first week looks good. Early results swing.
+- **Too little traffic.** If your page gets a few hundred visitors a week, a test may never reach confidence. Spend that effort on a bigger change instead.
+
+Write these down as they happen. An inconclusive result is still a result: it tells you the change wasn't big enough to matter, or that you don't have enough traffic to test small ideas.
+
+## Check what happened after the install
+
+A treatment that raises conversion can attract people who don't stay. Before you apply a winner permanently, compare day-1 and day-7 retention for installs during the test window. Apple's App Analytics shows retention by source. For Google Play, and for anything finer, use your own product analytics and segment by install date or, where you can, by treatment.
+
+## Keep a test log
+
+After every test, record six things in one place:
+
+1. The decision and hypothesis.
+2. What changed, with screenshots of the original and treatments.
+3. Dates, traffic share and languages.
+4. Anything else that happened during the test.
+5. The result and confidence.
+6. What you did next.
+
+<WorkbenchLink platform="apple" template="experiment">Write your next test brief</WorkbenchLink>
+
+## Ask AI to help
+
+<AskAI
+  prompt={`I want to test my App Store screenshots. Current first screenshot caption: "[caption]". What reviews say people like most: [list]. What reviews say confused them: [list].
+Write 3 hypotheses in this form: "People who [situation] don't [know or believe X]. Changing [one thing] to [specific change] will raise conversion because [reason]." Each must change only one thing.`}
+  checks={["Pick the hypothesis tied to the most common review complaint.", "Make sure the change is visible at thumbnail size.", "Write the decision you'll make for each outcome before starting."]}
+/>
+
+<DoToday>
+
+1. Write the decision sentence for your next test.
+2. Check your weekly product page views; if they're under a few thousand, test a big change, not a small one.
+3. Start a test log and fill in your last listing change from memory.
+
+</DoToday>

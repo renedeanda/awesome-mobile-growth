@@ -1,0 +1,45 @@
+## Continue the promise from the store page
+
+People install because of a promise on the store page. The first screens should deliver that promise, not introduce a different app.
+
+<BeforeAfter
+  before={<p>Store page: "Build routines in 2 minutes a day". First launch: four swipeable slides about the company, then a sign-up form, then a notifications prompt, then an empty home screen.</p>}
+  after={<p>First launch: "Pick your first habit" with five suggestions. One tap adds it and shows today's checklist. Sign-up is offered after the first check-off, to back it up.</p>}
+  note="Example app. The second version gets someone to the promised outcome in under a minute and asks for an account once there's something worth saving."
+/>
+
+Apple's Human Interface Guidelines recommend letting people use the app right away, keeping onboarding short, and deferring sign-in until it's needed. Treat that as the default.
+
+## Define your first useful moment
+
+Pick the one action that shows a new user got value: the first habit checked, the first note synced, the first photo edited. This is your **activation** event.
+
+Choose it with data if you can: compare users who were still active after 30 days with those who weren't, and find the first-session action the stayers had in common. Then measure the share of new users who reach it in their first day or two, and remove every step between install and that action that isn't required.
+
+## Ask for each thing at the moment it makes sense
+
+**Accounts.** If the app works without one, let people try it first. Offer an account when there's something to protect ("Back up your 5 habits"). On iOS, if you offer third-party sign-in (Google, Facebook), Apple's guidelines require you to also offer an equivalent login option with privacy protections, such as Sign in with Apple.
+
+**Permissions.** Ask in context, right before the feature that needs it, and explain why first. A notification request right after someone sets their first reminder makes sense to them; the same request on the first screen doesn't. On iOS you get one system prompt per permission; if someone declines, they have to change it in Settings. On Android 13 and later, notifications also need a runtime permission.
+
+**Payment.** Show the paywall after people understand the value, or offer a trial that starts when they're ready. A paywall on the first screen filters out everyone still deciding.
+
+**Preferences.** Ask only what changes the first experience. Everything else can wait for Settings.
+
+## Carry context from the ad or link
+
+If someone arrives from a custom store page, an ad or a shared link, use that context: open the matching screen with a deep link, or adjust the first question. On iOS 18 and later, custom product pages can include a deep link. On Android, App Links with a campaign parameter do the same job.
+
+## Measure onboarding as a funnel
+
+Track each step as an event: app open, each onboarding screen, account created, permission responses, activation. Look at where people drop off. A step that loses 20% of people needs a reason to exist.
+
+Then test changes the same way you'd test the store page: one change at a time, with day-7 retention as the measure, not slide completion.
+
+<DoToday>
+
+1. Install your app fresh and count the taps to the first useful moment.
+2. Remove or defer one step that isn't required to get there.
+3. Move your notification request to right after the feature that uses it.
+
+</DoToday>

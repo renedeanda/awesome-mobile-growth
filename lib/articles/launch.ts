@@ -1,0 +1,77 @@
+import { apple, google } from "./links.ts";
+import type { ArticleSource } from "./types.ts";
+
+const reviewed = "2026-10-16";
+
+export const launchArticles: ArticleSource[] = [
+  {
+    section: "launch", slug: "iphone", label: "iPhone",
+    title: "Launch an iPhone app on the App Store",
+    seoTitle: "How to launch an iPhone app on the App Store (2026 guide)",
+    description: "Set up App Store Connect, write the listing, capture the required screenshots, pass App Review and read your first two weeks of data.",
+    answer: "Create the app record two weeks early, write the subtitle before anything else, capture at least one screenshot at 1206 × 2622 (or 1179 × 2556), test the signed build on real phones, and give App Review a working demo account. Apple reviews most submissions within 48 hours.",
+    platforms: ["apple"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
+    sources: [apple.appInformation, apple.versionInformation, apple.screenshots, apple.search, apple.testflight, apple.appReview, apple.submit, apple.publishing, apple.privacy],
+    related: ["/launch/ipad/", "/store-page/metadata/", "/store-page/screenshots/", "/launch/checklist/"],
+  },
+  {
+    section: "launch", slug: "ipad", label: "iPad",
+    title: "Launch an iPad app that feels made for iPad",
+    seoTitle: "iPad App Store launch guide: screenshots, listing and testing",
+    description: "iPad shares the iOS listing with iPhone. Here is what still has to be iPad-specific: 13-inch screenshots, big-screen proof, and keyboard and multitasking tests.",
+    answer: "iPad isn't a separate platform in App Store Connect; it shares the iOS name, subtitle and description with iPhone. If your app runs on iPad, you need at least one 13-inch screenshot (2064 × 2752 or 2048 × 2732), and those screenshots should show a layout designed for the big screen.",
+    platforms: ["apple"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
+    sources: [apple.appInformation, apple.screenshots, apple.devices, apple.accessibility, apple.testflight],
+    related: ["/launch/iphone/", "/store-page/screenshots/", "/launch/requirements/"],
+  },
+  {
+    section: "launch", slug: "mac", label: "Mac App Store",
+    title: "Launch a Mac app on the Mac App Store",
+    seoTitle: "How to launch a Mac app on the Mac App Store",
+    description: "Choose native, Catalyst or iOS-on-Mac, add macOS to your existing app record, meet the sandbox and screenshot rules, and submit the Mac version.",
+    answer: "Decide how the app reaches the Mac first: native, Mac Catalyst, or your unmodified iOS app on Apple silicon. For one purchase across devices, add macOS to your existing iOS record. Mac screenshots must be 16:10 at 1280 × 800, 1440 × 900, 2560 × 1600 or 2880 × 1800, and App Sandbox is required.",
+    platforms: ["apple"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
+    sources: [apple.addPlatforms, apple.universalPurchase, apple.iosOnMac, apple.screenshots, apple.sandbox, apple.testflight, apple.submit, apple.accessibility],
+    related: ["/launch/universal-purchase/", "/launch/requirements/", "/store-page/screenshots/"],
+  },
+  {
+    section: "launch", slug: "google-play", label: "Google Play",
+    title: "Launch an Android app on Google Play",
+    seoTitle: "Google Play launch checklist for 2026: testing, target API and listing",
+    description: "The two gates that set your Google Play launch date, the order to fill in Play Console, listing limits, graphic sizes, testing tracks and staged rollouts.",
+    answer: "Check two gates first: new personal developer accounts need a closed test with at least 12 testers for 14 days before Production unlocks, and from 31 August 2026 apps must target Android 16 (API 36). Then complete the app content declarations, write a policy-safe listing, and roll out to production in stages.",
+    platforms: ["google-play"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
+    sources: [google.listing, google.testing, google.targetSdk, google.dataSafety, google.metadataPolicy, google.graphics, google.release, google.statistics],
+    related: ["/store-page/metadata/", "/store-page/screenshots/", "/store-page/testing/", "/launch/checklist/"],
+  },
+  {
+    section: "launch", slug: "universal-purchase", label: "Universal Purchase",
+    title: "Universal Purchase: one purchase across iPhone, iPad and Mac",
+    seoTitle: "Apple Universal Purchase explained: what's shared and what's permanent",
+    description: "How one App Store Connect record serves iPhone, iPad and Mac, which fields are shared, and the three decisions you can't undo.",
+    answer: "Universal Purchase uses one app record and one bundle ID for related iPhone, iPad and Mac apps, so customers buy once. Each platform still ships its own build and its own screenshots and description. Add platforms to your existing record: Apple won't merge separate records, and once two platforms are approved you can't remove one.",
+    platforms: ["apple"], evidence: ["official"], published: "2026-10-12", reviewed,
+    sources: [apple.addPlatforms, apple.universalPurchase, apple.purchases, apple.iosOnMac],
+    related: ["/launch/mac/", "/launch/requirements/"],
+  },
+  {
+    section: "launch", slug: "requirements", label: "Requirements",
+    title: "App Store launch requirements by platform",
+    seoTitle: "App Store requirements for iPhone, iPad and Mac: fields, sizes and limits",
+    description: "One reference for iPhone, iPad and Mac: which fields are shared, every text limit, required screenshot sizes, preview rules and how submissions work.",
+    answer: "iPhone and iPad share one iOS version and listing; Mac is a separate macOS version on the same record. The name and subtitle are 30 characters each, keywords 100 bytes, promotional text 170 characters and the description 4,000. Required screenshots are iPhone Dynamic Island (medium display), iPad 13-inch if you support iPad, and a 16:10 Mac size for Mac.",
+    platforms: ["apple"], evidence: ["official"], published: "2026-10-12", reviewed,
+    sources: [apple.appInformation, apple.versionInformation, apple.screenshots, apple.creativeAssets, apple.releaseNotes, apple.addPlatforms, apple.reviewOverview],
+    related: ["/launch/iphone/", "/launch/mac/", "/store-page/creative-assets/"],
+  },
+  {
+    section: "launch", slug: "checklist", label: "Launch checklist",
+    title: "App launch checklist for the App Store and Google Play",
+    seoTitle: "App launch checklist (App Store and Google Play) you can tick off",
+    description: "An interactive launch checklist from three weeks out to two weeks after release, for both stores. Your progress is saved in your browser.",
+    answer: "Start three weeks before launch: set up the store records and agreements, answer the privacy and rating questionnaires, write the subtitle or short description first, capture screenshots from the release build, test purchases on real devices, then release in stages and record a baseline.",
+    platforms: ["apple", "google-play"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
+    sources: [apple.submit, apple.screenshots, google.listing, google.testing],
+    related: ["/launch/iphone/", "/launch/google-play/", "/store-page/metadata/"],
+  },
+];

@@ -1,28 +1,27 @@
 # Awesome Mobile Growth
 
-**Evidence-aware App Store Optimization, Apple and Google Play launch guidance, private browser tools, and open AI workflows for people building better mobile products.**
+**Practical, sourced guides for launching and growing apps on the App Store and Google Play, with free private tools and an open AI agent skill.**
 
-[Visit the field guide](https://mobile.productbuilder.net) · [Apple launch desk](https://mobile.productbuilder.net/apple-platforms/) · [Google Play desk](https://mobile.productbuilder.net/google-play/) · [Free tools](https://mobile.productbuilder.net/tools/) · [Open AI skill](https://mobile.productbuilder.net/ai/skills/app-store-growth/)
+[Visit the site](https://mobile.productbuilder.net) · [Launch](https://mobile.productbuilder.net/launch/) · [Store page](https://mobile.productbuilder.net/store-page/) · [Grow](https://mobile.productbuilder.net/grow/) · [Tools](https://mobile.productbuilder.net/tools/) · [Changes](https://mobile.productbuilder.net/changes/)
 
-Awesome Mobile Growth began as a link collection. It is now a maintained field manual: practical guides, current platform sources, a curated mobile podcast shelf, a transparent tool map, and a browser-local workspace for turning strategy into a release brief.
+Awesome Mobile Growth began as a link collection. It is now a maintained set of guides, specs and tools for people shipping mobile apps.
 
 ## What is here
 
-- Apple launch guides for iPhone, iPad, Mac, Universal Purchase, and cross-platform delivery requirements
-- Platform-specific Apple and Google Play guides spanning launch, metadata, creative, localization, testing, and product outcomes
-- Current coverage of Apple’s October 2026 Asset Library, product-page headers, search creative, custom product pages, app tags, analytics, and featuring nominations
-- An App Growth Loop connecting acquisition and store conversion to activation, monetization, retention, and advocacy
-- A practical ASO checklist from product truth through post-launch learning
-- Local-only keyword, metadata, screenshot-reference, experiment, and working-brief tools
-- A public App Store Growth AI skill with focused references, a deterministic validator, and strict evidence and permission boundaries
-- An editorially selected podcast guide and a maintained resource shelf with retired-product transitions
-- Explicit evidence labels, primary-source links, and visible review dates
+- **Launch:** guides for iPhone, iPad, Mac and Google Play, Universal Purchase, a requirements reference and an interactive launch checklist
+- **Store page:** metadata, keywords, screenshots, Apple's header and search assets, localization, testing and custom pages
+- **Grow:** the growth loop, onboarding, subscriptions, ratings, web-to-app, paid and organic, App Store Connect and choosing tools
+- **Changes:** dated App Store and Google Play changes, each with actions and official sources (also in the RSS feed)
+- **Learn:** an App Store Connect metrics glossary, AI for ASO, a podcast list and an independent resource list
+- **Tools:** browser-local keyword, metadata, screenshot-size and experiment tools, a workbench, and the open App Store Growth skill for AI agents
+
+Every guide links to Apple's and Google's own documentation, shows when its sources were last checked, and ends with a short "Do this today" list.
 
 ## Editorial policy
 
 This is an owner-maintained publication, not an open promotional directory. Unsolicited listings, paid placements, affiliate rankings, link swaps, and promotional pull requests are not accepted. Focused factual corrections with current primary sources are welcome. Resource nominations may be considered but never create an obligation to list a product.
 
-Official Apple and Google documentation outranks industry folklore. Observations, experiments, hypotheses, and opinions are labeled. The project does not invent search volume, conversion, revenue, or platform behavior.
+Apple's and Google's own documentation comes first. Observations, experiments and opinions are labeled. The project does not invent search volume, conversion, revenue or platform behavior. Copy follows the voice rules in the editorial policy, and the build fails on banned phrases.
 
 Read [the full editorial policy](docs/EDITORIAL.md).
 
@@ -41,7 +40,9 @@ Run the complete verification suite:
 npm run verify
 ```
 
-The production build is a static export in `out/`. Verification includes TypeScript, unit tests, the production export, content/SEO/internal-link/skill-package audits, and Playwright coverage in desktop Chromium and mobile WebKit. On a new machine, install those browsers once with `npx playwright install chromium webkit`.
+The production build is a static export in `out/`. Verification includes TypeScript, unit tests, the production export, content (voice, read times), SEO, internal-link and redirect, and skill-package audits, and Playwright coverage in desktop Chromium and mobile WebKit. `npm run audit:external` checks every external link and runs in CI.
+
+Guides are MDX files in `content/<section>/`, registered in `lib/articles/`. Create one with `npm run content:new -- --section store-page --slug your-slug`. On a new machine, install those browsers once with `npx playwright install chromium webkit`.
 
 ## Contributing
 

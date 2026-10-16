@@ -1,8 +1,604 @@
 {
   "redirects": [
-    { "source": "/growth/mobile-app-growth-strategy/", "destination": "/growth/app-growth-loop/", "permanent": true },
-    { "source": "/growth/acquisition-to-retention/", "destination": "/growth/app-growth-loop/", "permanent": true },
-    { "source": "/growth/app-referral-loop/", "destination": "/guides/ratings-retention/", "permanent": true },
-    { "source": "/ai/guides/verify-ai-generated-aso/", "destination": "/ai/guides/aso-with-ai/", "permanent": true }
+    {
+      "source": "/apple-platforms/",
+      "destination": "/launch/",
+      "permanent": true
+    },
+    {
+      "source": "/apple-platforms",
+      "destination": "/launch/",
+      "permanent": true
+    },
+    {
+      "source": "/apple-platforms/iphone-app-store-launch/",
+      "destination": "/launch/iphone/",
+      "permanent": true
+    },
+    {
+      "source": "/apple-platforms/iphone-app-store-launch",
+      "destination": "/launch/iphone/",
+      "permanent": true
+    },
+    {
+      "source": "/apple-platforms/ipad-app-store-launch/",
+      "destination": "/launch/ipad/",
+      "permanent": true
+    },
+    {
+      "source": "/apple-platforms/ipad-app-store-launch",
+      "destination": "/launch/ipad/",
+      "permanent": true
+    },
+    {
+      "source": "/apple-platforms/macos-app-store-launch/",
+      "destination": "/launch/mac/",
+      "permanent": true
+    },
+    {
+      "source": "/apple-platforms/macos-app-store-launch",
+      "destination": "/launch/mac/",
+      "permanent": true
+    },
+    {
+      "source": "/apple-platforms/universal-purchase/",
+      "destination": "/launch/universal-purchase/",
+      "permanent": true
+    },
+    {
+      "source": "/apple-platforms/universal-purchase",
+      "destination": "/launch/universal-purchase/",
+      "permanent": true
+    },
+    {
+      "source": "/apple-platforms/app-store-launch-requirements/",
+      "destination": "/launch/requirements/",
+      "permanent": true
+    },
+    {
+      "source": "/apple-platforms/app-store-launch-requirements",
+      "destination": "/launch/requirements/",
+      "permanent": true
+    },
+    {
+      "source": "/aso-checklist/",
+      "destination": "/launch/checklist/",
+      "permanent": true
+    },
+    {
+      "source": "/aso-checklist",
+      "destination": "/launch/checklist/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/",
+      "destination": "/launch/google-play/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play",
+      "destination": "/launch/google-play/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/android-app-launch-checklist/",
+      "destination": "/launch/google-play/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/android-app-launch-checklist",
+      "destination": "/launch/google-play/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/store-listing-metadata/",
+      "destination": "/store-page/metadata/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/store-listing-metadata",
+      "destination": "/store-page/metadata/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/screenshot-sizes-and-creative/",
+      "destination": "/store-page/screenshots/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/screenshot-sizes-and-creative",
+      "destination": "/store-page/screenshots/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/custom-store-listings/",
+      "destination": "/store-page/custom-pages/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/custom-store-listings",
+      "destination": "/store-page/custom-pages/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/store-listing-experiments/",
+      "destination": "/store-page/testing/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/store-listing-experiments",
+      "destination": "/store-page/testing/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/localization/",
+      "destination": "/store-page/localization/",
+      "permanent": true
+    },
+    {
+      "source": "/google-play/localization",
+      "destination": "/store-page/localization/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/",
+      "destination": "/store-page/",
+      "permanent": true
+    },
+    {
+      "source": "/guides",
+      "destination": "/store-page/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/metadata/",
+      "destination": "/store-page/metadata/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/metadata",
+      "destination": "/store-page/metadata/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/keyword-research/",
+      "destination": "/store-page/keywords/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/keyword-research",
+      "destination": "/store-page/keywords/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/localization/",
+      "destination": "/store-page/localization/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/localization",
+      "destination": "/store-page/localization/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/screenshots/",
+      "destination": "/store-page/screenshots/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/screenshots",
+      "destination": "/store-page/screenshots/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/app-store-creative-assets/",
+      "destination": "/store-page/creative-assets/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/app-store-creative-assets",
+      "destination": "/store-page/creative-assets/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/product-page-testing/",
+      "destination": "/store-page/testing/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/product-page-testing",
+      "destination": "/store-page/testing/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/app-store-connect-growth/",
+      "destination": "/grow/app-store-connect/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/app-store-connect-growth",
+      "destination": "/grow/app-store-connect/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/mobile-growth-stack/",
+      "destination": "/grow/tool-stack/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/mobile-growth-stack",
+      "destination": "/grow/tool-stack/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/ratings-retention/",
+      "destination": "/grow/ratings-reviews/",
+      "permanent": true
+    },
+    {
+      "source": "/guides/ratings-retention",
+      "destination": "/grow/ratings-reviews/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/",
+      "destination": "/grow/",
+      "permanent": true
+    },
+    {
+      "source": "/growth",
+      "destination": "/grow/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/app-growth-loop/",
+      "destination": "/grow/growth-loop/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/app-growth-loop",
+      "destination": "/grow/growth-loop/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/web-to-app-funnels/",
+      "destination": "/grow/web-to-app/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/web-to-app-funnels",
+      "destination": "/grow/web-to-app/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/aso-and-paid-acquisition/",
+      "destination": "/grow/paid-and-organic/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/aso-and-paid-acquisition",
+      "destination": "/grow/paid-and-organic/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/subscription-funnel/",
+      "destination": "/grow/subscriptions/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/subscription-funnel",
+      "destination": "/grow/subscriptions/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/mobile-app-onboarding/",
+      "destination": "/grow/onboarding/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/mobile-app-onboarding",
+      "destination": "/grow/onboarding/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/mobile-app-growth-strategy/",
+      "destination": "/grow/growth-loop/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/mobile-app-growth-strategy",
+      "destination": "/grow/growth-loop/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/acquisition-to-retention/",
+      "destination": "/grow/growth-loop/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/acquisition-to-retention",
+      "destination": "/grow/growth-loop/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/app-referral-loop/",
+      "destination": "/grow/ratings-reviews/",
+      "permanent": true
+    },
+    {
+      "source": "/growth/app-referral-loop",
+      "destination": "/grow/ratings-reviews/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/",
+      "destination": "/learn/metrics/",
+      "permanent": true
+    },
+    {
+      "source": "/reference",
+      "destination": "/learn/metrics/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/keyword-field/",
+      "destination": "/store-page/keywords/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/keyword-field",
+      "destination": "/store-page/keywords/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/subtitle/",
+      "destination": "/store-page/metadata/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/subtitle",
+      "destination": "/store-page/metadata/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/promotional-text/",
+      "destination": "/store-page/metadata/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/promotional-text",
+      "destination": "/store-page/metadata/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/product-page-optimization/",
+      "destination": "/store-page/testing/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/product-page-optimization",
+      "destination": "/store-page/testing/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/custom-product-pages/",
+      "destination": "/store-page/custom-pages/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/custom-product-pages",
+      "destination": "/store-page/custom-pages/",
+      "permanent": true
+    },
+    {
+      "source": "/updates/",
+      "destination": "/changes/",
+      "permanent": true
+    },
+    {
+      "source": "/updates",
+      "destination": "/changes/",
+      "permanent": true
+    },
+    {
+      "source": "/updates/october-2026-app-store-creative/",
+      "destination": "/changes/october-2026-app-store-creative/",
+      "permanent": true
+    },
+    {
+      "source": "/updates/october-2026-app-store-creative",
+      "destination": "/changes/october-2026-app-store-creative/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/",
+      "destination": "/learn/ai-for-aso/",
+      "permanent": true
+    },
+    {
+      "source": "/ai",
+      "destination": "/learn/ai-for-aso/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/aso-with-ai/",
+      "destination": "/learn/ai-for-aso/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/aso-with-ai",
+      "destination": "/learn/ai-for-aso/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/ai-app-store-metadata/",
+      "destination": "/store-page/metadata/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/ai-app-store-metadata",
+      "destination": "/store-page/metadata/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/ai-keyword-research/",
+      "destination": "/store-page/keywords/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/ai-keyword-research",
+      "destination": "/store-page/keywords/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/ai-aso-localization/",
+      "destination": "/store-page/localization/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/ai-aso-localization",
+      "destination": "/store-page/localization/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/ai-screenshot-briefs/",
+      "destination": "/store-page/screenshots/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/ai-screenshot-briefs",
+      "destination": "/store-page/screenshots/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/verify-ai-generated-aso/",
+      "destination": "/learn/ai-for-aso/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/guides/verify-ai-generated-aso",
+      "destination": "/learn/ai-for-aso/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/skills/",
+      "destination": "/tools/app-store-growth-skill/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/skills",
+      "destination": "/tools/app-store-growth-skill/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/skills/app-store-growth/",
+      "destination": "/tools/app-store-growth-skill/",
+      "permanent": true
+    },
+    {
+      "source": "/ai/skills/app-store-growth",
+      "destination": "/tools/app-store-growth-skill/",
+      "permanent": true
+    },
+    {
+      "source": "/podcasts/",
+      "destination": "/learn/podcasts/",
+      "permanent": true
+    },
+    {
+      "source": "/podcasts",
+      "destination": "/learn/podcasts/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/",
+      "destination": "/learn/resources/",
+      "permanent": true
+    },
+    {
+      "source": "/resources",
+      "destination": "/learn/resources/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/impressions/",
+      "destination": "/learn/metrics/impressions/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/impressions",
+      "destination": "/learn/metrics/impressions/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/product-page-views/",
+      "destination": "/learn/metrics/product-page-views/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/product-page-views",
+      "destination": "/learn/metrics/product-page-views/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/conversion-rate/",
+      "destination": "/learn/metrics/conversion-rate/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/conversion-rate",
+      "destination": "/learn/metrics/conversion-rate/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/first-time-downloads/",
+      "destination": "/learn/metrics/first-time-downloads/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/first-time-downloads",
+      "destination": "/learn/metrics/first-time-downloads/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/redownloads/",
+      "destination": "/learn/metrics/redownloads/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/redownloads",
+      "destination": "/learn/metrics/redownloads/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/acquisition-sources/",
+      "destination": "/learn/metrics/acquisition-sources/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/acquisition-sources",
+      "destination": "/learn/metrics/acquisition-sources/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/search-vs-browse/",
+      "destination": "/learn/metrics/search-vs-browse/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/search-vs-browse",
+      "destination": "/learn/metrics/search-vs-browse/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/proceeds-vs-sales/",
+      "destination": "/learn/metrics/proceeds-vs-sales/",
+      "permanent": true
+    },
+    {
+      "source": "/reference/proceeds-vs-sales",
+      "destination": "/learn/metrics/proceeds-vs-sales/",
+      "permanent": true
+    }
   ]
 }

@@ -4,10 +4,9 @@ export const site = {
   name: "Awesome Mobile Growth",
   shortName: "AMG",
   origin: "https://mobile.productbuilder.net",
-  description: "Evidence-aware App Store Optimization, Apple and Google Play launch guides, free browser-local tools, mobile growth strategy, and an open AI skill.",
+  description: "Practical, sourced guides for launching and growing apps on the App Store and Google Play: store page specs, launch checklists, free private tools and platform changes.",
   author: "René DeAnda",
   github: "https://github.com/renedeanda/awesome-mobile-growth",
-  reviewed: "October 12, 2026",
 };
 
 export function formatDate(iso: string) {
@@ -20,7 +19,7 @@ const socialImage = {
   url: absolute("/opengraph-image"),
   width: 1200,
   height: 630,
-  alt: `${site.name} — a practical, evidence-aware ASO field guide`,
+  alt: `${site.name}: App Store and Google Play guides`,
   type: "image/png",
 };
 

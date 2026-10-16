@@ -1,0 +1,55 @@
+## Start with the free tools you already have
+
+Before you pay for anything, use what the stores and platforms give you:
+
+| Need | Free tool | What it covers |
+| --- | --- | --- |
+| Store traffic and conversion | App Store Connect App Analytics, Play Console statistics | Impressions, page views, downloads, sources, retention, proceeds |
+| Store page tests | Product Page Optimization, store listing experiments | Icon, screenshot and (on Play) description tests |
+| Links into the app | Universal Links (iOS), App Links (Android) | Web-to-app links that open the right screen |
+| Crashes | Xcode Organizer, Android vitals | Crash and hang rates by version and device |
+| Reviews | App Store Connect, Play Console | Read and reply to reviews |
+
+Add a product analytics tool next, because the stores stop at the install. Then add paid tools only when a specific, recurring question needs one.
+
+## Buy in layers
+
+1. **Foundation:** store consoles, native links, crash reporting, one product analytics tool and a change log.
+2. **Research:** an ASO tool when you regularly research keywords or competitors across several markets.
+3. **Attribution:** a mobile measurement partner when paid spend is large enough that channel decisions need it.
+4. **Subscriptions:** subscription infrastructure when entitlements, offers and cross-platform purchases become hard to maintain yourself.
+5. **Specialized:** review management, creative testing or localization platforms when the manual work is measurable.
+
+Once a quarter, list each tool and the last decision it changed. Cancel the ones you can't name a decision for.
+
+## What each category is for
+
+**ASO research and store operations.** Sensor Tower, AppTweak, MobileAction, App Radar, Appfigures and AppFollow cover different mixes of keyword research, competitor tracking, review management and reporting. Their search volume and difficulty scores are each vendor's own model, not Apple's or Google's data, so compare definitions before comparing numbers. Run a trial on a real release.
+
+**Product analytics.** Google Analytics for Firebase, Mixpanel, Amplitude and PostHog show what people do after they install. Keep a short list of well-named events with an owner; a messy event list is the most common reason analytics stops being useful.
+
+**Attribution and links.** Branch, AppsFlyer and Adjust measure campaigns and manage deep links. Attribution is a model under privacy limits, not an exact ledger. Firebase Dynamic Links shut down on 25 August 2025, so migrate any remaining links to Universal Links, App Links or another provider.
+
+**Subscriptions.** RevenueCat and similar services handle entitlements, receipts and cross-platform purchases, and show subscription metrics. Reconcile their numbers with the stores' financial reports.
+
+**In-app experiments.** Firebase Remote Config and A/B Testing, and similar tools, test changes inside the app. They don't test store pages; use the stores' own tools for that.
+
+The [resource list](/learn/resources/) keeps current links for each category and notes products that were acquired or retired.
+
+<AlsoBy href="https://www.productbuilder.net/tools/" title="AI tools directory (Product Builder)">A maintained directory of AI coding, design and writing tools, if your growth work includes building with AI.</AlsoBy>
+
+## Questions to ask in every trial
+
+- What decision will this change, and who makes it?
+- Where does the data come from, and how fresh is it?
+- Does it cover our countries and languages?
+- Can we export our data and leave?
+- What does it cost when we grow?
+
+<DoToday>
+
+1. List every tool you pay for and the last decision each one changed.
+2. Write the one recurring question your current tools can't answer.
+3. Check for any remaining Firebase Dynamic Links in your app or emails.
+
+</DoToday>

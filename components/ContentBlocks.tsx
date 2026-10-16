@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import type { Evidence } from "@/lib/content";
+import type { Evidence } from "@/lib/evidence";
 import { platformRules } from "@/lib/platform";
 import { absolute, site } from "@/lib/site";
 export function ArticleJsonLd({ title, description, path, published = "2026-10-12", modified = "2026-10-12" }: { title: string; description: string; path: string; published?: string; modified?: string }) { const data = { "@context": "https://schema.org", "@type": "Article", headline: title, description, datePublished: published, dateModified: modified, author: { "@type": "Person", name: site.author, url: "https://productbuilder.net" }, publisher: { "@id": `${site.origin}/#publisher` }, mainEntityOfPage: absolute(path), image: absolute("/opengraph-image") }; return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />; }

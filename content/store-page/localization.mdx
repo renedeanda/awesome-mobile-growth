@@ -1,0 +1,71 @@
+## Choose markets by evidence
+
+Localizing a store page is cheap compared with localizing an app, but it isn't free: every language needs keywords, captions, screenshots and someone to answer reviews. Pick markets where you already see signs of demand:
+
+- Countries that already download your app without a localized page (App Analytics and Play Console both break this down by country).
+- Languages your support emails and reviews arrive in.
+- Markets where your price and payment model work.
+- Languages someone on your team, or a paid reviewer, can check.
+
+Start with two or three. A well-localized page in three languages beats a machine-translated page in thirty.
+
+## Rewrite keywords for each language
+
+Search language doesn't translate word for word. People in each market use their own terms, abbreviations and sometimes English loanwords. Do keyword research again in each language, using the same sources: local reviews, local search suggestions and native speakers.
+
+<Example title="Budgeting app, German">
+<p>A literal translation of "budget app" gives "Budget-App", but German users often search "Haushaltsbuch" (household ledger) or "Ausgaben tracker". A native reviewer and Germany's App Store search suggestions surface these; a translation tool usually doesn't.</p>
+</Example>
+
+On the App Store, each localization has its own name, subtitle, keyword field, description and promotional text. Remember the keyword field counts **bytes**: accented letters take 2 bytes and Chinese, Japanese or Korean characters usually take 3, so the same field holds far fewer characters.
+
+On Google Play, each language has its own name, short description and full description. Write them naturally; the same rules against repetition apply in every language.
+
+## Brief your translator properly
+
+Give your translator or reviewer more than a spreadsheet of strings:
+
+- One sentence on what the app does and who it's for.
+- The screenshots, so they see where each caption appears.
+- Character and byte limits for every field.
+- Words that must stay unchanged: your brand, feature names, trademarks.
+- Which features are unavailable in their market.
+
+Then ask them to judge the page as a local customer: would they install this? Is anything awkward, too formal or culturally off?
+
+## Localize screenshots, not just text
+
+Captions are the obvious part. Also check:
+
+- **Text length.** German and French often run 20–30% longer than English. Leave room or shorten.
+- **Examples inside the UI.** Currency, dates, names, units and holidays should match the market.
+- **Reading direction.** Arabic and Hebrew read right to left, so mirror layouts where the app does.
+- **Features.** Don't show a feature that isn't available in that country.
+
+Preview every language at thumbnail size before you submit.
+
+## Roll out and measure
+
+Ship localizations in a release with few other changes, so you can see their effect. After two to four weeks, compare conversion and day-7 retention in each localized country with the weeks before. Keep a log of what changed and when.
+
+If conversion rises but retention doesn't, the page is clearer than the app is localized. Translate onboarding next.
+
+## Ask AI to help
+
+AI translation is a good first draft and a poor final version for store pages. Use it to produce options, then have a native speaker choose and fix.
+
+<AskAI
+  prompt={`Translate this App Store subtitle into [language] for users in [country]. Give 5 options, each under 30 characters, that a local user would search for or say naturally. For each, give a back-translation into English and note any word that might sound unnatural or too formal.
+Subtitle: "[your subtitle]"
+App: [one sentence]`}
+  checks={["Have a native speaker pick and edit the final version.", "Check the length on the device, not just in a spreadsheet.", "Re-do keyword research in the language; don't translate the English keyword field."]}
+/>
+
+<DoToday>
+
+1. Open App Analytics or Play Console and list the top five countries where you already get installs.
+2. Pick the top non-English one and find a native reviewer.
+3. Collect 30 search suggestions in that language for your main use case.
+4. Write that language's subtitle and keyword field from those words.
+
+</DoToday>

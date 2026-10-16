@@ -1,0 +1,111 @@
+## Set up App Store Connect two weeks early
+
+Create the app record as soon as you have a bundle ID. Most launch-week surprises come from paperwork, not code: an unsigned agreement, missing tax forms, an age-rating question nobody answered, or a privacy label that does not match an SDK.
+
+Two choices are permanent, so make them deliberately:
+
+- **Bundle ID.** It cannot change after you upload a build.
+- **SKU.** It cannot change after you create the app record. Customers never see it, so use something boring like `notes-ios-2026`.
+
+Then fill in the app-level fields. The app name can be 2 to 30 characters. Apple lets you edit it until you submit, and after that only with a new version.
+
+<Callout tone="official" title="Required before you submit">
+<p>Privacy policy URL, App Privacy answers, age rating questionnaire, primary category, pricing and availability, export compliance, and, if you distribute in the EU, your Digital Services Act trader status. The age rating system now includes 13+, 16+ and 18+ tiers alongside 4+ and 9+.</p>
+</Callout>
+
+## Write the listing fields in this order
+
+Write the subtitle first. It is the line most people read, and it forces you to say what the app does in 30 characters. Then write the name, the first screenshot caption and the keywords so they support that line instead of repeating it.
+
+<MetadataLimits platform="apple" />
+
+App Store search reads your **app name, subtitle, keywords and primary category**, plus how people respond to your app. Promotional text and the description do not change ranking, so write those for the person deciding whether to install.
+
+<BeforeAfter
+  before={<p><strong>Subtitle:</strong> The best notes app ever</p>}
+  after={<p><strong>Subtitle:</strong> Private notes that work offline</p>}
+  note="The first line wastes 30 characters on a claim nobody can check. The second tells a searcher what they get and adds two useful words (private, offline) that are not in the name."
+/>
+
+Keep these out of the keyword field: words already in your name or subtitle, plurals of words you already have, the word "app", competitor names and trademarks you do not own. Apple calls improper keywords a common reason for rejection.
+
+<WorkbenchLink platform="apple" template="metadata">Draft and count your iPhone metadata</WorkbenchLink>
+
+## Make the first three screenshots count
+
+Every iPhone app needs at least one screenshot in the **iPhone with Dynamic Island (medium display)** set: 1179 × 2556 or 1206 × 2622 pixels in portrait. You can upload up to 10. If your interface looks the same on every size, upload the largest required size and App Store Connect scales it down for older phones.
+
+<AppleScreenshotTable devices={["iPhone"]} />
+
+When you do not have an app preview, search results show your first one to three screenshots, depending on orientation. Plan those three as one unit:
+
+1. **Frame 1, the outcome.** What someone gets, in the words they would search with.
+2. **Frame 2, how it works.** The core screen with real content, readable at thumbnail size.
+3. **Frame 3, why this one.** The feature or quality that sets you apart.
+4. **Frames 4–10, the objections.** Sync, privacy, price, setup time, accessibility, widgets.
+
+<Callout tone="caution" title="iPhone Duo">
+<p>From April 2027, App Store submissions need iPhone Duo screenshots: 1398 × 2034 for the outer display and 2007 × 2853 for the inner display. Uploads are open now, and providing them adds an iPhone Duo badge to your product page. Keep your screenshot source files editable so you can add these frames without redrawing the set.</p>
+</Callout>
+
+App previews are optional: up to three per size and language, up to 30 seconds each. They autoplay muted, so the first two seconds must make sense without sound.
+
+## Test the build people will actually install
+
+TestFlight lets you invite up to 100 internal testers from your team and up to 10,000 external testers. The first build you send to external testers goes through a short beta review, and every build expires after 90 days.
+
+Give testers jobs, not just an invite. Five people who each try a fresh install, a denied permission, a purchase, a restore and a bad network will find more than fifty people who open the app once.
+
+Before you submit, check every claim on the store page against the signed release build:
+
+- Every feature in a screenshot exists and is reachable without a hidden setting.
+- Subscription prices and trial lengths in captions match what StoreKit shows.
+- The privacy label covers your analytics, crash reporting and ad SDKs.
+- Sign-in works with the demo account you will give App Review.
+
+## Submit with notes that answer the reviewer's questions
+
+Apple says App Review typically reviews at least 50% of submissions in under 24 hours and 90% in under 48 hours. Incomplete submissions are what slow it down: over 40% of unresolved issues fall under guideline 2.1, App Completeness, which covers crashes, placeholder content and missing information.
+
+Write review notes for someone who has never seen your app:
+
+<Example title="Review notes">
+<p>Demo account: review@example.com / (password in the sign-in field). The main feature is the Today tab. To test the subscription, tap Settings › Upgrade; the sandbox account is already eligible for the 7-day trial. Notes sync through iCloud, so sign in to iCloud on the review device to see sync. The app does not use location.</p>
+</Example>
+
+Choose a release method before you submit: manual release, automatic release on approval, or automatic release no earlier than a date. Approved apps can take up to 24 hours to appear on the store, so do not schedule a launch announcement for the minute of approval.
+
+For updates, turn on **phased release** to roll out to users with automatic updates over 7 days. You can pause it if crash reports spike.
+
+## Read the first two weeks as one journey
+
+In App Analytics, watch impressions, product page views and conversion rate by source type: App Store Search, App Store Browse, web referrers and app referrers. Then follow the same people into your product analytics: did they finish onboarding, reach the first useful moment, and come back on day 7?
+
+A rising conversion rate is good news only if day-7 retention holds. If installs go up and retention goes down, the listing is attracting people the app does not serve. Fix the promise before you buy more traffic.
+
+Once you have a stable baseline, test one idea at a time with [Product Page Optimization](/store-page/testing/), and build [custom product pages](/store-page/custom-pages/) for audiences that need a different pitch.
+
+## Ask AI to help
+
+AI is good at drafting subtitle options and spotting repeated keywords. It does not know your product, your search volume or Apple's current limits, so give it the facts and check its output.
+
+<AskAI
+  prompt={`I'm launching an iPhone app. Here are the facts:
+- What it does: [one sentence]
+- Who it's for: [audience]
+- Features that ship in this version: [list]
+- Words customers use in reviews or support: [list]
+
+Write 10 App Store subtitle options, each 30 characters or fewer, that say what the app does in plain words. Don't repeat words from the app name "[name]". Don't use superlatives like "best". After each option, show its character count.`}
+  checks={["Count characters yourself; models miscount.", "Delete any option that mentions a feature not in this build.", "Check the words against your keyword field so you don't repeat them."]}
+/>
+
+<DoToday>
+
+1. Create the app record and write down the bundle ID and SKU somewhere permanent.
+2. Answer the age rating questionnaire and the App Privacy questions, including every SDK.
+3. Write five subtitle options and pick the one a stranger understands fastest.
+4. Capture the first three screenshots at 1206 × 2622 from a real build with real-looking data.
+5. Draft review notes with a working demo account.
+
+</DoToday>

@@ -1,0 +1,67 @@
+## When a custom page is worth it
+
+A custom page is a second (or tenth) version of your store page for a specific audience. Make one when a group of people needs a different pitch:
+
+- An ad campaign that promises one specific feature.
+- A search phrase with a clear, different intent ("budget for couples" vs "business expenses").
+- A partner, event or newsletter that sends a particular audience.
+- A country where the main use case is different.
+
+Don't make one just because you can. Each page needs screenshots, review and someone to keep it current.
+
+## Custom product pages on the App Store
+
+| Rule | Detail |
+| --- | --- |
+| How many | Up to 70 in addition to your default page |
+| What can differ | Screenshots, app previews and promotional text |
+| Link | Each page has its own URL (your app URL plus a page ID) |
+| Search | You can assign keywords so the page appears in search for them; each keyword combination belongs to one page |
+| Deep link | Send people to a specific place in the app (iOS and iPadOS 18 or later) |
+| Review | Submitted for review on their own, without an app update |
+| Ads | Can be used in Apple Ads and by ad networks through StoreKit |
+
+Your app name, subtitle, icon and description stay the same on every page. Only the visual story and promotional text change, so make those carry the specific promise.
+
+Apple reports that developers see an average conversion rate increase of 2.5 percentage points when they send people to a custom page, which it describes as 156% over the 1.6% average for default pages. That is Apple's aggregate number, not a forecast for your app.
+
+## Custom store listings on Google Play
+
+Google Play lets you create up to **50 custom store listings**. Each can target people by country, Google Ads campaign, search keyword, install state (for example, people who uninstalled the app), or a unique URL. A custom listing can change the name, short description, full description and graphics.
+
+Each country can be assigned to only one custom listing at a time, and custom listings don't get automatic translations, so plan the languages for each one.
+
+## Keep the promise after the install
+
+A custom page that promises "Shared budgets for couples" and then opens to a generic home screen wastes the click. Make the first screen match the page:
+
+1. **Use the deep link** (App Store, iOS 18+) or an App Link with a campaign parameter (Android) to open the right screen.
+2. **Adapt onboarding** for that audience, even if it's just the first question.
+3. **Check the result** by measuring retention for each custom page, not only conversion.
+
+<Example title="One custom page, end to end">
+<p>Audience: couples searching "shared budget". Keywords assigned: shared budget, couples budget. Screenshot 1: two avatars on one budget, caption "Plan money together". Deep link: opens the invite-your-partner screen. Success measure: share of installs that invite a partner within 3 days.</p>
+</Example>
+
+## Measure each page
+
+App Analytics shows impressions, downloads, conversion rate, retention and average proceeds per paying user for each custom product page, compared with your default page. Google Play shows performance for each custom store listing in the store listing reports.
+
+Compare like with like. A custom page for a paid campaign gets a different audience from your default page, so a higher conversion rate doesn't automatically mean a better page. Compare retention and revenue per install too.
+
+## Ask AI to help
+
+<AskAI
+  prompt={`My app: [one sentence]. I want a custom store page for this audience: [audience and where they come from].
+Their main need: [need]. The feature that serves it: [feature, which exists in the build].
+Write: a promotional text under 170 characters, and captions for 3 screenshots (7 words or fewer each) that speak to this audience. Use plain words and no claims I haven't listed.`}
+  checks={["Confirm the feature exists and is easy to reach in the app.", "Set up the deep link before you launch the page.", "Decide the retention measure for this audience before launch."]}
+/>
+
+<DoToday>
+
+1. List your traffic sources and find the one with the most specific intent.
+2. Write the promise that audience needs, in one line.
+3. Check which screen in the app delivers that promise and whether you can deep link to it.
+
+</DoToday>

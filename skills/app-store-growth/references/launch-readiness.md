@@ -2,7 +2,7 @@
 
 Review in this order:
 
-1. Product truth and supported devices.
+1. Product facts and supported devices.
 2. Store record, identifiers, version, territories, pricing, privacy, and policy declarations.
 3. Metadata limits, accuracy, localization, and links.
 4. Screenshots, video, device fit, and real-build evidence.

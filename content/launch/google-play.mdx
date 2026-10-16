@@ -1,0 +1,70 @@
+## Know the two gates before you start
+
+Two Google Play rules decide your launch date more than anything in your code. Check both on day one.
+
+**New personal accounts must run a closed test.** If you created a personal developer account after 13 November 2023, Play Console keeps Production disabled until you have run a closed test with at least 12 testers who stayed opted in for the last 14 days in a row. Organization accounts are exempt. Recruit testers early; two weeks is the minimum, not the plan.
+
+**Your app must target a recent Android version.** From 31 August 2026, new apps and updates must target Android 16 (API level 36). Wear OS and Android Automotive apps need API 35; Android TV and Android XR apps need API 34. You can request an extension to 1 November 2026. Targeting API 36 changes behavior: on screens 600 dp and wider, your app can no longer lock orientation or aspect ratio, so test tablets and foldables.
+
+## Fill in Play Console in this order
+
+1. **Create the app.** Choose the default language, app or game, free or paid. Paid-to-free is allowed later; free-to-paid is not.
+2. **App content declarations.** Privacy policy URL, app access (give login steps if parts are gated), ads, content rating questionnaire, target audience, Data safety form, government app and financial features declarations where they apply.
+3. **Store listing.** Name, short description, full description, icon, feature graphic, screenshots.
+4. **Testing track.** Upload an Android App Bundle to internal testing first, then closed testing.
+5. **Countries and pricing.** Pick countries deliberately; you can add more later.
+
+The Data safety form must cover every SDK in the app, including analytics, crash reporting and ads. Get the list from your build file, not from memory.
+
+## Write the listing for people and for search
+
+Google Play has no hidden keyword field. Search reads your visible text, so write it the way your customers talk, and never repeat words to game it.
+
+| Field | Limit | Job |
+| --- | --- | --- |
+| App name | 30 characters | Your brand plus, if it fits, what the app is |
+| Short description | 80 characters | One sentence a stranger understands |
+| Full description | 4,000 characters | The details: features, who it's for, what it costs |
+
+<BeforeAfter
+  before={<p><strong>Short description:</strong> ⭐ #1 BEST Budget App!! Free budget tracker, budget planner, budgeting</p>}
+  after={<p><strong>Short description:</strong> Track spending and plan a monthly budget in two minutes a day.</p>}
+  note="The first uses emoji, a ranking claim, all caps and repeated words, all of which Google Play's metadata policy restricts and which can get a listing rejected. The second says what the app does and how much effort it takes."
+/>
+
+Then the graphics. The feature graphic is required to publish.
+
+<GooglePlayGraphicsTable />
+
+## Test with tracks, then roll out in stages
+
+Use the tracks in order. **Internal testing** (up to 100 testers) is available within minutes and is right for your team. **Closed testing** is where new personal accounts meet the 12-tester rule. **Open testing** lets anyone join from your store listing.
+
+For production, use a **staged rollout**: release to a small percentage, watch the Android vitals crash and ANR rates for a day or two, then raise it. You can halt a rollout if something breaks.
+
+Before each release, check on a real device: fresh install, upgrade from the previous version, purchase and restore, deep links, notifications, and a small phone plus a tablet or foldable.
+
+## Read the first weeks
+
+Google Play's store listing reports changed in mid-2026. They now count **unique users who tap Install, Open or Pre-register** and report a click-through rate, where they previously reported acquisitions and conversion rate. The older acquisition metrics are still in the Statistics tab. If you compare before and after July 2026, compare like with like.
+
+After launch, follow installs into your product analytics: activation, day-7 retention, reviews and crashes by device. A spike in installs from a new country with poor retention usually means the listing wasn't localized, not that the market loves you.
+
+## Ask AI to help
+
+<AskAI
+  prompt={`Rewrite this Google Play short description in plain language, under 80 characters, with no emoji, no ALL CAPS, no ranking claims like "#1" or "best", and no repeated words:
+"[your current short description]"
+The app: [one sentence about what it does and for whom].
+Give 5 options with character counts.`}
+  checks={["Count the characters yourself.", "Check each option against Google Play's metadata policy.", "Make sure each claim is true in the current build."]}
+/>
+
+<DoToday>
+
+1. Check your account type and creation date; if the 12-tester rule applies, recruit 15 testers today.
+2. Confirm your build targets API 36, and test one tablet or foldable.
+3. List every SDK in your build for the Data safety form.
+4. Write the short description in under 80 characters with no emoji or claims.
+
+</DoToday>

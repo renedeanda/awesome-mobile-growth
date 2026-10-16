@@ -1,0 +1,76 @@
+## Start with the words customers already use
+
+Good keywords come from people, not from a list of popular terms. Collect phrases from five places before you open any tool:
+
+1. **Your reviews and your competitors' reviews.** How do people describe the problem?
+2. **Support emails and chat.** The words people use when something is missing.
+3. **App Store and Google Play search suggestions.** Type the start of a phrase and note the completions.
+4. **Your own onboarding and feature names,** if customers actually use them.
+5. **Five people you'd like as users.** Ask how they'd search for an app like yours.
+
+Third-party tools estimate popularity and difficulty. Those numbers are models, not Apple's or Google's data, and two tools often disagree. Use them to sort a list you already have, not to create one.
+
+## Group phrases by what the person wants
+
+A phrase list is only useful once it's grouped by intent. For each group, write the promise your page makes and the screen that proves it.
+
+| Intent | Example phrases | Page promise | Proof on the page |
+| --- | --- | --- | --- |
+| Build a habit | habit tracker, daily routine, streaks | Build routines in 2 minutes a day | Screenshot 1: today's checklist |
+| Track mood | mood journal, mood tracker | See how habits affect your mood | Screenshot 3: mood chart |
+| Stay accountable | habit buddy, accountability | Share goals with a friend | Screenshot 4: shared habit |
+
+*Example app.* If a group has no proof column, you can't support it yet, so leave those words out. Ranking for a phrase your app doesn't serve brings installs that leave in a day.
+
+## Fill Apple's 100-byte keyword field
+
+App Store search reads your app name, subtitle, keyword field and primary category. The keyword field is hidden and holds 100 bytes. Use it for words that aren't already in the name or subtitle.
+
+Apple's rules and advice:
+
+- Separate terms with **commas and no spaces**: `habit,routine,streak`. Spaces inside a phrase are fine: `daily planner`.
+- Each keyword must be **at least 3 characters**.
+- **Don't repeat** words from your name, subtitle or category; they're already indexed.
+- **Skip plurals** of words you already have, the word "app", filler like "the", and special characters.
+- **Never** add competitor names, trademarks you don't own, celebrity names or unrelated terms. Apple calls improper keywords a common reason for rejection.
+
+<BeforeAfter
+  before={<p><code>habit tracker, habits, habit app, daily habits, routine, routines, best habit tracker</code><br/>85 bytes, about 3 distinct useful words.</p>}
+  after={<p><code>routine,streak,daily,goal,reminder,mood,journal,planner,discipline,morning,checklist</code><br/>84 bytes, 11 distinct words, none repeated from the name "Northstar: Habit Tracker".</p>}
+  note="Example. The first wastes bytes on spaces, plurals, the word 'app', and words already in the name. The second covers far more searches in less space."
+/>
+
+**Bytes, not characters.** English letters take 1 byte each. Accented letters take 2 (é, ü, ñ), and Chinese, Japanese and Korean characters usually take 3. A Japanese keyword field fills up three times faster than it looks.
+
+<WorkbenchLink platform="apple" template="metadata">Check your keyword field in bytes</WorkbenchLink>
+
+## Write naturally on Google Play
+
+Google Play has no keyword field. Its search uses your app name, short description and full description, plus signals like installs and ratings. Put your most important phrase in the name or short description, and use related phrases where they fit naturally in the full description.
+
+Don't repeat a word to push it. Google Play's metadata policy treats excessive or irrelevant repetition as keyword spam, which can get a listing rejected. Write for a person and the right words will be there.
+
+## Measure what matters
+
+Rank trackers show where you appear, but rank alone doesn't pay. In App Analytics, filter by **App Store Search** to see impressions and conversion from search. Then compare your day-7 retention for search installs against other sources. If search installs retain worse than browse or referrals, your keywords are attracting the wrong people.
+
+Change keywords one release at a time and write down what you changed and when. Ranking moves for many reasons, including competitors and seasonality, so give each change two to four weeks before you judge it.
+
+## Ask AI to help
+
+<AskAI
+  prompt={`Here are real phrases from my app's reviews, support emails and store search suggestions:
+[paste 30-100 phrases]
+
+Group them by what the person is trying to do. For each group, give a short name and list the phrases. Don't add phrases that aren't in my list, and don't estimate search volume.`}
+  checks={["The model must not invent phrases or volumes; delete anything not from your list.", "Remove competitor names and trademarks.", "Count the final keyword field in bytes with the workbench."]}
+/>
+
+<DoToday>
+
+1. Copy 50 phrases from reviews, support and search suggestions into a document.
+2. Group them into three to five intents and write the proof screen for each.
+3. Rewrite your Apple keyword field with no spaces, plurals or repeated words.
+4. Check its byte count in every language you ship.
+
+</DoToday>

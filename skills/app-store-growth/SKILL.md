@@ -1,6 +1,6 @@
 ---
 name: app-store-growth
-description: Evidence-aware App Store and Google Play listing work. Use when auditing, drafting, localizing, or validating store metadata; planning screenshots; writing experiment briefs; or reviewing launch readiness for Apple-platform and Android apps.
+description: Sourced App Store and Google Play listing work. Use when auditing, drafting, localizing, or validating store metadata; planning screenshots; writing experiment briefs; or reviewing launch readiness for Apple-platform and Android apps.
 ---
 
 # App Store Growth
@@ -18,9 +18,9 @@ Help the user make an accurate store decision, not merely produce more copy.
 
 ## Choose the workflow
 
-1. Establish product truth: product, audience, job, promise, proof, and exclusions.
+1. Establish the product facts: product, audience, job, promise, proof, and exclusions.
 2. Pick one mode:
-   - **audit** — compare existing listing content with product truth and current platform rules.
+   - **audit** — compare existing listing content with the product facts and current platform rules.
    - **draft** — write a coherent metadata set from supplied evidence.
    - **localize** — adapt meaning and intent for a locale; do not merely translate word-for-word.
    - **creative-brief** — map screenshot or video frames to a message and visible product proof.

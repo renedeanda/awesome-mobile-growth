@@ -4,7 +4,7 @@
 
 ## Blocking issues
 
-## Product truth
+## Product facts
 
 ## Field-by-field review
 

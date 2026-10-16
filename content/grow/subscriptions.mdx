@@ -1,0 +1,53 @@
+## Map the funnel stage by stage
+
+A subscription funnel has more steps than most teams measure. Define each one with a population and a time window, so the numbers mean the same every month.
+
+| Stage | Measure | Window |
+| --- | --- | --- |
+| Install | First-time downloads | Week of install |
+| Activation | Share who reach the first useful moment | First 2 days |
+| Paywall view | Share of new users who see a price | First 7 days |
+| Trial start | Share of paywall viewers who start a trial | At view |
+| Paid conversion | Share of trials that become paid | At trial end |
+| Renewal | Share of paid subscribers who renew | Each renewal period |
+| Refunds | Refunded transactions ÷ paid transactions | 30 days after purchase |
+
+Read them together. More trial starts with fewer paid conversions often means the trial is attracting people who never meant to pay.
+
+## Show value before the price
+
+People pay for what they've already experienced. Common, defensible patterns:
+
+- **Paywall after activation:** let people complete the first useful action, then show the offer.
+- **A free tier with a clear limit:** "3 habits free, unlimited with Plus". The limit should be easy to understand.
+- **A trial with a reminder:** tell people when the trial ends, before it ends. Surprise renewals turn into refunds and one-star reviews.
+
+Whatever you do, the price, the billing period and what happens when a trial ends must be clear on the paywall. Apple's App Review Guidelines and Google Play's subscription policy both require it.
+
+## Use the offers the stores give you
+
+**Apple** supports introductory offers (free trial, pay-as-you-go or pay-up-front discounts for new subscribers), promotional offers for existing or lapsed subscribers, offer codes, and win-back offers for people whose subscription ended. You can show eligible win-back offers on the App Store as well as in the app.
+
+**Google Play** supports free trials and introductory prices through base plans and offers, with eligibility rules for new, upgrading or returning customers.
+
+Judge every offer by what it does to **paid subscribers after renewal and refunds**, not by how many people start it.
+
+## Reduce involuntary churn
+
+Some cancellations aren't decisions at all: the card expired or the payment failed. Both stores help:
+
+- **Billing grace period** keeps access while the store retries payment. Turn it on in App Store Connect and Play Console.
+- **Account hold / billing retry:** the stores keep retrying after the grace period. Handle these states in your app and tell the user how to fix their payment method.
+- **Server notifications** (App Store Server Notifications, Google Play real-time developer notifications) tell your backend about renewals, failures and refunds as they happen.
+
+## Reconcile your numbers
+
+App Store Connect, Play Console, your subscription service and your product analytics will disagree, because they differ in time zones, currency conversion, refund timing and how they identify users. Pick one source of truth for each decision, write down which, and reconcile monthly against the stores' financial reports.
+
+<DoToday>
+
+1. Write each funnel stage with its population and window.
+2. Check your paywall shows the price, period and trial end clearly.
+3. Turn on billing grace period in App Store Connect and Play Console if it's off.
+
+</DoToday>

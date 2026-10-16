@@ -1,0 +1,62 @@
+## What Apple added in October 2026
+
+On 5 October 2026, App Store Connect started accepting two new optional creative assets, managed in a new **Asset Library**:
+
+- A **product page header**: a wide image or looping video at the top of your product page.
+- A **search result asset**: a landscape image or video shown for your app in App Store search.
+
+They appear on iOS and iPadOS 27 or later. Screenshots still matter: they stay on the product page, and when there's no search result asset, search shows your app previews or screenshots instead. Approved assets in the Asset Library can be reused across custom product pages and in-app events without uploading them again.
+
+## Sizes and formats
+
+<AppleCreativeTable />
+
+Images can't include transparency. Videos must be 5 to 30 seconds at 30 or 60 frames per second, and they loop.
+
+**Sound:** search result videos are muted and people can't unmute them. Product page header videos start muted, and people can turn the sound on. Design both to work in silence.
+
+## Design one idea that survives three sizes
+
+A good header or search asset makes one clear point at a glance. Check every version at three distances before you upload:
+
+1. **Search result, small.** It's one card among many on a phone. Is the subject obvious in one second?
+2. **Product page, wide.** At 21:9, is the subject centered with room to breathe, or does it look stretched?
+3. **Full size.** Zoom in and look for private data in the UI, typos, placeholder text and status-bar clutter.
+
+Keep the important part away from the edges. Apple doesn't publish crop-safe margins, so assume the outer 10% on each side may be covered or cropped on some devices, and preview in App Store Connect before you submit.
+
+<BeforeAfter
+  before={<p>A 21:9 header with the app logo, five feature icons, a 20-word tagline and "Download now!" in the corner.</p>}
+  after={<p>A 21:9 header showing one hand checking off a habit on the app's main screen, with the line "Two minutes a day" set large on the left.</p>}
+  note="The first crams a screenshot set into one image and adds a call to action the store already provides. The second makes one point you can read in a search result."
+/>
+
+Don't put prices, rankings, awards or "Download" buttons in the art. If the image shows a feature that needs a subscription or an accessory, make that clear on the page.
+
+## Header assets vs screenshots
+
+They do different jobs:
+
+| | Header and search assets | Screenshots |
+| --- | --- | --- |
+| Job | Make one memorable first impression | Show how the app works, step by step |
+| Shown on | iOS and iPadOS 27 or later | All supported devices |
+| Required | No | Yes |
+| Count | One per placement | 1–10 per size and language |
+
+A striking header that says nothing about the product shouldn't replace a screenshot that proves the app's value. If you only have time for one, fix your first three screenshots first.
+
+## Test and measure
+
+Product Page Optimization lets you test icons, screenshots and app previews against your default page. Check Apple's [Product Page Optimization page](https://developer.apple.com/app-store/product-page-optimization/) for whether the new header and search assets can be tested before you plan a test around them.
+
+After you publish, compare product page conversion and search conversion in App Analytics on iOS 27 devices before and after. Use a few weeks on each side, and note any other changes you made in that time.
+
+<DoToday>
+
+1. Write the one sentence your header should communicate without sound.
+2. Sketch it as a still before you produce any video.
+3. Export a 3840 × 1646 test image and view it on a phone at search-result size.
+4. Remove any text in the image longer than five words.
+
+</DoToday>

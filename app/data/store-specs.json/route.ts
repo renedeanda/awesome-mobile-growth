@@ -1,3 +1,15 @@
-export const dynamic="force-static";
-const reviewed="2026-10-12";
-export function GET(){return Response.json({schemaVersion:1,reviewed,disclaimer:"Verify submission-sensitive requirements in the linked primary source before delivery.",metadata:{apple:{name:{limit:30,unit:"characters"},subtitle:{limit:30,unit:"characters"},promotionalText:{limit:170,unit:"characters"},keywords:{limit:100,unit:"UTF-8 bytes"},description:{limit:4000,unit:"characters"},whatsNew:{limit:4000,unit:"characters"}},googlePlay:{name:{limit:30,unit:"characters"},shortDescription:{limit:80,unit:"characters"},fullDescription:{limit:4000,unit:"characters"}}},creative:{appleScreenshots:{count:"1–10",formats:["JPEG","JPG","PNG"],alpha:false,source:"https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications/"},googlePlayScreenshots:{minimumAcrossDeviceTypes:2,maximumPerDeviceType:8,formats:["JPEG","24-bit PNG"],alpha:false,minimumDimension:320,maximumDimension:3840,source:"https://support.google.com/googleplay/android-developer/answer/9866151"}}});}
+import { appleCreativeAssets, appleScreenshotClasses, appleScreenshotRules, appleScreenshotSource, appleCreativeSource, googleGraphicsSource, googlePlayGraphics, specsChecked } from "@/lib/storeSpecs";
+import { platformRules } from "@/lib/platform";
+
+export const dynamic = "force-static";
+
+export function GET() {
+  return Response.json({
+    schemaVersion: 2,
+    checked: specsChecked,
+    disclaimer: "Check the linked official page before delivery; store requirements change.",
+    metadata: Object.values(platformRules).map(({ platform, label, limit, unit, source }) => ({ platform, field: label, limit, unit, source })),
+    apple: { screenshots: { rules: appleScreenshotRules, classes: appleScreenshotClasses, source: appleScreenshotSource }, creativeAssets: { items: appleCreativeAssets, source: appleCreativeSource } },
+    googlePlay: { graphics: googlePlayGraphics, source: googleGraphicsSource },
+  });
+}

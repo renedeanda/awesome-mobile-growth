@@ -1,0 +1,55 @@
+## Why ratings matter for growth
+
+Ratings and reviews show up next to your app in search results and on your product page, and Apple says they can influence how your app ranks in App Store search. Your summary rating is calculated per country on the App Store, so a weak rating in one market doesn't drag down another.
+
+They're also your best free research: people tell you, in their own words, what they wanted and what went wrong.
+
+## Ask at the right moment, with the system prompt
+
+Both stores provide an in-app rating prompt. Use it instead of a custom "Rate us" screen.
+
+| | App Store | Google Play |
+| --- | --- | --- |
+| API | `requestReview` (StoreKit) | In-App Review API (Play Core) |
+| Limit | Shown at most 3 times in 365 days per person | A quota Google doesn't publish; the prompt may not appear |
+| Rules | Don't ask with custom pre-prompts that filter unhappy users | Don't ask questions before the prompt or incentivize ratings |
+
+Ask right after someone succeeds at something: finishing a workout, completing a 7-day streak, exporting a file. Don't ask at launch, after an error, during onboarding or in the middle of a task.
+
+<Example title="A good moment">
+<p>A habit app shows the rating prompt the first time someone completes all their habits for 7 days in a row, and not again for 60 days. It never shows during sign-up or after a sync error.</p>
+</Example>
+
+"Review gating" (asking "Do you like the app?" and only sending happy people to the store) breaks both stores' rules.
+
+## Read reviews as research
+
+Once a week, read every new review below 4 stars and a sample of the 5-star ones. Tag each by theme: bug, missing feature, pricing, confusion, praise. After a month, the tags tell you what to fix and what to put in your screenshots.
+
+The words people use in positive reviews are good material for keywords and captions. The words in negative reviews often show where the store page set the wrong expectation.
+
+## Reply where it helps
+
+Both stores let you reply publicly to reviews. Reply when:
+
+- You've fixed the problem they reported: say which version fixed it.
+- They're confused about how something works: give the steps.
+- They had a billing problem: point them to where to get help.
+
+Keep replies short, specific and polite. An answered complaint also shows future readers that someone is listening. On the App Store, people can update their review after you respond.
+
+## Recover from a bad release
+
+If a release causes a wave of one-star reviews:
+
+1. Fix and ship quickly; on Google Play, halt the staged rollout.
+2. Reply to the affected reviews once the fix is live, naming the version.
+3. On the App Store, you can **reset your summary rating** when you release a new version. Use this rarely: it also removes good ratings.
+
+<DoToday>
+
+1. Find where your app asks for a rating, and move it to right after a success moment.
+2. Read the last 30 reviews and tag each by theme.
+3. Reply to every unanswered review about a bug you've already fixed.
+
+</DoToday>
