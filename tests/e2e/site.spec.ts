@@ -81,7 +81,7 @@ test("old URLs are covered by the new structure", async ({ page }) => {
 test("podcast shelf filters and offers current editorial picks", async ({ page }) => {
   await page.goto("/learn/podcasts/");
   await expect(page.locator(".podcast-explorer")).toHaveAttribute("data-ready", "true");
-  await page.getByLabel("Search").fill("subscription");
+  await page.getByLabel("Search", { exact: true }).fill("subscription");
   await expect(page.getByRole("link", { name: /Sub Club/ }).first()).toBeVisible();
   await expect(page.getByRole("link", { name: /Launched/ })).toBeHidden();
   await expect(page.getByRole("link", { name: /Nancy Anderson/ })).toHaveAttribute("href", /revenuecat\.com/);
@@ -125,7 +125,7 @@ test("open AI skill explains its trust boundary and exposes complete source", as
 
 test("buttons and standalone links are at least 32px tall on phones", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const path of ["/", "/launch/iphone/", "/store-page/screenshots/", "/learn/metrics/conversion-rate/", "/launch/checklist/", "/changes/", "/tools/", "/workbench/", "/learn/podcasts/"]) {
+  for (const path of ["/", "/launch/iphone/", "/store-page/screenshots/", "/learn/metrics/conversion-rate/", "/launch/checklist/", "/changes/", "/tools/", "/workbench/", "/learn/podcasts/", "/screenshot-sizes/", "/screenshot-sizes/iphone-duo/", "/tools/app-store-keyword-field/"]) {
     await page.goto(path);
     const small = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>("a, button, summary, input, select, textarea")]
       .filter((el) => {
@@ -139,4 +139,58 @@ test("buttons and standalone links are at least 32px tall on phones", async ({ p
       .map((el) => `${el.tagName.toLowerCase()}.${el.className} "${(el.textContent ?? "").trim().slice(0, 30)}"`));
     expect(small, `small tap targets on ${path}`).toEqual([]);
   }
+});
+
+test("workbench opens on a store preview that flags a clipped name", async ({ page }) => {
+  await page.goto("/workbench/");
+  await expect(page.getByTestId("workbench")).toHaveAttribute("data-ready", "true");
+  await expect(page.getByRole("tab", { name: "Store preview" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByText("The name fits on one line in the search result.")).toBeVisible();
+  await page.getByRole("tab", { name: "Apple" }).click();
+  await page.getByLabel("App name").fill("Daybook Private Journal Mood");
+  await page.getByLabel("Subtitle").fill("Write a few lines every day, privately and calmly");
+  await page.getByRole("tab", { name: "Store preview" }).click();
+  await expect(page.getByRole("region", { name: "Store preview" })).toContainText("Daybook Private Journal Mood");
+  await expect(page.getByText(/subtitle is cut off/)).toBeVisible();
+});
+
+test("keyword packer fills the field in priority order and skips name words", async ({ page }) => {
+  await page.goto("/tools/app-store-keyword-field/");
+  await expect(page.getByTestId("browser-tool")).toHaveAttribute("data-ready", "true");
+  await page.getByLabel("App name and subtitle").fill("Daybook: Private Journal");
+  await page.getByLabel("Candidates, most important first").fill("mood tracker\njournal\ngratitude");
+  await expect(page.locator(".packer__field code")).toHaveText("mood,tracker,gratitude");
+  await expect(page.getByText("journal (already in name or subtitle)", { exact: false })).toBeVisible();
+  await page.getByRole("button", { name: "Check this field above" }).click();
+  await expect(page.getByLabel("Keywords")).toHaveValue("mood,tracker,gratitude");
+});
+
+test("launch countdown dates each phase and remembers the launch", async ({ page }) => {
+  await page.goto("/launch/checklist/");
+  await expect(page.locator(".checklist")).toHaveAttribute("data-ready", "true");
+  const launch = await page.evaluate(() => { const d = new Date(); d.setDate(d.getDate() + 10); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; });
+  await page.getByLabel("Launch date").fill(launch);
+  await expect(page.getByText("10 days to launch")).toBeVisible();
+  await expect(page.locator(".checklist__group--current h3")).toHaveText([/Store page/, /Testing/]);
+  await expect(page.getByRole("button", { name: /Add phases to calendar/ })).toBeVisible();
+  await page.reload();
+  await expect(page.getByLabel("Launch date")).toHaveValue(launch);
+});
+
+test("changes marks entries that are new since the last visit", async ({ page }) => {
+  await page.addInitScript(() => { if (!sessionStorage.getItem("amg-changes-previous.v1")) localStorage.setItem("amg-changes-visit.v1", "2026-01-01"); });
+  await page.goto("/changes/");
+  await expect(page.getByText(/new or updated since your last visit on 1 Jan 2026/)).toBeVisible();
+  await expect(page.locator(".new-badge").first()).toBeVisible();
+});
+
+test("search finds a device size page and opens it", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Search the site" }).click();
+  await page.getByRole("searchbox", { name: "Search the site" }).fill("iphone duo");
+  await expect(page.getByRole("option").first()).toBeVisible();
+  await page.getByRole("option", { name: /iPhone Duo screenshot size/ }).click();
+  await expect(page).toHaveURL(/\/screenshot-sizes\/iphone-duo\/$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("iPhone Duo screenshot size");
+  await expect(page.getByRole("region", { name: "iPhone Duo screenshot sizes" })).toContainText("2034 × 1398");
 });
