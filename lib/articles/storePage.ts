@@ -7,7 +7,7 @@ export const storePageArticles: ArticleSource[] = [
   {
     section: "store-page", slug: "metadata", label: "Name, subtitle and description",
     title: "App name, subtitle and description that get the install",
-    seoTitle: "App Store and Google Play metadata: limits and how to write each field",
+    seoTitle: "App Store and Google Play metadata: limits and examples",
     description: "Every text field on both stores with its limit and its job, plus before-and-after examples for the name, subtitle, description, promotional text and release notes.",
     answer: "Write the subtitle (Apple, 30 characters) or short description (Google Play, 80 characters) first: one line that says what the app does. Apple's search reads the name, subtitle, keywords and category; promotional text and the description don't affect ranking, so write those for people. Google Play's search reads all visible text.",
     platforms: ["apple", "google-play"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
@@ -17,7 +17,7 @@ export const storePageArticles: ArticleSource[] = [
   {
     section: "store-page", slug: "keywords", label: "Keywords",
     title: "App Store keywords: research, the 100-byte field and Google Play",
-    seoTitle: "App Store keyword research and the 100-byte keyword field (2026)",
+    seoTitle: "App Store keywords: research and the 100-byte field",
     description: "Find keywords in your customers' own words, group them by intent, fill Apple's 100-byte field without waste, and write Google Play copy that ranks without spam.",
     answer: "Collect phrases from reviews, support and store search suggestions, then group them by what the person wants. Fill Apple's hidden keyword field to near 100 bytes with commas, no spaces, and no words already in your name or subtitle. Google Play has no keyword field; write the visible text naturally.",
     platforms: ["apple", "google-play"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
@@ -27,7 +27,7 @@ export const storePageArticles: ArticleSource[] = [
   {
     section: "store-page", slug: "screenshots", label: "Screenshots",
     title: "App Store and Google Play screenshots: sizes and what to show",
-    seoTitle: "App Store screenshot sizes 2026 (iPhone, iPad, Duo) and Google Play rules",
+    seoTitle: "App Store screenshot sizes 2026: iPhone, iPad, Duo, Play",
     description: "Every required screenshot size for iPhone, iPad and Google Play, and how to plan the first three frames so they work at thumbnail size.",
     answer: "Every iPhone app needs at least one 1206 × 2622 or 1179 × 2556 screenshot, and iPad apps need 2064 × 2752 or 2048 × 2732. Google Play needs 2 to 8 phone screenshots between 320 and 3,840 pixels. Plan the first three frames as a set (outcome, main screen, difference), because search results often show only those.",
     platforms: ["apple", "google-play"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
@@ -37,7 +37,7 @@ export const storePageArticles: ArticleSource[] = [
   {
     section: "store-page", slug: "creative-assets", label: "Headers and search assets",
     title: "App Store product page headers and search result assets",
-    seoTitle: "App Store product page header and search asset sizes (October 2026)",
+    seoTitle: "App Store header and search asset sizes (Oct 2026)",
     description: "Apple's new optional header and search result assets: exact sizes, video rules, where they appear, and how to design one idea that works in silence.",
     answer: "Since 5 October 2026, App Store Connect accepts a product page header (21:9 at 3840 × 1646) and a search result asset (3:2, 1920 × 1280 to 3840 × 2560), as images or 5–30 second looping videos. They show on iOS and iPadOS 27 or later. They're optional and don't replace screenshots.",
     platforms: ["apple"], evidence: ["official"], published: "2026-10-12", reviewed,
@@ -47,7 +47,7 @@ export const storePageArticles: ArticleSource[] = [
   {
     section: "store-page", slug: "localization", label: "Localization",
     title: "Localize your store page for new markets",
-    seoTitle: "App Store and Google Play localization: keywords, screenshots and markets",
+    seoTitle: "App Store localization: keywords, screenshots, markets",
     description: "Choose markets from your own data, redo keyword research in each language, brief translators properly, and localize screenshots as well as text.",
     answer: "Start with two or three markets where you already get installs. Redo keyword research in each language with native speakers and local search suggestions; don't translate the English keyword field. Remember Apple counts keywords in bytes, so accented and Asian scripts fill the field faster.",
     platforms: ["apple", "google-play"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
@@ -57,7 +57,7 @@ export const storePageArticles: ArticleSource[] = [
   {
     section: "store-page", slug: "testing", label: "Testing",
     title: "Test your store page: Product Page Optimization and Play experiments",
-    seoTitle: "Product Page Optimization and Google Play store listing experiments explained",
+    seoTitle: "App Store PPO and Google Play experiments explained",
     description: "How Apple's Product Page Optimization and Google Play's store listing experiments work, their limits, and how to run tests whose results you can trust.",
     answer: "Write the decision before the test and change one idea at a time. Apple's Product Page Optimization tests up to 3 treatments of your icon, screenshots and previews for up to 90 days; apply a winner only at 90% confidence or more. Google Play runs one default graphics experiment or up to five localized experiments at once.",
     platforms: ["apple", "google-play"], evidence: ["official", "experiment"], published: "2026-10-12", reviewed,
@@ -67,7 +67,7 @@ export const storePageArticles: ArticleSource[] = [
   {
     section: "store-page", slug: "custom-pages", label: "Custom pages",
     title: "Custom product pages and custom store listings",
-    seoTitle: "Custom product pages (App Store) and custom store listings (Google Play)",
+    seoTitle: "Custom product pages and custom store listings",
     description: "When a separate store page for one audience is worth it, what each store lets you change, keyword and deep link options, and how to measure each page.",
     answer: "Make a custom page when an audience needs a different pitch, such as a specific ad campaign or search intent. The App Store allows up to 70 custom product pages with their own screenshots, previews, promotional text, keywords and deep links. Google Play allows up to 50 custom store listings targeted by country, campaign, keyword, install state or URL.",
     platforms: ["apple", "google-play"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,

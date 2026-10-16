@@ -5,11 +5,14 @@ import { trackEvent } from "@/lib/analytics";
 import { duplicates, keywordTokens, utf8Bytes, warnings } from "@/lib/workbench";
 import { LIMITS } from "@/lib/platform";
 import type { ToolSlug } from "@/lib/tools";
+import { appleScreenshotClasses, appleScreenshotRules, appleScreenshotSource, formatSize, type ScreenshotClass } from "@/lib/storeSpecs";
 
+const appleLines = (device: ScreenshotClass["device"]) => appleScreenshotClasses.filter((item) => item.device === device && item.required).map((item) => `${item.name}: ${item.sizes.map(formatSize).join(" or ")} (portrait; landscape swaps them). Required: ${item.required}.`);
+const appleCommon = [`${appleScreenshotRules.count}.`, "JPEG, JPG or PNG; no transparency."];
 const screenshotGroups = {
-  iphone: { label: "iPhone", lines: ["Provide 1–10 screenshots.", "For the current required Dynamic Island medium-display set, Apple accepts 1179 × 2556 or 1206 × 2622 pixels; landscape reverses the dimensions.", "JPEG, JPG, or PNG; no transparency."], href: "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications/" },
-  ipad: { label: "iPad", lines: ["A 13-inch iPad screenshot is required when the app runs on iPad.", "Provide 1–10 screenshots.", "JPEG, JPG, or PNG; no transparency."], href: "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications/" },
-  mac: { label: "Mac", lines: ["Provide 1–10 screenshots.", "Accepted examples include 1280 × 800, 1440 × 900, 2560 × 1600, and 2880 × 1800 pixels.", "Show the real Mac experience and keep window and menu-bar details honest."], href: "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications/" },
+  iphone: { label: "iPhone", lines: [...appleLines("iPhone"), ...appleCommon], href: appleScreenshotSource },
+  ipad: { label: "iPad", lines: [...appleLines("iPad"), ...appleCommon], href: appleScreenshotSource },
+  mac: { label: "Mac", lines: [...appleLines("Mac"), ...appleCommon, "Landscape, 16:10. Show the real Mac window and menu bar."], href: appleScreenshotSource },
   google: { label: "Google Play", lines: ["Publishing minimum: at least two screenshots across supported device types; up to eight per device type.", "JPEG or 24-bit PNG without alpha; each side 320–3840 pixels; the long side cannot exceed twice the short side.", "Separate recommendation-eligibility guidance asks for at least four screenshots at 1080px or higher in 16:9 landscape or 9:16 portrait."], href: "https://support.google.com/googleplay/android-developer/answer/9866151" },
 } as const;
 const appleFields = [["appleName", "Name"], ["appleSubtitle", "Subtitle"], ["applePromotional", "Promotional text"], ["appleKeywords", "Keywords"], ["appleDescription", "Description"], ["appleWhatsNew", "What’s New"]] as const;
