@@ -1,11 +1,11 @@
 ## How to use this checklist
 
-Work top to bottom, starting two to three weeks before your launch date. Items marked **Apple** or **Google Play** apply to one store; everything else applies to both. Tick items as you go; your progress is saved in this browser.
+Work top to bottom, starting three weeks before your launch date. Add the date below to see when each phase starts, or put the phases in your calendar. Items marked **Apple** or **Google Play** apply to one store; everything else applies to both. Tick items as you go; your progress is saved in this browser.
 
 ## The checklist
 
 <Checklist groups={[
-  { title: "Foundation", when: "3 weeks out", items: [
+  { title: "Foundation", when: "3 weeks out", startDaysBefore: 21, items: [
     { id: "f-audience", text: "Write one sentence: who the app is for and what it helps them do." },
     { id: "f-features", text: "List the features that ship in this version. The store page can only mention these." },
     { id: "f-record-apple", text: "Create the App Store Connect record; record the bundle ID and SKU.", store: "Apple" },
@@ -13,14 +13,14 @@ Work top to bottom, starting two to three weeks before your launch date. Items m
     { id: "f-agreements", text: "Sign agreements, add tax and banking details, and choose countries." },
     { id: "f-target-sdk", text: "Confirm the build targets Android 16 (API 36).", store: "Google Play" },
   ]},
-  { title: "Declarations", when: "2–3 weeks out", items: [
+  { title: "Declarations", when: "2–3 weeks out", startDaysBefore: 21, items: [
     { id: "d-privacy-url", text: "Publish a privacy policy and a support page with real contact details." },
     { id: "d-privacy-labels", text: "Answer App Privacy for every SDK you ship.", store: "Apple" },
     { id: "d-data-safety", text: "Complete the Data safety form for every SDK you ship.", store: "Google Play" },
     { id: "d-age", text: "Answer the age rating or content rating questionnaire." },
     { id: "d-access", text: "Prepare a demo account that doesn't expire and step-by-step access notes." },
   ]},
-  { title: "Store page", when: "2 weeks out", items: [
+  { title: "Store page", when: "2 weeks out", startDaysBefore: 14, items: [
     { id: "s-subtitle", text: "Write the subtitle (Apple) or short description (Google Play) first; a stranger should understand it." },
     { id: "s-name", text: "Keep the app name within 30 characters and recognizable." },
     { id: "s-keywords", text: "Fill the keyword field to near 100 bytes with no words repeated from the name or subtitle.", store: "Apple" },
@@ -30,7 +30,7 @@ Work top to bottom, starting two to three weeks before your launch date. Items m
     { id: "s-feature-graphic", text: "Upload the 1024 × 500 feature graphic and 2–8 phone screenshots.", store: "Google Play" },
     { id: "s-localize", text: "Localize the name, subtitle, keywords and captions for your top markets, with a native reviewer." },
   ]},
-  { title: "Testing", when: "1–2 weeks out", items: [
+  { title: "Testing", when: "1–2 weeks out", startDaysBefore: 14, items: [
     { id: "t-fresh", text: "Fresh install on a real device: onboarding, permissions denied, poor network, empty states." },
     { id: "t-purchase", text: "Buy, restore and cancel every in-app purchase and subscription." },
     { id: "t-claims", text: "Check every screenshot and caption against the shipped build." },
@@ -38,13 +38,13 @@ Work top to bottom, starting two to three weeks before your launch date. Items m
     { id: "t-closed", text: "Run the closed test long enough to meet the 14-day rule, if it applies.", store: "Google Play" },
     { id: "t-tablet", text: "Test on a tablet or foldable; API 36 removes orientation locks on large screens.", store: "Google Play" },
   ]},
-  { title: "Launch", when: "Launch week", items: [
+  { title: "Launch", when: "Launch week", startDaysBefore: 7, items: [
     { id: "l-notes", text: "Write review notes: demo account, where the main feature is, anything unusual." },
     { id: "l-release", text: "Choose manual or scheduled release; allow up to 24 hours for an approved app to appear.", store: "Apple" },
     { id: "l-staged", text: "Start production with a staged rollout and watch Android vitals.", store: "Google Play" },
     { id: "l-links", text: "Test the store links you'll share, on both platforms, after the app is live." },
   ]},
-  { title: "After launch", when: "First 2 weeks", items: [
+  { title: "After launch", when: "First 2 weeks", startDaysBefore: 0, items: [
     { id: "a-baseline", text: "Record conversion by source, day-1 and day-7 retention, crashes and the first reviews." },
     { id: "a-reviews", text: "Reply to the first reviews that report bugs, once the fix ships." },
     { id: "a-log", text: "Write down every listing change and its date before you make the next one." },

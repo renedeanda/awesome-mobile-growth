@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { ServiceWorker } from "@/components/ServiceWorker";
 import { site, absolute } from "@/lib/site";
 import "./globals.css";
 
@@ -39,6 +40,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   ];
   return <html lang="en" data-scroll-behavior="smooth"><body>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
-    <a className="skip" href="#main">Skip to content</a><SiteHeader/><main id="main" className="page">{children}</main><SiteFooter/><GoogleAnalytics/>
+    <a className="skip" href="#main">Skip to content</a><SiteHeader/><main id="main" className="page">{children}</main><SiteFooter/><GoogleAnalytics/><ServiceWorker/>
   </body></html>;
 }

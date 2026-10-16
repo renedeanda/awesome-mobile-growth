@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { tools } from "@/lib/tools";
+import { SearchDialog } from "./SearchDialog";
 
 type NavLink = { href: string; label: string; note?: string };
 type NavGroup = { title: string; links: NavLink[] };
@@ -29,6 +30,7 @@ const groups: NavGroup[] = [
     { href: "/store-page/metadata/", label: "Name, subtitle and description" },
     { href: "/store-page/keywords/", label: "Keywords" },
     { href: "/store-page/screenshots/", label: "Screenshots" },
+    { href: "/screenshot-sizes/", label: "Screenshot sizes by device" },
     { href: "/store-page/creative-assets/", label: "Headers and search assets" },
     { href: "/store-page/localization/", label: "Localization" },
     { href: "/store-page/testing/", label: "Testing" },
@@ -120,6 +122,7 @@ export function SiteHeader() {
       <nav className="desktop-nav" aria-label="Primary">
         {desktopLinks.map(item => <Link key={item.href} href={item.href} aria-current={isActive(pathname, item.href) ? "page" : undefined}>{item.label}</Link>)}
       </nav>
+      <SearchDialog/>
       <button ref={toggleRef} type="button" className="menu-toggle" aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen(true)}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         <span className="sr-only">Open menu</span>

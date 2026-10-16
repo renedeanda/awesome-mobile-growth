@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { CopyButton } from "@/components/CopyButton";
 import { appleCreativeAssets, appleScreenshotClasses, appleScreenshotSource, appleCreativeSource, formatSize, googleGraphicsSource, googlePlayGraphics, type ScreenshotClass } from "@/lib/storeSpecs";
@@ -30,7 +31,7 @@ export function AskAI({ prompt, checks }: { prompt: string; checks?: string[] })
 }
 
 function ScreenshotRows({ items }: { items: ScreenshotClass[] }) {
-  return <>{items.map((item) => <tr key={item.id}><th scope="row">{item.name}{item.required && <small className="required-tag">Required: {item.required}</small>}</th><td className="nowrap-cells">{item.sizes.map((size) => <span key={formatSize(size)}>{formatSize(size)}</span>)}</td></tr>)}</>;
+  return <>{items.map((item) => <tr key={item.id}><th scope="row"><Link href={`/screenshot-sizes/${item.id}/`}>{item.name}</Link>{item.required && <small className="required-tag">Required: {item.required}</small>}</th><td className="nowrap-cells">{item.sizes.map((size) => <span key={formatSize(size)}>{formatSize(size)}</span>)}</td></tr>)}</>;
 }
 
 export function AppleScreenshotTable({ devices = ["iPhone", "iPad"] }: { devices?: Array<ScreenshotClass["device"]> }) {

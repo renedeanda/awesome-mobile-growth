@@ -24,6 +24,8 @@ for (const file of html) {
     if (!/noindex/.test(source)) errors.push(`${file}: 404 must be noindex`);
     continue;
   }
+  // Utility pages that opt out of indexing (the offline fallback) need no search metadata.
+  if (/<meta name="robots" content="noindex/.test(source)) continue;
 
   const title = source.match(/<title>([^<]+)<\/title>/)?.[1];
   const description = meta(source, "description");
