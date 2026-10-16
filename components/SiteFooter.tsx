@@ -11,7 +11,7 @@ export function SiteFooter() {
       <Link href="/tools/">Tools</Link>
       <Link href="/ai/">AI skills</Link>
       <Link href="/reference/">Reference</Link>
-      <Link href="/updates/">Updates</Link>
+      <Link href="/updates/">Platform changes</Link>
       <Link href="/podcasts/">Podcasts</Link>
       <Link href="/privacy/">Privacy</Link>
       <Link href="/feed.xml">Feed</Link>

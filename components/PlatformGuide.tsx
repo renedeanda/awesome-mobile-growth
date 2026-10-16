@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ArticleMeta } from "@/components/ArticleMeta";
 import { DirectAnswer } from "@/components/ContentBlocks";
 import type { ApplePlatformGuide } from "@/lib/applePlatforms";
 import { applePlatformsReviewed } from "@/lib/applePlatforms";
@@ -19,7 +20,7 @@ export function PlatformGuide({ guide, sections, children }: { guide: ApplePlatf
   return <div className="article-shell platform-article"><article className="article">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
     <nav className="breadcrumbs" aria-label="Breadcrumb"><Link href="/apple-platforms/">Apple launch guides</Link><span aria-hidden="true">/</span><span>{guide.label}</span></nav>
-    <header className="article-head platform-article__head"><p className="eyebrow">{guide.label} · Official sources first</p><h1>{guide.title}</h1><p className="lede">{guide.description}</p><div className="article-meta"><span>{guide.reading}</span><span>Verified <time dateTime={applePlatformsReviewed}>{applePlatformsReviewed}</time></span></div></header>
+    <header className="article-head platform-article__head"><p className="eyebrow">{guide.label} · Official sources first</p><h1>{guide.title}</h1><p className="lede">{guide.description}</p><ArticleMeta reading={guide.reading} checked={applePlatformsReviewed}/></header>
     <DirectAnswer><p>{guide.answer}</p></DirectAnswer>
     <details className="toc-mobile"><summary>On this page</summary><ol>{sections.map((section) => <li key={section.id}><a href={`#${section.id}`}>{section.label}</a></li>)}</ol></details>
     <div className="prose platform-prose">{children}</div>

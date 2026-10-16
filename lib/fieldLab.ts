@@ -1,3 +1,5 @@
+import { readingTime } from "./readingTime.ts";
+
 export type FieldSource = { label: string; href: string; note?: string };
 export type FieldSection = { id: string; title: string; paragraphs: string[]; bullets?: string[] };
 export type FieldEntry = {
@@ -7,14 +9,12 @@ export type FieldEntry = {
   description: string;
   answer: string;
   reviewed: string;
-  reading: string;
   sections: FieldSection[];
   sources: FieldSource[];
 };
 
 export function fieldReadingTime(entry: FieldEntry) {
-  const text = [entry.title, entry.description, entry.answer, ...entry.sections.flatMap((section) => [section.title, ...section.paragraphs, ...(section.bullets ?? [])])].join(" ");
-  return `${Math.max(2, Math.ceil(text.trim().split(/\s+/).length / 180))} min`;
+  return readingTime([entry.title, entry.description, entry.answer, ...entry.sections.flatMap((section) => [section.title, ...section.paragraphs, ...(section.bullets ?? [])])].join(" "));
 }
 
 export const reviewed = "2026-10-12";
@@ -33,7 +33,7 @@ const googleCustom = "https://support.google.com/googleplay/android-developer/an
 const googleExperiments = "https://support.google.com/googleplay/android-developer/answer/12053285";
 
 const metric = (slug: string, title: string, description: string, answer: string, exact: string, misread: string, decision: string, source = appleMetrics): FieldEntry => ({
-  slug, label: "App Store metric", title, description, answer, reviewed, reading: "4 min",
+  slug, label: "App Store metric", title, description, answer, reviewed,
   sections: [
     { id: "definition", title: "The platform definition", paragraphs: [exact] },
     { id: "misread", title: "The common misread", paragraphs: [misread] },
@@ -42,7 +42,7 @@ const metric = (slug: string, title: string, description: string, answer: string
   sources: [{ label: "Apple · Metric definitions", href: source }],
 });
 
-const allReferenceEntries: FieldEntry[] = [
+export const referenceEntries: FieldEntry[] = [
   metric("impressions", "App Store impressions", "What Apple counts as an impression, where the metric appears, and what it cannot prove.", "An App Store impression is counted when an app is viewed on the Today, Games, Apps, or Search tabs for more than one second. Apple includes product page views in the total.", "Apple defines Impressions as the number of times an app was viewed on App Store discovery surfaces for more than one second. Unique Device Impressions deduplicate those views by device.", "Impressions are exposure, not necessarily intentional consideration. Search, Browse, featuring, ads, and repeated exposure can represent very different levels of intent.", "Use impressions to locate changes in visibility and to compare source mix. Do not use them alone to judge listing quality or product-market fit."),
   metric("product-page-views", "Product page views", "Understand what a product page view means in App Store Connect and why it is not the denominator in Apple’s standard conversion rate.", "Product Page Views count visits to the App Store product page, including pages loaded with StoreKit. They are a useful consideration signal, but Apple’s standard Conversion Rate uses unique impressions instead.", "Apple counts the total number of times the product page was accessed. A separate Unique Devices version deduplicates by device.", "Downloads divided by product page views can be a useful custom diagnostic, but it is not Apple’s standard Conversion Rate. Label that ratio clearly if you calculate it.", "Use page views to understand movement from discovery into deeper consideration and to compare external campaigns that send people directly to a listing."),
   metric("conversion-rate", "App Store conversion rate", "Use Apple’s actual formula and avoid comparing incompatible benchmark definitions.", "Apple’s App Store conversion rate is total downloads and pre-orders divided by unique device impressions. It is not downloads divided by product page views.", "The numerator includes first-time downloads, redownloads, and applicable pre-orders. The denominator is unique device impressions for the selected period.", "Many third-party reports call downloads divided by product page views a conversion rate. Comparing that value with Apple’s metric produces a false benchmark.", "Segment Apple’s rate by source and compare with Apple’s own peer groups. Use product page views as a separate diagnostic, not a replacement denominator."),
@@ -52,7 +52,7 @@ const allReferenceEntries: FieldEntry[] = [
   metric("search-vs-browse", "App Store Search versus Browse", "Distinguish intent-driven search exposure from editorial and navigational browse exposure.", "Search includes views and downloads from App Store search, including ads in search results. Browse covers discovery elsewhere in the store, such as Today, Games, and Apps surfaces.", "The two sources represent different contexts and can have very different conversion patterns.", "A change in Search does not automatically prove a keyword change worked; paid search, brand demand, seasonality, and ranking movement may overlap.", "Compare source trends with release dates and marketing activity. Treat source changes as evidence to investigate, not a causal verdict.", appleAcquisition),
   metric("proceeds-vs-sales", "Proceeds versus Sales", "Do not confuse what customers paid with the amount a developer is estimated to receive.", "Sales are amounts billed to customers. Proceeds estimate what the developer receives after applicable taxes and Apple’s commission; final payment can still differ.", "Apple reports Sales and Proceeds as separate metrics and provides finalized payment information in financial reporting.", "Revenue dashboards, subscription platforms, and financial reports may use different timing, currencies, refunds, and definitions.", "Use proceeds for unit-economics context, but reconcile important business decisions with final financial reports."),
   {
-    slug: "keyword-field", label: "Apple metadata", title: "The App Store keyword field", description: "Use Apple’s private 100-byte field without duplicate terms, spaces, or imaginary volume scores.", reviewed, reading: "6 min",
+    slug: "keyword-field", label: "Apple metadata", title: "The App Store keyword field", description: "Use Apple’s private 100-byte field without duplicate terms, spaces, or imaginary volume scores.", reviewed,
     answer: "Apple’s keyword field accepts up to 100 UTF-8 bytes. Use relevant comma-separated terms, avoid wasting bytes on repetition, and validate bytes—not visible character count.",
     sections: [
       { id: "limit", title: "Count bytes, not characters", paragraphs: ["ASCII letters usually consume one byte, while many accented and non-Latin characters consume more. The field can therefore look shorter than its byte limit in some languages."] },
@@ -61,7 +61,7 @@ const allReferenceEntries: FieldEntry[] = [
     ], sources: [{ label: "Apple · Platform version information", href: "https://developer.apple.com/help/app-store-connect/reference/app-information/platform-version-information" }],
   },
   {
-    slug: "subtitle", label: "Apple metadata", title: "App Store subtitle", description: "Write the 30-character subtitle as a specific use or benefit, not a duplicate brand line.", reviewed, reading: "5 min",
+    slug: "subtitle", label: "Apple metadata", title: "App Store subtitle", description: "Write the 30-character subtitle as a specific use or benefit, not a duplicate brand line.", reviewed,
     answer: "The App Store subtitle is a localizable field of up to 30 characters shown beneath the app name. Use it to clarify the product’s primary use or benefit in language the rest of the page can prove.",
     sections: [
       { id: "job", title: "Give the field one job", paragraphs: ["A subtitle is too small to carry the entire positioning strategy. Choose the most important missing piece after the name: the audience, job, or concrete outcome."] },
@@ -70,7 +70,7 @@ const allReferenceEntries: FieldEntry[] = [
     ], sources: [{ label: "Apple · App information", href: "https://developer.apple.com/help/app-store-connect/reference/app-information/app-information" }],
   },
   {
-    slug: "promotional-text", label: "Apple metadata", title: "App Store promotional text", description: "Use Apple’s 170-character flexible field for timely conversion context rather than keyword stuffing.", reviewed, reading: "5 min",
+    slug: "promotional-text", label: "Apple metadata", title: "App Store promotional text", description: "Use Apple’s 170-character flexible field for timely conversion context rather than keyword stuffing.", reviewed,
     answer: "Promotional text is an optional localizable field of up to 170 characters displayed above the description. Apple lets you update it without submitting a new app version; use it for current, truthful conversion context.",
     sections: [
       { id: "purpose", title: "Use it for a timely reason", paragraphs: ["A meaningful new capability, seasonal use, event, or offer can belong here when it is currently available and accurately represented."] },
@@ -79,7 +79,7 @@ const allReferenceEntries: FieldEntry[] = [
     ], sources: [{ label: "Apple · Product page", href: appleProductPage }, { label: "Apple · Platform version information", href: "https://developer.apple.com/help/app-store-connect/reference/app-information/platform-version-information" }],
   },
   {
-    slug: "product-page-optimization", label: "Apple experimentation", title: "Product Page Optimization", description: "Understand what Apple’s native product-page test can change and how to read the result.", reviewed, reading: "7 min",
+    slug: "product-page-optimization", label: "Apple experimentation", title: "Product Page Optimization", description: "Understand what Apple’s native product-page test can change and how to read the result.", reviewed,
     answer: "Product Page Optimization lets eligible App Store pages compare icon, screenshot, and preview treatments with the original page. Begin with a decision and hypothesis; do not treat a winning label as universal proof.",
     sections: [
       { id: "purpose", title: "Optimization answers one decision", paragraphs: ["Use a treatment to test a meaningful creative hypothesis. Multiple unrelated changes make the result harder to interpret and reuse."] },
@@ -88,7 +88,7 @@ const allReferenceEntries: FieldEntry[] = [
     ], sources: [{ label: "Apple · Product Page Optimization", href: applePpo }, { label: "Apple · PPO analytics", href: "https://developer.apple.com/help/app-store-connect-analytics/acquisition/product-page-optimization/" }],
   },
   {
-    slug: "custom-product-pages", label: "Apple personalization", title: "Custom product pages", description: "Match a specific App Store page to a campaign, audience, keyword, or in-app destination.", reviewed, reading: "7 min",
+    slug: "custom-product-pages", label: "Apple personalization", title: "Custom product pages", description: "Match a specific App Store page to a campaign, audience, keyword, or in-app destination.", reviewed,
     answer: "A custom product page is an additional App Store product-page version with its own promotional text and creative. It can support a specific audience promise, unique URL, keyword assignment, and—on supported systems—deep link.",
     sections: [
       { id: "difference", title: "Personalization is not optimization", paragraphs: ["Product Page Optimization asks which treatment performs better for a shared page. A custom product page expresses a different promise for a defined audience or campaign."] },
@@ -96,31 +96,12 @@ const allReferenceEntries: FieldEntry[] = [
       { id: "measurement", title: "Measure downstream quality", paragraphs: ["Use page analytics and campaign context, then compare activation, paid conversion, retention, and refunds. More downloads are not automatically better acquisition."] },
     ], sources: [{ label: "Apple · Custom product pages", href: appleCpp }],
   },
-  {
-    slug: "custom-store-listings", label: "Google Play personalization", title: "Google Play custom store listings", description: "Create a distinct Play listing only when a country, campaign, keyword, or user state deserves a different promise.", reviewed, reading: "7 min",
-    answer: "Custom store listings let a developer tailor a Google Play listing to defined audiences such as countries, campaigns, search keywords, or eligible user states. Capacity is not a reason to create variants; each listing needs a distinct job and measurement plan.",
-    sections: [
-      { id: "audience", title: "Begin with a real audience difference", paragraphs: ["Change the listing when the audience’s context, language, campaign promise, or product destination is meaningfully different—not merely because another slot exists."] },
-      { id: "continuity", title: "Preserve message continuity", paragraphs: ["The acquisition message, listing, install, and first-use experience should reinforce the same outcome. Use deep links or onboarding context where the product supports them."] },
-      { id: "measurement", title: "Read listing performance in context", paragraphs: ["Compare the custom listing with its traffic source and product outcomes. Differences in audience composition can make a simple listing-to-listing comparison misleading."] },
-    ], sources: [{ label: "Google Play · Custom store listings", href: googleCustom }],
-  },
-  {
-    slug: "store-listing-experiments", label: "Google Play experimentation", title: "Google Play store listing experiments", description: "Plan a Play listing experiment around a decision, not a hopeful collection of variants.", reviewed, reading: "7 min",
-    answer: "Store listing experiments compare eligible text or creative variants on Google Play. Define the decision, hypothesis, primary measure, audience, and stopping rule before the experiment begins.",
-    sections: [
-      { id: "setup", title: "Choose a bounded question", paragraphs: ["A test should distinguish between plausible choices. Avoid bundling a new icon, screenshot story, and description rewrite when the team needs to learn which idea mattered."] },
-      { id: "confounders", title: "Protect interpretation", paragraphs: ["App releases, campaigns, seasonality, territory mix, store featuring, pricing, and product incidents can change the audience during a test. Record them before declaring a lesson."] },
-      { id: "outcome", title: "Keep inconclusive results", paragraphs: ["Do not convert uncertainty into a marketing story. Save the result and decide whether to gather more traffic, make a stronger treatment, or move to a higher-value question."] },
-    ], sources: [{ label: "Google Play · Store listing experiments", href: googleExperiments }],
-  },
 ];
 
-export const referenceEntries = allReferenceEntries.filter((entry) => !["custom-store-listings", "store-listing-experiments"].includes(entry.slug));
 
 export const googleGuides: FieldEntry[] = [
   {
-    slug: "android-app-launch-checklist", label: "Launch", title: "Android app launch checklist", description: "Move from product truth through Play Console setup, listing, testing, policy, rollout, and post-launch learning.", reviewed, reading: "12 min",
+    slug: "android-app-launch-checklist", label: "Launch", title: "Android app launch checklist", description: "Move from product truth through Play Console setup, listing, testing, policy, rollout, and post-launch learning.", reviewed,
     answer: "A reliable Google Play launch joins a production-ready Android build to accurate policy declarations, a truthful store listing, tested device experiences, a controlled release, and a measurement plan that extends beyond installs.",
     sections: [
       { id: "ground", title: "Ground the launch in the product", paragraphs: ["Name the audience, job, primary promise, business model, supported devices, data practices, and every claim the store page must prove."], bullets: ["Inventory only shipped capabilities.", "Confirm account, payment, support, and deletion flows.", "Record required policy declarations and target markets.", "Choose a release owner and rollback decision."] },
@@ -131,7 +112,7 @@ export const googleGuides: FieldEntry[] = [
     ], sources: [{ label: "Google Play · Create and set up your app", href: "https://support.google.com/googleplay/android-developer/answer/9859152" }, { label: "Google Play · Prepare and roll out a release", href: "https://support.google.com/googleplay/android-developer/answer/9859348" }],
   },
   {
-    slug: "store-listing-metadata", label: "Metadata", title: "Google Play store listing metadata", description: "Write a clear app name, short description, and full description inside current policy and field limits.", reviewed, reading: "9 min",
+    slug: "store-listing-metadata", label: "Metadata", title: "Google Play store listing metadata", description: "Write a clear app name, short description, and full description inside current policy and field limits.", reviewed,
     answer: "Google Play uses visible listing fields rather than Apple’s private keyword field. Write naturally for the customer, make the product purpose unmistakable, and keep every claim inside Google Play metadata policy.",
     sections: [
       { id: "fields", title: "Give each visible field one job", paragraphs: ["The app name identifies the product, the short description classifies its use, and the full description gives enough evidence to make an informed decision. Repetition is not a strategy."] },
@@ -141,7 +122,7 @@ export const googleGuides: FieldEntry[] = [
     ], sources: [{ label: "Google Play · Store listing", href: googleListing }, { label: "Google Play · Metadata policy", href: googlePolicy }],
   },
   {
-    slug: "screenshot-sizes-and-creative", label: "Creative", title: "Google Play screenshots and creative", description: "Plan screenshots, icon, feature graphic, and video as a truthful system across Play surfaces and devices.", reviewed, reading: "10 min",
+    slug: "screenshot-sizes-and-creative", label: "Creative", title: "Google Play screenshots and creative", description: "Plan screenshots, icon, feature graphic, and video as a truthful system across Play surfaces and devices.", reviewed,
     answer: "Google Play creative should show the experience people will receive, remain legible at store scale, and satisfy the current asset requirements for each supported form factor. Verify exact file rules in Play Console before delivery.",
     sections: [
       { id: "system", title: "Build an asset system, not isolated images", paragraphs: ["Keep editable sources, locale, form factor, safe areas, claim owner, and expiration notes with each asset. Reuse a product truth while adapting composition to the placement."] },
@@ -150,10 +131,26 @@ export const googleGuides: FieldEntry[] = [
       { id: "truth", title: "Show what exists", paragraphs: ["Use real UI or clearly disclosed illustrative elements. Do not depict unavailable features, fabricated reviews, impossible results, or a visual quality the shipped experience does not support."] },
     ], sources: [{ label: "Google Play · Graphic assets", href: googleGraphics }, { label: "Google Play · Preview assets policy", href: "https://support.google.com/googleplay/android-developer/answer/1078870" }],
   },
-  allReferenceEntries.find((entry) => entry.slug === "custom-store-listings")!,
-  allReferenceEntries.find((entry) => entry.slug === "store-listing-experiments")!,
   {
-    slug: "localization", label: "Markets", title: "Google Play listing localization", description: "Adapt the product promise, search language, and creative to each market instead of translating an English page literally.", reviewed, reading: "8 min",
+    slug: "custom-store-listings", label: "Google Play personalization", title: "Google Play custom store listings", description: "Create a distinct Play listing only when a country, campaign, keyword, or user state deserves a different promise.", reviewed,
+    answer: "Custom store listings let a developer tailor a Google Play listing to defined audiences such as countries, campaigns, search keywords, or eligible user states. Capacity is not a reason to create variants; each listing needs a distinct job and measurement plan.",
+    sections: [
+      { id: "audience", title: "Begin with a real audience difference", paragraphs: ["Change the listing when the audience’s context, language, campaign promise, or product destination is meaningfully different—not merely because another slot exists."] },
+      { id: "continuity", title: "Preserve message continuity", paragraphs: ["The acquisition message, listing, install, and first-use experience should reinforce the same outcome. Use deep links or onboarding context where the product supports them."] },
+      { id: "measurement", title: "Read listing performance in context", paragraphs: ["Compare the custom listing with its traffic source and product outcomes. Differences in audience composition can make a simple listing-to-listing comparison misleading."] },
+    ], sources: [{ label: "Google Play · Custom store listings", href: googleCustom }],
+  },
+  {
+    slug: "store-listing-experiments", label: "Google Play experimentation", title: "Google Play store listing experiments", description: "Plan a Play listing experiment around a decision, not a hopeful collection of variants.", reviewed,
+    answer: "Store listing experiments compare eligible text or creative variants on Google Play. Define the decision, hypothesis, primary measure, audience, and stopping rule before the experiment begins.",
+    sections: [
+      { id: "setup", title: "Choose a bounded question", paragraphs: ["A test should distinguish between plausible choices. Avoid bundling a new icon, screenshot story, and description rewrite when the team needs to learn which idea mattered."] },
+      { id: "confounders", title: "Protect interpretation", paragraphs: ["App releases, campaigns, seasonality, territory mix, store featuring, pricing, and product incidents can change the audience during a test. Record them before declaring a lesson."] },
+      { id: "outcome", title: "Keep inconclusive results", paragraphs: ["Do not convert uncertainty into a marketing story. Save the result and decide whether to gather more traffic, make a stronger treatment, or move to a higher-value question."] },
+    ], sources: [{ label: "Google Play · Store listing experiments", href: googleExperiments }],
+  },
+  {
+    slug: "localization", label: "Markets", title: "Google Play listing localization", description: "Adapt the product promise, search language, and creative to each market instead of translating an English page literally.", reviewed,
     answer: "Google Play localization is a market workflow: rebuild relevant vocabulary, adapt the promise and visuals, respect local policy and product availability, and require native review before treating generated copy as final.",
     sections: [
       { id: "market", title: "Choose markets intentionally", paragraphs: ["Use product readiness, support, demand evidence, monetization, legal constraints, and translation capacity. A locale slot is not an obligation to publish weak copy."] },
@@ -173,25 +170,15 @@ export const growthStages = [
   { id: "compound", title: "Compound", question: "Does learning and advocacy improve the next cycle?", metric: "Referrals, reviews, repeat demand", failure: "Growth lessons disappear between releases" },
 ] as const;
 
-const allGrowthGuides: FieldEntry[] = [
+export const growthGuides: FieldEntry[] = [
   {
-    slug: "app-growth-loop", label: "Framework", title: "The App Growth Loop", description: "Connect discovery, conversion, activation, monetization, retention, and advocacy without pretending one channel creates the whole result.", reviewed, reading: "10 min",
+    slug: "app-growth-loop", label: "Framework", title: "The App Growth Loop", description: "Connect discovery, conversion, activation, monetization, retention, and advocacy without pretending one channel creates the whole result.", reviewed,
     answer: "Sustainable app growth is a connected loop: reach the right people, make an honest promise, deliver first value, support the business model, retain customers, and carry what you learn into the next acquisition cycle.",
     sections: growthStages.map((stage) => ({ id: stage.id, title: stage.title, paragraphs: [`Ask: ${stage.question} Use ${stage.metric.toLowerCase()} as evidence, then protect against the common failure: ${stage.failure.toLowerCase()}.`, "A stage can limit everything after it. Diagnose the constraint before buying another tool or producing another campaign."] })),
     sources: [{ label: "Apple · Acquisition analytics", href: appleAcquisition }, { label: "Google Play · Statistics", href: "https://support.google.com/googleplay/android-developer/answer/139628" }],
   },
   {
-    slug: "mobile-app-growth-strategy", label: "Strategy", title: "Mobile app growth strategy", description: "Choose channels from product economics, audience intent, evidence, and operational capacity—not a universal playbook.", reviewed, reading: "12 min",
-    answer: "A useful mobile growth strategy names the customer, product value, business model, current constraint, and the smallest channel experiment that can answer a real decision. ASO is one pillar, not the entire system.",
-    sections: [
-      { id: "diagnose", title: "Diagnose before selecting a channel", paragraphs: ["A new app with no qualified visibility has a different problem from an app with strong traffic and poor activation. Map the journey before choosing ASO, web content, paid acquisition, partnerships, referrals, or lifecycle work."] },
-      { id: "economics", title: "Respect the business model", paragraphs: ["Paid apps, subscriptions, advertising, commerce, and enterprise products support different acquisition costs and time horizons. Do not borrow a funnel whose economics cannot fit the product."] },
-      { id: "portfolio", title: "Build a small channel portfolio", paragraphs: ["Use one dependable channel, one learning channel, and one compounding asset before operating everywhere. Store presence, web demand, product referrals, and paid media can reinforce one another when the message stays coherent."] },
-      { id: "cadence", title: "Run a decision cadence", paragraphs: ["Record the hypothesis, cost, audience, primary outcome, guardrails, and next move. Stop activities that cannot teach or compound."] },
-    ], sources: [{ label: "Apple · Acquisition", href: appleAcquisition }, { label: "RevenueCat · State of Subscription Apps", href: "https://www.revenuecat.com/state-of-subscription-apps/" }],
-  },
-  {
-    slug: "web-to-app-funnels", label: "Acquisition", title: "Web-to-app funnels", description: "Decide when a web journey adds useful qualification, education, or payment—and when it only adds friction.", reviewed, reading: "14 min",
+    slug: "web-to-app-funnels", label: "Acquisition", title: "Web-to-app funnels", description: "Decide when a web journey adds useful qualification, education, or payment—and when it only adds friction.", reviewed,
     answer: "A web-to-app funnel moves acquisition through a web experience before or alongside the app. It can support education, qualification, personalization, account creation, or payment, but adds handoff, policy, attribution, support, and conversion complexity.",
     sections: [
       { id: "shape", title: "Map the complete handoff", paragraphs: ["A common path is ad or search → landing page → education or quiz → account or offer → store or web checkout → app install → signed-in first value. Every step needs ownership and measurement."] },
@@ -202,7 +189,7 @@ const allGrowthGuides: FieldEntry[] = [
     ], sources: [{ label: "RevenueCat · Web-to-app funnels", href: "https://www.revenuecat.com/blog/growth/web-to-app-funnels" }, { label: "Apple · App Review Guidelines", href: "https://developer.apple.com/app-store/review/guidelines/" }, { label: "Google Play · External offers", href: "https://support.google.com/googleplay/android-developer/answer/14372887" }],
   },
   {
-    slug: "aso-and-paid-acquisition", label: "Channels", title: "ASO and paid acquisition", description: "Share intent and creative learning across paid and organic work without confusing attribution with incrementality.", reviewed, reading: "10 min",
+    slug: "aso-and-paid-acquisition", label: "Channels", title: "ASO and paid acquisition", description: "Share intent and creative learning across paid and organic work without confusing attribution with incrementality.", reviewed,
     answer: "ASO and paid acquisition work best when they share audience intent, product proof, and creative learning. Keep measurement distinct: a campaign can influence store behavior without proving an organic ranking or incremental download.",
     sections: [
       { id: "intent", title: "Share the intent map", paragraphs: ["Paid query data, landing-page behavior, reviews, support language, and store suggestions can improve the vocabulary map. None is a perfect substitute for another channel’s context."] },
@@ -212,27 +199,17 @@ const allGrowthGuides: FieldEntry[] = [
     ], sources: [{ label: "Apple · Custom product pages", href: appleCpp }, { label: "Google Play · Custom store listings", href: googleCustom }],
   },
   {
-    slug: "acquisition-to-retention", label: "Measurement", title: "From acquisition to retention", description: "Connect store metrics to activation, payment, retention, quality, and reviews so acquisition remains accountable to the product.", reviewed, reading: "10 min",
-    answer: "A store-page win is valuable only when the acquired audience can activate, receive the promised value, and remain worth serving. Read downloads with product and business outcomes rather than optimizing the store in isolation.",
-    sections: [
-      { id: "funnel", title: "Keep metric definitions intact", paragraphs: ["Impressions, page views, downloads, installations, sessions, active devices, trials, paid plans, and retention describe different events. Name the exact numerator, denominator, population, and time window."] },
-      { id: "quality", title: "Use quality guardrails", paragraphs: ["For every acquisition experiment, choose at least one downstream guardrail such as activation, D7 retention, refund rate, crash rate, or support burden."] },
-      { id: "segments", title: "Compare like with like", paragraphs: ["Source, territory, device, version, campaign, and product page can change audience quality. Aggregate conversion can improve while an important segment gets worse."] },
-      { id: "learning", title: "Return product evidence to the page", paragraphs: ["Reviews, onboarding failures, retention, and support themes should influence metadata and creative. Remove claims that attract people the product cannot serve."] },
-    ], sources: [{ label: "Apple · Analytics dashboard", href: "https://developer.apple.com/help/app-store-connect-analytics/overview/analytics-dashboard" }, { label: "Apple · Peer group benchmarks", href: "https://developer.apple.com/help/app-store-connect-analytics/benchmarks/peer-group-benchmarks/" }],
-  },
-  {
-    slug: "subscription-funnel", label: "Monetization", title: "Subscription app funnel", description: "Connect acquisition, onboarding, paywall, trial, paid conversion, renewal, churn, and win-back without hiding the product value.", reviewed, reading: "12 min",
+    slug: "subscription-funnel", label: "Monetization", title: "Subscription app funnel", description: "Connect acquisition, onboarding, paywall, trial, paid conversion, renewal, churn, and win-back without hiding the product value.", reviewed: "2026-10-16",
     answer: "A subscription funnel is the full path from qualified discovery to recurring value. Optimize the handoffs together: acquisition promise, first value, offer, purchase, entitlement, renewal, support, and retention.",
     sections: [
       { id: "promise", title: "Begin with the recurring value", paragraphs: ["A subscription is not the product. Explain what improves repeatedly and show enough proof before asking for an ongoing commitment."] },
       { id: "measurement", title: "Define every stage", paragraphs: ["Track exposure, install, onboarding completion, paywall view, trial start, paid conversion, renewal, churn, refund, and reactivation with explicit populations and windows."] },
       { id: "offers", title: "Treat offers as product decisions", paragraphs: ["Trials, introductory offers, discounts, and win-back offers change who converts and why. Judge them by retained proceeds and customer experience, not starts alone."] },
       { id: "systems", title: "Reconcile systems", paragraphs: ["App Store Connect, Play Console, subscription infrastructure, payment processors, and product analytics can differ in attribution, currency, refund timing, and identity. Document the source of truth for each decision."] },
-    ], sources: [{ label: "Apple · Subscription analytics", href: "https://developer.apple.com/help/app-store-connect-analytics/measure-subscription-performance/view-subscription-data" }, { label: "RevenueCat · Subscription app resources", href: "https://www.revenuecat.com/blog/" }],
+    ], sources: [{ label: "Apple · Subscription analytics", href: "https://developer.apple.com/help/app-store-connect-analytics/monetization/subscriptions" }, { label: "RevenueCat · Subscription app resources", href: "https://www.revenuecat.com/blog/" }],
   },
   {
-    slug: "mobile-app-onboarding", label: "Activation", title: "Mobile app onboarding", description: "Carry the acquisition promise into first value without turning setup, permissions, or account creation into a maze.", reviewed, reading: "9 min",
+    slug: "mobile-app-onboarding", label: "Activation", title: "Mobile app onboarding", description: "Carry the acquisition promise into first value without turning setup, permissions, or account creation into a maze.", reviewed,
     answer: "Good onboarding continues the promise that earned the install and removes everything that does not help the customer reach first value safely. Measure activation, not slide completion.",
     sections: [
       { id: "continuity", title: "Continue the store promise", paragraphs: ["If the listing foregrounds one outcome, onboarding should help the customer reach it. Do not open with an unrelated feature tour or organizational history."] },
@@ -241,23 +218,12 @@ const allGrowthGuides: FieldEntry[] = [
       { id: "segments", title: "Preserve acquisition context", paragraphs: ["A customer arriving from a specific page or campaign may need a different first path. Use deep linking or carried context when the product can support it reliably."] },
     ], sources: [{ label: "Apple · Human Interface Guidelines · Onboarding", href: "https://developer.apple.com/design/human-interface-guidelines/onboarding" }, { label: "Android · Permissions UX", href: "https://developer.android.com/training/permissions/usage-notes" }],
   },
-  {
-    slug: "app-referral-loop", label: "Compounding", title: "App referral and advocacy loop", description: "Design sharing, ratings, reviews, and referrals around earned value rather than interruption or manipulation.", reviewed, reading: "8 min",
-    answer: "A referral loop begins after demonstrated value. Make the shared object useful, preserve recipient context, ask at an earned moment, and measure whether referred customers activate and retain—not just whether a link was sent.",
-    sections: [
-      { id: "value", title: "Find the naturally shareable value", paragraphs: ["The strongest loop often shares an outcome, collaboration, artifact, invitation, or progress that is useful to both sender and recipient."] },
-      { id: "handoff", title: "Preserve recipient context", paragraphs: ["The link, landing page, store page, install, and first open should explain what was shared and where to continue. A generic handoff wastes the social context."] },
-      { id: "ratings", title: "Keep ratings separate from referrals", paragraphs: ["Use platform-provided review prompts after earned value. Do not gate functionality, manipulate sentiment, or route unhappy customers away from a fair rating opportunity."] },
-      { id: "quality", title: "Measure referred quality", paragraphs: ["Track activation, retention, purchase, abuse, and support burden. A high invitation rate can still produce a poor customer experience."] },
-    ], sources: [{ label: "Apple · Requesting App Store reviews", href: "https://developer.apple.com/documentation/storekit/requestreviewaction" }, { label: "Google Play · In-app reviews", href: "https://developer.android.com/guide/playcore/in-app-review" }],
-  },
 ];
 
-export const growthGuides = allGrowthGuides.filter((entry) => !["mobile-app-growth-strategy", "acquisition-to-retention", "app-referral-loop"].includes(entry.slug));
 
-const allAiGuides: FieldEntry[] = [
+export const aiGuides: FieldEntry[] = [
   {
-    slug: "aso-with-ai", label: "AI field guide", title: "ASO with AI, without invented certainty", description: "Use a model for synthesis, critique, and drafts while keeping facts, product truth, and final judgment human-verifiable.", reviewed, reading: "10 min",
+    slug: "aso-with-ai", label: "AI field guide", title: "ASO with AI, without invented certainty", description: "Use a model for synthesis, critique, and drafts while keeping facts, product truth, and final judgment human-verifiable.", reviewed,
     answer: "AI can organize evidence, propose alternatives, validate mechanics, and expose inconsistencies. It cannot know private store algorithms, ground-truth keyword volume, your unshared product behavior, or whether generated copy is true.",
     sections: [
       { id: "inputs", title: "Give the model evidence, not vibes", paragraphs: ["Provide the audience, job, shipped features, exclusions, business model, current metadata, screenshots, reviews, support themes, and primary platform documentation. Mark private material explicitly."] },
@@ -268,7 +234,7 @@ const allAiGuides: FieldEntry[] = [
     ], sources: [{ label: "Apple · Product page", href: appleProductPage }, { label: "Google Play · Store listing", href: googleListing }],
   },
   {
-    slug: "ai-app-store-metadata", label: "AI workflow", title: "AI-assisted App Store metadata", description: "Turn a product brief into reviewable metadata proposals without overwriting crafted copy or leaking reviewer notes.", reviewed, reading: "9 min",
+    slug: "ai-app-store-metadata", label: "AI workflow", title: "AI-assisted App Store metadata", description: "Turn a product brief into reviewable metadata proposals without overwriting crafted copy or leaking reviewer notes.", reviewed,
     answer: "Use AI-assisted metadata as a preserve-and-propose workflow: inventory the canonical copy, build a factual brief, draft field-specific alternatives, validate limits, and approve a diff. Never make the generated draft the source of truth automatically.",
     sections: [
       { id: "inventory", title: "Inventory before drafting", paragraphs: ["Find the current listing, release notes, shipped UI, pricing boundary, privacy facts, screenshots, reviewer notes, and localization sources. Public copy and internal review context must remain separate."] },
@@ -278,7 +244,7 @@ const allAiGuides: FieldEntry[] = [
     ], sources: [{ label: "Apple · App information", href: "https://developer.apple.com/help/app-store-connect/reference/app-information/app-information" }, { label: "Apple · Platform version information", href: "https://developer.apple.com/help/app-store-connect/reference/app-information/platform-version-information" }],
   },
   {
-    slug: "ai-keyword-research", label: "AI workflow", title: "AI-assisted ASO keyword research", description: "Use models to organize real language and intent—not to fabricate store search volume or difficulty.", reviewed, reading: "8 min",
+    slug: "ai-keyword-research", label: "AI workflow", title: "AI-assisted ASO keyword research", description: "Use models to organize real language and intent—not to fabricate store search volume or difficulty.", reviewed,
     answer: "AI is useful for clustering customer language, expanding concepts, identifying intent, and mapping phrases to product proof. Treat every generated phrase as a candidate until it is validated for relevance, policy, market language, and available evidence.",
     sections: [
       { id: "corpus", title: "Start with a real language corpus", paragraphs: ["Collect reviews, support conversations, interviews, store suggestions, competitor positioning, product UI language, and appropriate third-party estimates. Remove personal and confidential information before sharing."] },
@@ -288,7 +254,7 @@ const allAiGuides: FieldEntry[] = [
     ], sources: [{ label: "Apple · Optimizing for discovery", href: "https://developer.apple.com/app-store/discoverability/" }, { label: "Google Play · Metadata policy", href: googlePolicy }],
   },
   {
-    slug: "ai-aso-localization", label: "AI workflow", title: "AI-assisted ASO localization", description: "Draft market-specific metadata while protecting meaning, field limits, product availability, and native tone.", reviewed, reading: "9 min",
+    slug: "ai-aso-localization", label: "AI workflow", title: "AI-assisted ASO localization", description: "Draft market-specific metadata while protecting meaning, field limits, product availability, and native tone.", reviewed,
     answer: "AI can accelerate a localization draft, terminology table, and consistency review. It cannot certify market fit or native tone. Provide context, validate bytes and characters, and require a native reviewer before publication.",
     sections: [
       { id: "context", title: "Translate the product decision", paragraphs: ["Give the model the audience, job, tone, screenshots, market, character limits, protected terms, product availability, and the purpose of each field."] },
@@ -298,7 +264,7 @@ const allAiGuides: FieldEntry[] = [
     ], sources: [{ label: "Apple · Localize app information", href: "https://developer.apple.com/help/app-store-connect/manage-app-information/localize-app-information" }, { label: "Google Play · Localization", href: "https://support.google.com/googleplay/android-developer/answer/9844778" }],
   },
   {
-    slug: "ai-screenshot-briefs", label: "AI workflow", title: "AI-assisted screenshot briefs", description: "Use product evidence to draft a visual argument without generating a fictional app experience.", reviewed, reading: "8 min",
+    slug: "ai-screenshot-briefs", label: "AI workflow", title: "AI-assisted screenshot briefs", description: "Use product evidence to draft a visual argument without generating a fictional app experience.", reviewed,
     answer: "AI can help map audience objections to screenshot messages, sequence proof, and adapt a brief across devices or locales. The source images and claims still need to come from the real product.",
     sections: [
       { id: "evidence", title: "Inventory visible product proof", paragraphs: ["List the screens, states, interactions, outcomes, and customer language the current build can demonstrate. Exclude roadmap features and simulated results."] },
@@ -307,31 +273,18 @@ const allAiGuides: FieldEntry[] = [
       { id: "review", title: "Review at thumbnail size", paragraphs: ["Test legibility, hierarchy, truthful composition, localization expansion, and whether the first frames classify the app in a one-second scan."] },
     ], sources: [{ label: "Apple · Screenshot specifications", href: appleScreens }, { label: "Google Play · Graphic assets", href: googleGraphics }],
   },
-  {
-    slug: "verify-ai-generated-aso", label: "AI review", title: "Verify AI-generated ASO work", description: "A practical truth, privacy, policy, voice, localization, and mechanics review before generated work reaches a store.", reviewed, reading: "9 min",
-    answer: "Verify generated ASO in six passes: product truth, private-data separation, platform policy, field mechanics, brand voice, and market context. A fluent draft is not evidence that any claim is correct.",
-    sections: [
-      { id: "truth", title: "Product truth", paragraphs: ["Trace every feature, result, integration, privacy statement, device requirement, and price implication to the shipped product or an approved launch commitment."] },
-      { id: "privacy", title: "Private-data separation", paragraphs: ["Remove reviewer notes, credentials, bundle identifiers, internal paths, customer information, unreleased strategy, and confidential analytics from public output."] },
-      { id: "policy", title: "Platform policy", paragraphs: ["Review trademarks, superlatives, rankings, awards, offers, health or financial claims, screenshot truthfulness, and current metadata rules."] },
-      { id: "mechanics", title: "Field mechanics", paragraphs: ["Validate characters, UTF-8 bytes, accepted asset formats, localization completeness, required URLs, and the exact console preview."] },
-      { id: "voice", title: "Voice and meaning", paragraphs: ["Reject interchangeable copy, implementation jargon, repetitive claims, unnatural localization, and language that conflicts with the product’s actual relationship to the customer."] },
-      { id: "decision", title: "Human decision", paragraphs: ["Review a diff, record remaining unknowns, and require explicit authorization before an agent writes to a live store console."] },
-    ], sources: [{ label: "Apple · App Review Guidelines", href: "https://developer.apple.com/app-store/review/guidelines/" }, { label: "Google Play · Metadata policy", href: googlePolicy }],
-  },
 ];
 
-export const aiGuides = allAiGuides.filter((entry) => entry.slug !== "verify-ai-generated-aso");
 
 export const updates: FieldEntry[] = [
   {
-    slug: "october-2026-app-store-creative", label: "Effective now and upcoming", title: "October 2026 App Store creative changes", description: "A decision-focused index to Apple’s Asset Library, product-page headers, search-result creative, and upcoming iPhone Duo work.", reviewed, reading: "5 min",
-    answer: "Apple’s current creative system adds product-page header and search-result assets alongside screenshots. iPhone Duo screenshot delivery is an upcoming requirement dated for April 2027, not a universal requirement today.",
+    slug: "october-2026-app-store-creative", label: "Effective now and upcoming", title: "October 2026 App Store creative changes", description: "A decision-focused index to Apple’s Asset Library, product-page headers, search-result creative, and upcoming iPhone Duo work.", reviewed: "2026-10-16",
+    answer: "Apple’s current creative system adds product-page header and search-result assets alongside screenshots. iPhone Duo screenshots become required for App Store submissions starting in April 2027, and you can upload them now.",
     sections: [
       { id: "now", title: "Effective now", paragraphs: ["Teams can plan the new product-page header and search-result creative as separate placements with their own aspect ratios and playback behavior. Screenshots remain a distinct proof sequence."] },
-      { id: "upcoming", title: "Upcoming", paragraphs: ["Apple has published iPhone Duo screenshot guidance tied to the iOS 27.1 SDK and an April 2027 requirement date. Keep source files flexible and label the requirement as upcoming until it applies."] },
+      { id: "upcoming", title: "Upcoming", paragraphs: ["Starting in April 2027, App Store submissions need iPhone Duo screenshots: 1398 × 2034 px for the outer display and 2007 × 2853 px for the inner display (or the landscape equivalents). Apple’s screenshot specification ties the rule to apps built with the iOS 27.1 SDK or later, and the App Store Connect release notes (5 and 15 October 2026) say any app or game submitted from April 2027. Plan for every release after that date to need them. App Store Connect has accepted iPhone Duo uploads since October 2026."] },
       { id: "action", title: "What to do", paragraphs: ["Inventory editable creative sources, define placement-safe compositions, plan silent-first video, keep essential content away from edges, and verify final requirements in App Store Connect before delivery."] },
-    ], sources: [{ label: "Apple · Creative asset specifications", href: "https://developer.apple.com/help/app-store-connect/reference/app-information/creative-asset-specifications" }, { label: "Apple · Screenshot specifications", href: appleScreens }],
+    ], sources: [{ label: "Apple · Creative asset specifications", href: "https://developer.apple.com/help/app-store-connect/reference/app-information/creative-assets-specifications" }, { label: "Apple · App Store Connect release notes", href: "https://developer.apple.com/help/app-store-connect/release-notes/" }, { label: "Apple · Screenshot specifications", href: appleScreens }],
   },
 ];
 

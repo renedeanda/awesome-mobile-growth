@@ -20,8 +20,24 @@ test("mobile navigation and hero remain usable", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await page.getByText("Menu", { exact: true }).click();
-  await expect(page.getByRole("navigation", { name: "Mobile primary" }).getByRole("link", { name: "Guides", exact: true })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Main sections" }).getByRole("link", { name: "Tools" })).toBeVisible();
+  await page.getByRole("button", { name: "Open menu" }).click();
+  const menu = page.getByRole("dialog", { name: "Site menu" });
+  await expect(menu.getByRole("link", { name: "Google Play", exact: true })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+  await page.getByRole("button", { name: "Open menu" }).click();
+  await menu.getByRole("link", { name: "Keywords", exact: true }).click();
+  await expect(page).toHaveURL(/\/guides\/keyword-research\/$/);
+  await expect(menu).toBeHidden();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
+test("workbench fits a phone screen", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/workbench/");
+  await expect(page.getByTestId("workbench")).toHaveAttribute("data-ready", "true");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
 test("Apple launch desk connects the platform guides", async ({ page }) => {
@@ -73,6 +89,7 @@ test("Google Play desk, growth loop, and reference library are connected", async
 
 test("keyword checker counts UTF-8 bytes without sending copy away", async ({ page }) => {
   await page.goto("/tools/app-store-keyword-field/");
+  await expect(page.getByTestId("browser-tool")).toHaveAttribute("data-ready", "true");
   await page.getByLabel("Keywords").fill("café,notes,notes");
   await expect(page.getByText("Repeated tokens: notes.")).toBeVisible();
   await expect(page.getByText(/bytes available/)).toBeVisible();
@@ -84,4 +101,22 @@ test("open AI skill explains its trust boundary and exposes complete source", as
   await expect(page.getByText("Invented search volume")).toBeVisible();
   await page.getByText("Read the raw SKILL.md").click();
   await expect(page.locator(".skill-source pre code")).toContainText("# App Store Growth");
+});
+
+test("buttons and standalone links are at least 32px tall on phones", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const path of ["/", "/guides/metadata/", "/reference/conversion-rate/", "/aso-checklist/", "/tools/", "/workbench/", "/podcasts/"]) {
+    await page.goto(path);
+    const small = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>("a, button, summary, input, select, textarea")]
+      .filter((el) => {
+        const style = getComputedStyle(el);
+        // Links inside running text are exempt; a checkbox counts its whole label as the target.
+        if (style.display === "inline" || style.visibility === "hidden") return false;
+        const target = el instanceof HTMLInputElement && el.closest("label") ? el.closest("label")! : el;
+        const box = target.getBoundingClientRect();
+        return box.width > 0 && box.height > 0 && box.height < 32;
+      })
+      .map((el) => `${el.tagName.toLowerCase()}.${el.className} "${(el.textContent ?? "").trim().slice(0, 30)}"`));
+    expect(small, `small tap targets on ${path}`).toEqual([]);
+  }
 });
