@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { guides } from "@/lib/content";
 import { absolute } from "@/lib/site";
-import { applePlatformGuides } from "@/lib/applePlatforms";
+import { applePlatformGuides, applePlatformsReviewed } from "@/lib/applePlatforms";
 import { fieldCollections } from "@/lib/fieldLab";
 import { tools } from "@/lib/tools";
 
@@ -29,20 +29,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "privacy",
     "field-notes/rebuilding-awesome-mobile-growth",
   ];
-  const pages: MetadataRoute.Sitemap = fixed.map((path) => ({
-    url: absolute(`/${path}${path ? "/" : ""}`),
-    lastModified: new Date("2026-10-12"),
-  }));
+  // Hub and tool pages have no editorial date of their own, so they omit lastModified
+  // instead of repeating a date that would never change.
+  const pages: MetadataRoute.Sitemap = fixed.map((path) => ({ url: absolute(`/${path}${path ? "/" : ""}`) }));
   const guidePages: MetadataRoute.Sitemap = guides.map((guide) => ({
     url: absolute(`/guides/${guide.slug}/`),
     lastModified: new Date(guide.modified),
   }));
   const applePlatformPages: MetadataRoute.Sitemap = applePlatformGuides.map((guide) => ({
     url: absolute(`/apple-platforms/${guide.slug}/`),
-    lastModified: new Date("2026-10-12"),
+    lastModified: new Date(applePlatformsReviewed),
   }));
   const bases = { reference: "reference", google: "google-play", growth: "growth", ai: "ai/guides", updates: "updates" } as const;
   const fieldPages: MetadataRoute.Sitemap = Object.entries(fieldCollections).flatMap(([collection, entries]) => entries.map((entry) => ({ url: absolute(`/${bases[collection as keyof typeof bases]}/${entry.slug}/`), lastModified: new Date(entry.reviewed) })));
-  const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({ url: absolute(`/tools/${tool.slug}/`), lastModified: new Date("2026-10-12") }));
+  const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({ url: absolute(`/tools/${tool.slug}/`) }));
   return [...pages, ...applePlatformPages, ...guidePages, ...fieldPages, ...toolPages];
 }

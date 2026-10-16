@@ -20,8 +20,24 @@ test("mobile navigation and hero remain usable", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await page.getByText("Menu", { exact: true }).click();
-  await expect(page.getByRole("navigation", { name: "Mobile primary" }).getByRole("link", { name: "Guides", exact: true })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Main sections" }).getByRole("link", { name: "Tools" })).toBeVisible();
+  await page.getByRole("button", { name: "Open menu" }).click();
+  const menu = page.getByRole("dialog", { name: "Site menu" });
+  await expect(menu.getByRole("link", { name: "Google Play", exact: true })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+  await page.getByRole("button", { name: "Open menu" }).click();
+  await menu.getByRole("link", { name: "Keywords", exact: true }).click();
+  await expect(page).toHaveURL(/\/guides\/keyword-research\/$/);
+  await expect(menu).toBeHidden();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
+test("workbench fits a phone screen", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/workbench/");
+  await expect(page.getByTestId("workbench")).toHaveAttribute("data-ready", "true");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
 test("Apple launch desk connects the platform guides", async ({ page }) => {

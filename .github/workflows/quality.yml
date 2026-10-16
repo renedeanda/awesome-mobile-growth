@@ -37,5 +37,7 @@ jobs:
         run: npm run audit:seo
       - name: Audit internal links
         run: npm run audit:links
+      - name: Audit official documentation links
+        run: npm run audit:external
       - name: Run browser tests
         run: npm run test:e2e
