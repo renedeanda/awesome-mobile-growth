@@ -36,9 +36,9 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.1",
-    "@types/node": "^24.7.2",
+    "@types/node": "^26.6.5",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   }
 }
