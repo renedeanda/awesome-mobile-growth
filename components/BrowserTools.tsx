@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { duplicates, keywordTokens, utf8Bytes, warnings } from "@/lib/workbench";
 import { LIMITS } from "@/lib/platform";
@@ -16,6 +16,13 @@ const appleFields = [["appleName", "Name"], ["appleSubtitle", "Subtitle"], ["app
 const googleFields = [["googleName", "App name"], ["googleShort", "Short description"], ["googleFull", "Full description"]] as const;
 
 export function BrowserTool({ tool }: { tool: ToolSlug }) {
+  // data-ready marks hydration: typing into the static HTML before React attaches is silently ignored.
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
+  return <div className="browser-tool" data-testid="browser-tool" data-ready={ready}><ToolBody tool={tool}/></div>;
+}
+
+function ToolBody({ tool }: { tool: ToolSlug }) {
   if (tool === "app-store-keyword-field") return <KeywordTool/>;
   if (tool === "metadata-validator") return <MetadataTool/>;
   if (tool === "app-store-screenshot-sizes") return <ScreenshotTool/>;

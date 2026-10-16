@@ -89,6 +89,7 @@ test("Google Play desk, growth loop, and reference library are connected", async
 
 test("keyword checker counts UTF-8 bytes without sending copy away", async ({ page }) => {
   await page.goto("/tools/app-store-keyword-field/");
+  await expect(page.getByTestId("browser-tool")).toHaveAttribute("data-ready", "true");
   await page.getByLabel("Keywords").fill("café,notes,notes");
   await expect(page.getByText("Repeated tokens: notes.")).toBeVisible();
   await expect(page.getByText(/bytes available/)).toBeVisible();
