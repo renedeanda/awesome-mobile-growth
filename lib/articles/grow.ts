@@ -17,7 +17,7 @@ export const growArticles: ArticleSource[] = [
   {
     section: "grow", slug: "onboarding", label: "Onboarding",
     title: "Mobile app onboarding that reaches the first useful moment",
-    seoTitle: "Mobile app onboarding: activation, permissions, sign-up and paywalls",
+    seoTitle: "Mobile app onboarding: activation, permissions, paywalls",
     description: "Deliver the store page's promise in the first minute, define your activation event, and ask for accounts, permissions and payment at the right time.",
     answer: "Get new users to one useful action as fast as possible, then ask for what you need. Let people try the app before creating an account, request each permission right before the feature that uses it, and show the paywall after people understand the value.",
     platforms: ["apple", "google-play"], evidence: ["official", "opinion"], published: "2026-10-12", reviewed,
@@ -27,7 +27,7 @@ export const growArticles: ArticleSource[] = [
   {
     section: "grow", slug: "subscriptions", label: "Subscriptions",
     title: "Subscription app funnel: from install to renewal",
-    seoTitle: "Subscription app funnel: paywalls, trials, offers and churn on iOS and Android",
+    seoTitle: "Subscription app funnel: paywalls, trials, offers, churn",
     description: "Define every funnel stage, show value before the price, use each store's offer types, reduce involuntary churn and reconcile your numbers.",
     answer: "Measure each step from install to renewal with a fixed window, show the paywall after people have seen value, and judge trials and offers by paid subscribers after renewals and refunds. Turn on billing grace period on both stores to keep subscribers whose payment failed.",
     platforms: ["apple", "google-play"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
@@ -37,7 +37,7 @@ export const growArticles: ArticleSource[] = [
   {
     section: "grow", slug: "ratings-reviews", label: "Ratings and reviews",
     title: "Get better ratings and use reviews as research",
-    seoTitle: "App ratings and reviews: when to ask, how to reply, and how to recover",
+    seoTitle: "App ratings and reviews: when to ask and how to reply",
     description: "Use the stores' rating prompts at the right moment, read reviews as research, reply where it helps, and recover after a bad release.",
     answer: "Use the system rating prompt (Apple shows it at most three times a year per person) right after someone succeeds at something, never at launch or after an error. Read every low review weekly and tag it by theme, reply when you've fixed the issue, and never filter unhappy users away from the prompt.",
     platforms: ["apple", "google-play"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
@@ -47,7 +47,7 @@ export const growArticles: ArticleSource[] = [
   {
     section: "grow", slug: "web-to-app", label: "Web-to-app",
     title: "Web-to-app funnels: when a web step helps",
-    seoTitle: "Web-to-app funnels: quizzes, web checkout, deep links and store rules",
+    seoTitle: "Web-to-app funnels: quizzes, checkout and store rules",
     description: "When sending people through a web page before the app helps, how to make the handoff reliable, and how store rules differ by country.",
     answer: "A web step helps when your product needs explaining or personalization before install, and only if accounts and purchases follow the person into the app. Use Universal Links and App Links for the handoff, check the payment rules for each storefront, and compare the whole funnel against going straight to the store.",
     platforms: ["apple", "google-play"], evidence: ["official", "opinion"], published: "2026-10-12", reviewed,
@@ -57,7 +57,7 @@ export const growArticles: ArticleSource[] = [
   {
     section: "grow", slug: "paid-and-organic", label: "Paid and organic",
     title: "Make paid ads and ASO help each other",
-    seoTitle: "ASO and paid user acquisition: search terms, custom pages and attribution",
+    seoTitle: "ASO and paid user acquisition: how they help each other",
     description: "Use ad search terms and creative tests to improve your store page, match pages to ads, and measure real impact instead of attributed credit.",
     answer: "Feed Apple Ads search terms and winning ad messages into your keywords and screenshot tests, send each campaign to a matching custom page, and use holdout tests to see the installs a campaign really adds, since attribution only shows which path got credit.",
     platforms: ["apple", "google-play"], evidence: ["official", "opinion"], published: "2026-10-12", reviewed,
@@ -67,7 +67,7 @@ export const growArticles: ArticleSource[] = [
   {
     section: "grow", slug: "tool-stack", label: "Tool stack",
     title: "Choose a mobile growth tool stack",
-    seoTitle: "Mobile growth tools: ASO, analytics, attribution and subscriptions",
+    seoTitle: "Mobile growth tools: ASO, analytics, attribution",
     description: "Start with the free store and platform tools, then add ASO research, analytics, attribution and subscription tools in layers, only when a decision needs them.",
     answer: "Start with App Store Connect, Play Console, native deep links and crash reporting, then add one product analytics tool. Add ASO research, attribution and subscription infrastructure only when a recurring decision needs them, and cancel any tool you can't connect to a recent decision.",
     platforms: ["apple", "google-play"], evidence: ["observed", "opinion"], published: "2026-10-12", reviewed,
@@ -77,7 +77,7 @@ export const growArticles: ArticleSource[] = [
   {
     section: "grow", slug: "app-store-connect", label: "App Store Connect",
     title: "Use App Store Connect's growth features",
-    seoTitle: "App Store Connect analytics, benchmarks, app tags and featuring nominations",
+    seoTitle: "App Store Connect analytics, benchmarks and app tags",
     description: "A map of App Store Connect's growth features: analytics by source, peer benchmarks, app tags, in-app events, custom pages and featuring nominations.",
     answer: "Read App Analytics by source (Search, Browse, referrers) because each needs a different fix. Use peer benchmarks as context, check the app tags Apple generates from your metadata, and nominate major updates for featuring weeks ahead.",
     platforms: ["apple"], evidence: ["official", "opinion"], published: "2026-10-12", reviewed,

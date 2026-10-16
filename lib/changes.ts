@@ -68,7 +68,7 @@ export const changes: PlatformChange[] = [
   {
     slug: "google-play-listing-metrics-unique-clicks", date: "2026-07-01", dateLabel: "Mid-2026", store: "Google Play", status: "In effect",
     title: "Google Play store listing reports now count install clicks",
-    summary: "In mid-2026, Play Console's store listing performance reports moved from acquisitions and conversion rate to unique users who tap Install, Open or Pre-register, with a click-through rate.",
+    summary: "In mid-2026, Play Console's store listing reports switched from acquisitions and conversion rate to unique Install, Open or Pre-register taps and a click-through rate.",
     details: [
       "Google describes the change as measuring user intent (clicks) instead of successful outcomes (acquisitions).",
       "The previous metrics (store listing acquisitions, visitors, conversion rate) remain available in the Statistics section with full history.",
@@ -82,7 +82,7 @@ export const changes: PlatformChange[] = [
   {
     slug: "apple-age-ratings-2026", date: "2026-01-31", store: "Apple", status: "In effect",
     title: "New App Store age ratings: 13+, 16+ and 18+",
-    summary: "Apple added 13+, 16+ and 18+ ratings to the existing 4+ and 9+, with new questionnaire topics. Developers had until 31 January 2026 to answer the new questions before submitting updates.",
+    summary: "Apple added 13+, 16+ and 18+ age ratings to 4+ and 9+. Developers had until 31 January 2026 to answer new questionnaire topics before submitting updates.",
     details: [
       "The questionnaire now covers in-app controls, capabilities such as AI assistants, medical or wellness topics, and violent themes.",
       "Apple re-rated existing apps from earlier answers; you can change the rating in App Store Connect if it doesn't fit.",

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { SkillViewer } from "@/components/SkillViewer";
 import { pageMetadata } from "@/lib/site";
 
-export const metadata = pageMetadata({ title: "App Store Growth skill for AI agents", description: "An open AI agent skill for App Store and Google Play listings: current limits, review checklists and a validator script, with rules against invented data and unapproved store changes.", path: "/tools/app-store-growth-skill/", imagePath: "/tools/opengraph-image", imageAlt: "App Store Growth skill for AI agents" });
+export const metadata = pageMetadata({ title: "App Store Growth skill for AI agents", description: "An open AI agent skill for App Store and Google Play listings: current limits, a review checklist and a validator, with rules against invented data.", path: "/tools/app-store-growth-skill/", imagePath: "/tools/opengraph-image", imageAlt: "App Store Growth skill for AI agents" });
 
 const modes = [
   "Audit an existing listing without changing it",

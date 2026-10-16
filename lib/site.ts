@@ -33,8 +33,10 @@ export function pageMetadata({ title, description, path, type = "website", image
 }): Metadata {
   const image = imagePath ? { ...socialImage, url: absolute(imagePath), alt: imageAlt ?? socialImage.alt } : socialImage;
   const socialTitle = `${title} · ${site.name}`;
+  // Search results show about 60 characters; keep the topic whole and drop the brand when both don't fit.
+  const fitsWithBrand = socialTitle.length <= 65;
   return {
-    title,
+    title: fitsWithBrand ? title : { absolute: title },
     description,
     alternates: { canonical: path },
     openGraph: {

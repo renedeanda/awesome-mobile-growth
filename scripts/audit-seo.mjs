@@ -42,6 +42,11 @@ for (const file of html) {
   if (!source.includes('type="application/ld+json"')) errors.push(`${file}: missing structured data`);
   if (!source.includes('<html lang="en"')) errors.push(`${file}: missing document language`);
 
+  // Search results show about 60–70 characters of a title and 150–170 of a description.
+  const visible = (text) => text.replace(/&#x27;|&#39;|&quot;|&amp;|&lt;|&gt;/g, "_").length;
+  if (title && visible(title) > 70 && !file.includes("404")) errors.push(`${file}: title is ${visible(title)} characters (keep it to 70)`);
+  if (description && visible(description) > 170) errors.push(`${file}: description is ${visible(description)} characters (keep it to 170)`);
+
   if (title) {
     if (seenTitles.has(title)) errors.push(`${file}: duplicate title also used by ${seenTitles.get(title)}`);
     seenTitles.set(title, file);
