@@ -19,8 +19,8 @@ export const resourceGroups: ResourceGroup[] = [
 ];
 
 export const transitions: Resource[] = [
-  { name: "App Annie / data.ai → Sensor Tower", href: "https://sensortower.com/blog/sensor-tower-acquires-data-ai", note: "data.ai joined Sensor Tower in 2024; update old bookmarks and vendor references.", status: "transition" },
-  { name: "TheTool → App Radar", href: "https://appradar.com/blog/appradar-acquires-thetool", note: "App Radar acquired TheTool; use App Radar for current product information.", status: "transition" },
-  { name: "Storemaven → Zynga", href: "https://www.zynga.com/news/zynga-to-acquire-storemaven/", note: "Zynga acquired Storemaven in 2022; do not treat the old product as an independent current vendor.", status: "transition" },
+  { name: "App Annie / data.ai → Sensor Tower", href: "https://sensortower.com/press/press-release-sensor-tower-acquires-market-intelligence-platform-data-ai", note: "data.ai joined Sensor Tower in 2024; update old bookmarks and vendor references.", status: "transition" },
+  { name: "TheTool → App Radar", href: "https://appradar.com/blog/app-radar-acquires-thetool", note: "App Radar acquired TheTool; use App Radar for current product information.", status: "transition" },
+  { name: "Storemaven → Zynga", href: "https://www.pocketgamer.biz/zynga-closes-acquisition-of-storemaven", note: "Zynga acquired Storemaven in 2022; do not treat the old product as an independent current vendor.", status: "transition" },
   { name: "Firebase Dynamic Links retired", href: "https://firebase.google.com/support/dynamic-links-faq", note: "The service shut down on August 25, 2025. Migrate to native links or another provider.", status: "transition" },
 ];

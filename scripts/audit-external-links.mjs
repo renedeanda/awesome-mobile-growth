@@ -9,6 +9,8 @@ import path from "node:path";
 const OFFICIAL_HOSTS = ["developer.apple.com", "support.google.com", "developer.android.com", "firebase.google.com", "play.google.com"];
 const NOT_FOUND_TITLE = /page not found|404|not found|can.t be found/i;
 const CONCURRENCY = 6;
+// The site's own pages are covered by audit:links; new pages don't exist in production until merged.
+const SELF_HOST = "mobile.productbuilder.net";
 
 const files = [];
 const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
@@ -24,6 +26,7 @@ for (const file of files) {
   const html = fs.readFileSync(file, "utf8");
   for (const [, raw] of html.matchAll(/href="(https:\/\/[^"]+)"/g)) {
     const url = raw.replace(/&amp;/g, "&").split("#")[0];
+    if (new URL(url).hostname === SELF_HOST) continue;
     if (!pagesByUrl.has(url)) pagesByUrl.set(url, new Set());
     pagesByUrl.get(url).add(path.relative("out", file));
   }
