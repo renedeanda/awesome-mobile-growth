@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArticleMeta } from "@/components/ArticleMeta";
 import { ArticleJsonLd, DirectAnswer, SourceList } from "@/components/ContentBlocks";
 import { fieldReadingTime, type FieldEntry } from "@/lib/fieldLab";
 
@@ -10,7 +11,7 @@ export function FieldArticle({ entry, homeLabel, homeHref, path, next }: { entry
   return <article className="single-article field-article">
     <ArticleJsonLd title={entry.title} description={entry.description} path={path} modified={entry.reviewed}/>
     <nav className="breadcrumbs" aria-label="Breadcrumb"><Link href={homeHref}>{homeLabel}</Link><span aria-hidden="true">/</span><span>{entry.label}</span></nav>
-    <header className="article-head"><p className="eyebrow">{entry.label} · Verified {entry.reviewed}</p><h1>{entry.title}</h1><p className="lede">{entry.description}</p><div className="article-meta"><span>{fieldReadingTime(entry)}</span><span>{entry.sources.length} source{entry.sources.length === 1 ? "" : "s"} linked</span></div></header>
+    <header className="article-head"><p className="eyebrow">{entry.label}</p><h1>{entry.title}</h1><p className="lede">{entry.description}</p><ArticleMeta reading={fieldReadingTime(entry)} checked={entry.reviewed}><span>{entry.sources.length} source{entry.sources.length === 1 ? "" : "s"} linked</span></ArticleMeta></header>
     <DirectAnswer><p>{entry.answer}</p></DirectAnswer>
     <nav className="article-jump" aria-label="On this page">{entry.sections.map((section) => <a href={`#${section.id}`} key={section.id}>{section.title}</a>)}</nav>
     <div className="prose">{entry.sections.map((section) => <section key={section.id}><h2 id={section.id}>{section.title}</h2>{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}{section.bullets && <ul>{section.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul>}</section>)}<h2 id="sources">Primary sources</h2><p>Rules and interfaces move. Recheck these sources before submission-sensitive work.</p><SourceList items={entry.sources}/>{next && <p className="field-next"><Link href={next.href}>{next.label} →</Link></p>}</div>

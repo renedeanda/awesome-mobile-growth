@@ -101,3 +101,21 @@ test("open AI skill explains its trust boundary and exposes complete source", as
   await page.getByText("Read the raw SKILL.md").click();
   await expect(page.locator(".skill-source pre code")).toContainText("# App Store Growth");
 });
+
+test("buttons and standalone links are at least 32px tall on phones", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const path of ["/", "/guides/metadata/", "/reference/conversion-rate/", "/aso-checklist/", "/tools/", "/workbench/", "/podcasts/"]) {
+    await page.goto(path);
+    const small = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>("a, button, summary, input, select, textarea")]
+      .filter((el) => {
+        const style = getComputedStyle(el);
+        // Links inside running text are exempt; a checkbox counts its whole label as the target.
+        if (style.display === "inline" || style.visibility === "hidden") return false;
+        const target = el instanceof HTMLInputElement && el.closest("label") ? el.closest("label")! : el;
+        const box = target.getBoundingClientRect();
+        return box.width > 0 && box.height > 0 && box.height < 32;
+      })
+      .map((el) => `${el.tagName.toLowerCase()}.${el.className} "${(el.textContent ?? "").trim().slice(0, 30)}"`));
+    expect(small, `small tap targets on ${path}`).toEqual([]);
+  }
+});

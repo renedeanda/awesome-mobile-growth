@@ -1,4 +1,4 @@
-export const applePlatformsReviewed = "2026-10-12";
+export const applePlatformsReviewed = "2026-10-16";
 
 export type ApplePlatformGuide = {
   slug: "macos-app-store-launch" | "universal-purchase" | "iphone-app-store-launch" | "ipad-app-store-launch" | "app-store-launch-requirements";

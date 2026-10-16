@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { tools } from "@/lib/tools";
 
 type NavLink = { href: string; label: string; note?: string };
 type NavGroup = { title: string; links: NavLink[] };
@@ -39,7 +40,7 @@ const groups: NavGroup[] = [
   ]},
   { title: "Tools", links: [
     { href: "/workbench/", label: "Workbench" },
-    { href: "/tools/", label: "All tools", note: "4 free" },
+    { href: "/tools/", label: "All tools", note: `${tools.length} free` },
     { href: "/ai/skills/app-store-growth/", label: "AI skill" },
   ]},
   { title: "Learn", links: [
@@ -52,7 +53,7 @@ const groups: NavGroup[] = [
 ];
 
 const tabs: Array<NavLink & { match: string[] }> = [
-  { href: "/apple-platforms/", label: "Launch", match: ["/apple-platforms/", "/google-play/", "/aso-checklist/"] },
+  { href: "/aso-checklist/", label: "Launch", match: ["/aso-checklist/", "/apple-platforms/", "/google-play/"] },
   { href: "/guides/", label: "Store page", match: ["/guides/", "/app-store-optimization/", "/reference/"] },
   { href: "/tools/", label: "Tools", match: ["/tools/", "/workbench/", "/ai/skills/"] },
   { href: "/updates/", label: "Changes", match: ["/updates/"] },
@@ -75,6 +76,9 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  // Focus returns to the menu button only for an explicit close; after navigation it belongs to the new page.
+  const returnFocus = useRef(false);
+  const close = () => { returnFocus.current = true; setOpen(false); };
 
   // Close whenever the route changes: the header stays mounted across client navigations.
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -87,7 +91,7 @@ export function SiteHeader() {
     const focusable = () => Array.from(sheetRef.current?.querySelectorAll<HTMLElement>("a[href], button") ?? []);
     focusable()[0]?.focus();
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") { setOpen(false); return; }
+      if (event.key === "Escape") { close(); return; }
       if (event.key !== "Tab") return;
       const items = focusable();
       if (!items.length) return;
@@ -97,7 +101,12 @@ export function SiteHeader() {
     };
     document.addEventListener("keydown", onKey);
     const toggle = toggleRef.current;
-    return () => { root.style.overflow = previousOverflow; document.removeEventListener("keydown", onKey); toggle?.focus(); };
+    return () => {
+      root.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+      if (returnFocus.current) toggle?.focus();
+      returnFocus.current = false;
+    };
   }, [open]);
 
   return <>
@@ -115,12 +124,12 @@ export function SiteHeader() {
       </button>
     </header>
 
-    <div className="menu-layer" data-open={open || undefined} hidden={!open}>
-      <button type="button" className="menu-scrim" tabIndex={-1} aria-label="Close menu" onClick={() => setOpen(false)}/>
+    <div className="menu-layer" hidden={!open}>
+      <button type="button" className="menu-scrim" tabIndex={-1} aria-label="Close menu" onClick={close}/>
       <div ref={sheetRef} id="site-menu" className="menu-sheet" role="dialog" aria-modal="true" aria-label="Site menu">
         <div className="menu-sheet__head">
           <span className="menu-sheet__grabber" aria-hidden="true"/>
-          <button type="button" className="menu-close" onClick={() => setOpen(false)}>Close</button>
+          <button type="button" className="menu-close" onClick={close}>Close</button>
         </div>
         <nav className="menu-groups" aria-label="Site sections">
           {groups.map(group => <section key={group.title}>

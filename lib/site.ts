@@ -10,6 +10,10 @@ export const site = {
   reviewed: "October 12, 2026",
 };
 
+export function formatDate(iso: string) {
+  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(`${iso}T00:00:00Z`));
+}
+
 export function absolute(path = "/") { return new URL(path, site.origin).toString(); }
 
 const socialImage = {
