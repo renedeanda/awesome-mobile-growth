@@ -1,0 +1,78 @@
+## Sizes you need today
+
+**App Store.** Every iPhone app needs at least one screenshot in the **iPhone with Dynamic Island (medium display)** set: 1206 × 2622 or 1179 × 2556 in portrait. iPad apps also need **13-inch iPad** screenshots: 2064 × 2752 or 2048 × 2732. You can upload 1 to 10 per size and language, as JPEG or PNG with no transparency. Smaller devices use scaled versions of the larger sets.
+
+<AppleScreenshotTable devices={["iPhone", "iPad"]} />
+
+**Google Play.** Upload 2 to 8 phone screenshots, JPEG or 24-bit PNG, each side between 320 and 3,840 pixels, with the long side no more than twice the short side. A 1080 × 1920 or 1080 × 2400 image works well. For tablets, upload at least four screenshots of 1080 pixels or more to be considered for large-screen recommendations.
+
+<GooglePlayGraphicsTable />
+
+Mac, Apple TV, Vision Pro and Apple Watch sizes are in the [requirements reference](/launch/requirements/).
+
+## The first three frames do most of the work
+
+In App Store search results, people see your first one to three screenshots (three in portrait, one in landscape) unless you have an app preview. On Google Play, the first few screenshots show in the listing's gallery. Many people decide from those frames alone.
+
+Plan the first three as a set:
+
+| Frame | Job | Caption example |
+| --- | --- | --- |
+| 1 | The outcome someone gets | "Build routines in 2 minutes a day" |
+| 2 | The main screen, working | "Check off habits with one tap" |
+| 3 | What makes you different | "See how habits affect your mood" |
+
+*Example app.* Frames 4 and later answer objections: sync, widgets, privacy, price, accessibility, Apple Watch.
+
+## Make each frame readable at thumbnail size
+
+A screenshot that looks great at full size on your monitor becomes a small card in search results. Before you export, shrink each frame to about 300 pixels tall and check:
+
+- **The caption reads in under two seconds.** Five to seven words, large type, high contrast.
+- **The app screen is recognizable.** Crop or zoom to the part that proves the caption.
+- **One idea per frame.** A collage of four features reads as none.
+- **Real content.** Realistic names and data, not "Lorem ipsum" or "Test User 1".
+
+<BeforeAfter
+  before={<p>A full-height app screen with a 14-word caption at the top: "Track all of your daily habits and routines easily with our simple and beautiful interface".</p>}
+  after={<p>The checklist screen, zoomed so the three checkboxes fill the frame, with the caption "Check off habits with one tap".</p>}
+  note="The first caption is too long to read in a search result and describes the design, not the benefit."
+/>
+
+## Show the app people will get
+
+Apple's review guidelines require screenshots to show the app in use, and App Review lists inaccurate screenshots as a common rejection reason. Google Play's policy prohibits misleading graphics. In practice:
+
+- Every feature shown must be in the current build and reachable without hidden settings.
+- If a feature needs a subscription, account or accessory, say so in the caption or nearby text.
+- Device frames are optional on both stores. If you use them, use current devices.
+- Don't show prices, rankings, awards or "#1" claims in images unless you can prove them; on Google Play, these are restricted in graphics.
+
+## Localize the captions, not just the words
+
+Translate captions with a native speaker and preview each language at thumbnail size. German and French often run 20–30% longer than English, so leave space or shorten. Replace culturally specific examples: a US dollar budget looks wrong to a user in Japan.
+
+If you support Dark Mode, Apple suggests including at least one screenshot that shows it.
+
+## Plan for iPhone Duo
+
+From April 2027, App Store submissions need iPhone Duo screenshots: 1398 × 2034 for the outer display and 2007 × 2853 for the inner display. Uploads open in October 2026, and apps that provide them get an iPhone Duo badge on the product page. Keep your source files editable so you can produce the new frames without starting over.
+
+## Ask AI to help
+
+<AskAI
+  prompt={`My app: [one sentence]. Real features in this build: [list].
+The three things customers praise most in reviews: [list].
+
+Suggest a 6-frame screenshot sequence. For each frame: the one claim, the exact screen to capture, and a caption of 7 words or fewer. Frame 1 is the outcome, frame 2 the main screen, frame 3 the difference. Only use features from my list.`}
+  checks={["Capture every screen from the real build; don't use generated UI.", "Read each caption at thumbnail size.", "Delete any frame that needs a feature not in the build."]}
+/>
+
+<DoToday>
+
+1. Shrink your current first three screenshots to thumbnail size and read the captions.
+2. Rewrite any caption longer than seven words.
+3. Recapture any frame that shows placeholder data.
+4. Confirm you have the 1206 × 2622 iPhone set (and 2064 × 2752 for iPad).
+
+</DoToday>

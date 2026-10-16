@@ -1,0 +1,63 @@
+## What AI is good at, and what it isn't
+
+AI assistants save real time on ASO work, as long as you give them the facts and keep the decisions.
+
+| Good at | Not a source for |
+| --- | --- |
+| Grouping hundreds of review phrases by intent | Search volume or keyword difficulty |
+| Drafting 20 subtitle or caption options to choose from | Current store limits and policies |
+| Spotting repeated words across name, subtitle and keywords | What your app actually does |
+| Summarizing review themes from text you paste in | How Apple or Google rank apps |
+| First-draft translations for a native speaker to fix | Conversion or revenue predictions |
+
+The pattern that works: **you supply the facts, the model drafts, you check and decide.**
+
+## Give the model facts, not a blank page
+
+The quality of the output depends on what you paste in. Before asking for anything, collect:
+
+- One sentence on what the app does and who it's for.
+- The features in the current build (not the roadmap).
+- Real phrases from reviews, support and store search suggestions.
+- The field limits: 30 characters for the subtitle, 100 bytes for Apple keywords, 80 characters for Google Play's short description.
+- Words that must not appear: competitor names, trademarks, claims you can't prove.
+
+Every guide in the Store page section has a ready-to-copy prompt built this way, at the end under "Ask AI to help".
+
+## Check everything before it ships
+
+Run every AI draft through five checks:
+
+1. **True:** every feature, number and claim matches the shipped build.
+2. **Allowed:** no competitor names, trademarks, rankings, "#1", or prices in images; nothing the store's metadata policy restricts.
+3. **Fits:** count characters and bytes yourself. Models miscount, especially in non-English text.
+4. **Sounds right:** read it aloud. Cut generic adjectives and anything that sounds like an ad.
+5. **Works in the market:** a native speaker approves every translation.
+
+## Keep private data out
+
+Store drafts often include unreleased features, customer reviews with names, or internal metrics. Before pasting into an AI tool, remove personal data and anything your company hasn't announced, and check your organization's policy on which tools are approved.
+
+Never let an AI agent change a live store listing on its own. Review the change as a diff and publish it yourself.
+
+## The open App Store Growth skill
+
+This site publishes an open [App Store Growth skill](/tools/app-store-growth-skill/) for AI agents. It packages the store limits, a review checklist and a script that validates field lengths, and it tells the agent what it must not invent. You can read every file on the site before you install it.
+
+<AlsoBy href="https://www.productbuilder.net/learn/agent-skills/" title="Agent skills, explained (Product Builder)">How skill packages work across AI coding agents, and how to write your own.</AlsoBy>
+
+## Prompts by task
+
+- Subtitle and description options: [metadata guide](/store-page/metadata/#ask-ai-to-help)
+- Grouping keyword phrases: [keywords guide](/store-page/keywords/#ask-ai-to-help)
+- Screenshot sequences: [screenshots guide](/store-page/screenshots/#ask-ai-to-help)
+- Translation options: [localization guide](/store-page/localization/#ask-ai-to-help)
+- Test hypotheses: [testing guide](/store-page/testing/#ask-ai-to-help)
+
+<DoToday>
+
+1. Write your app's one-sentence description and feature list in a note you can paste into any prompt.
+2. Export 50 recent reviews as plain text for keyword and theme work.
+3. Pick one prompt from the guides above and run it with your facts.
+
+</DoToday>

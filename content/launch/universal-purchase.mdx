@@ -1,0 +1,52 @@
+## One record, several platform builds
+
+Universal Purchase means one App Store Connect app record serves your iPhone, iPad and Mac apps. Customers buy once and get every platform. Behind that, each platform still ships its own build on its own schedule.
+
+| Shared across platforms | Separate per platform |
+| --- | --- |
+| Apple ID, SKU and bundle ID | The build, version number and build number |
+| App name and subtitle | Description, promotional text, keywords, What's New |
+| Age rating and App Privacy answers | Screenshots and app previews |
+| In-app purchases and subscriptions | Accessibility Nutrition Labels |
+| Ratings and the product relationship | App Review submission |
+
+## Make the three decisions you can't undo
+
+**1. Use the existing record.** Add macOS (or another platform) to the app record you already have. If you create a separate record, Apple will not merge the two later.
+
+**2. Use the same bundle ID.** Apple requires the related platform apps to share it.
+
+**3. Accept that it's permanent.** Once App Review approves versions on at least two platforms, the app is a Universal Purchase for good. You cannot remove a platform version afterward.
+
+<Callout tone="caution" title="Already have two records?">
+<p>You can't combine them. Your options are to keep two separate apps, or to move customers to one app with a migration path you build yourself (for example, a free unlock in the new app for verified purchasers). Plan support copy for either choice.</p>
+</Callout>
+
+## Plan purchases and existing customers
+
+In-app purchases and subscriptions configured on the record work across its platforms, but only if your code handles them. Before you ship the second platform, check:
+
+- The same product identifiers are used on every platform.
+- A subscriber on iPhone sees their access on Mac without buying again.
+- **Restore Purchases** works on a fresh Mac install.
+- Family Sharing, refunds and expired subscriptions show the right state everywhere.
+
+If your iPhone or iPad app was already available on Apple silicon Macs, releasing a native Mac app replaces it, and those users receive the Mac app as an update. Test that upgrade path with real data.
+
+## Implementation checklist
+
+1. **Record:** add the platform to the existing record; confirm Apple ID, SKU, bundle ID, agreements and availability.
+2. **Builds:** create a separate target; keep a table mapping iOS and Mac version numbers for support.
+3. **Commerce:** buy, restore, upgrade and cancel on every platform.
+4. **Data:** test sync, migration and offline edits for existing users.
+5. **Listing:** write the Mac description and capture Mac screenshots; don't reuse iPhone ones.
+6. **Review:** submit each platform version separately with clear notes.
+7. **Support:** ask for platform, version and purchase status in your support form.
+
+<DoToday>
+
+1. Check whether you already have more than one record for this product.
+2. List every in-app purchase identifier and confirm the new platform uses the same ones.
+3. Write the support answer for "I bought it on iPhone, why is Mac asking me to pay?"
+
+</DoToday>

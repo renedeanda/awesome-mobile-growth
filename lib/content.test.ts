@@ -1,25 +1,36 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import { describe, it } from "node:test";
-import { guideLoaders, guides } from "./content.ts";
+import { articles } from "./articles/index.ts";
+import { articleLoaders } from "./articles/loaders.ts";
+import { changes } from "./changes.ts";
+import { metrics } from "./metrics.ts";
 import { podcasts } from "./podcasts.ts";
 import { resourceGroups } from "./resources.ts";
-import { applePlatformGuides, appleSources, macScreenshotSizes, platformComparison } from "./applePlatforms.ts";
-import { fieldCollections } from "./fieldLab.ts";
+import { resolveRelated } from "./related.ts";
+import { appleScreenshotClasses } from "./storeSpecs.ts";
 import { tools } from "./tools.ts";
 
-describe("editorial data", () => {
-  it("keeps guide slugs unique", () => assert.equal(new Set(guides.map(({ slug }) => slug)).size, guides.length));
-  it("has one MDX loader for every guide", () => assert.deepEqual(Object.keys(guideLoaders).sort(), guides.map(({ slug }) => slug).sort()));
-  it("keeps editorial dates and direct answers explicit", () => guides.forEach(({ directAnswer, modified, reviewed }) => { assert.ok(directAnswer.length > 80); assert.match(modified, /^2026-\d{2}-\d{2}$/); assert.match(reviewed, /^2026-\d{2}-\d{2}$/); }));
+const isoDate = /^20\d{2}-\d{2}-\d{2}$/;
+
+describe("guides", () => {
+  it("have unique paths", () => assert.equal(new Set(articles.map(({ path }) => path)).size, articles.length));
+  it("each have exactly one MDX loader", () => assert.deepEqual(Object.keys(articleLoaders).sort(), articles.map(({ section, slug }) => `${section}/${slug}`).sort()));
+  it("only link to pages that exist", () => articles.forEach(({ path, related }) => related.forEach((target) => assert.ok(resolveRelated(target), `${path} → ${target}`))));
+  it("start with a substantive answer", () => articles.forEach(({ path, answer }) => assert.ok(answer.length > 120, path)));
+  it("keep meta descriptions short enough for search results", () => articles.forEach(({ path, description }) => assert.ok(description.length >= 80 && description.length <= 200, `${path}: ${description.length}`)));
+  it("keep search titles under 80 characters", () => articles.forEach(({ path, seoTitle }) => assert.ok(seoTitle.length <= 80, `${path}: ${seoTitle.length}`)));
+  it("record dates and secure sources", () => articles.forEach(({ path, published, reviewed, sources }) => { assert.match(published, isoDate, path); assert.match(reviewed, isoDate, path); assert.ok(sources.length > 0, path); sources.forEach(({ href }) => assert.match(href, /^https:\/\//)); }));
+  it("have at least three sections", () => articles.forEach(({ path, toc }) => assert.ok(toc.length >= 3, path)));
+  it("end with an action list, except the checklist itself", () => articles.filter(({ slug }) => slug !== "checklist").forEach(({ path, file }) => assert.ok(fs.readFileSync(`content/${file}`, "utf8").includes("<DoToday>"), path)));
+});
+
+describe("reference data", () => {
+  it("has unique metric slugs with related metrics that exist", () => { const slugs = new Set(metrics.map(({ slug }) => slug)); assert.equal(slugs.size, metrics.length); metrics.forEach(({ related }) => related.forEach((slug) => assert.ok(slugs.has(slug), slug))); });
+  it("lists platform changes newest first, linked to real guides", () => { changes.forEach((change, index) => { if (index) assert.ok(change.date <= changes[index - 1].date, change.slug); change.related.forEach((path) => assert.ok(resolveRelated(path), `${change.slug} → ${path}`)); }); });
+  it("gives every Apple screenshot class at least one size", () => appleScreenshotClasses.forEach(({ id, sizes }) => assert.ok(sizes.length > 0, id)));
+  it("records a review date for every podcast", () => podcasts.forEach(({ latestChecked }) => assert.match(latestChecked, isoDate)));
   it("keeps podcast slugs unique", () => assert.equal(new Set(podcasts.map(({ slug }) => slug)).size, podcasts.length));
-  it("records a review date for every podcast", () => podcasts.forEach(({ latestChecked }) => assert.match(latestChecked, /^2026-\d{2}-\d{2}$/)));
   it("uses secure resource URLs", () => resourceGroups.flatMap(({ items }) => items).forEach(({ href }) => assert.match(href, /^https:\/\//)));
-  it("keeps Apple launch guide slugs unique", () => assert.equal(new Set(applePlatformGuides.map(({ slug }) => slug)).size, applePlatformGuides.length));
-  it("keeps Apple launch guidance substantive", () => applePlatformGuides.forEach(({ answer, description }) => { assert.ok(answer.length > 140); assert.ok(description.length > 120); }));
-  it("links every platform claim set to secure Apple sources", () => Object.values(appleSources).forEach(({ href }) => assert.match(href, /^https:\/\/developer\.apple\.com\//)));
-  it("records the four accepted Mac screenshot dimensions", () => assert.deepEqual(macScreenshotSizes, ["1280 × 800", "1440 × 900", "2560 × 1600", "2880 × 1800"]));
-  it("compares iPhone, iPad, and Mac for every platform row", () => platformComparison.forEach((row) => { assert.ok(row.iphone); assert.ok(row.ipad); assert.ok(row.mac); }));
-  it("keeps field-library routes unique and substantive", () => Object.values(fieldCollections).forEach((entries) => { assert.equal(new Set(entries.map(({ slug }) => slug)).size, entries.length); entries.forEach(({ answer, sections, sources }) => { assert.ok(answer.length > 100); assert.ok(sections.length >= 3); assert.ok(sources.length >= 1); }); }));
-  it("uses secure sources throughout the field library", () => Object.values(fieldCollections).flat().flatMap(({ sources }) => sources).forEach(({ href }) => assert.match(href, /^https:\/\//)));
   it("keeps browser tool routes unique", () => assert.equal(new Set(tools.map(({ slug }) => slug)).size, tools.length));
 });

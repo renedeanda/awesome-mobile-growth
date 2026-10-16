@@ -1,47 +1,21 @@
 import type { MetadataRoute } from "next";
-import { guides } from "@/lib/content";
+import { articles, sections } from "@/lib/articles";
+import { changes } from "@/lib/changes";
+import { metrics, metricsReviewed } from "@/lib/metrics";
 import { absolute } from "@/lib/site";
-import { applePlatformGuides, applePlatformsReviewed } from "@/lib/applePlatforms";
-import { fieldCollections } from "@/lib/fieldLab";
 import { tools } from "@/lib/tools";
 
 export const dynamic = "force-static";
+export const revalidate = false;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const fixed = [
-    "",
-    "app-store-optimization",
-    "apple-platforms",
-    "aso-checklist",
-    "guides",
-    "google-play",
-    "growth",
-    "reference",
-    "updates",
-    "tools",
-    "ai",
-    "ai/skills",
-    "ai/skills/app-store-growth",
-    "podcasts",
-    "resources",
-    "workbench",
-    "about",
-    "privacy",
-    "field-notes/rebuilding-awesome-mobile-growth",
+  // Hub and tool pages have no editorial date of their own, so they omit lastModified.
+  const fixed = ["", ...Object.values(sections).map((section) => section.path.slice(1, -1)), "app-store-optimization", "changes", "tools", "tools/app-store-growth-skill", "workbench", "learn/metrics", "learn/podcasts", "learn/resources", "about", "privacy", "field-notes/rebuilding-awesome-mobile-growth"];
+  return [
+    ...fixed.map((path) => ({ url: absolute(`/${path}${path ? "/" : ""}`) })),
+    ...articles.map((article) => ({ url: absolute(article.path), lastModified: new Date(article.reviewed) })),
+    ...metrics.map((metric) => ({ url: absolute(`/learn/metrics/${metric.slug}/`), lastModified: new Date(metricsReviewed) })),
+    ...changes.map((change) => ({ url: absolute(`/changes/${change.slug}/`), lastModified: new Date(change.reviewed) })),
+    ...tools.map((tool) => ({ url: absolute(`/tools/${tool.slug}/`) })),
   ];
-  // Hub and tool pages have no editorial date of their own, so they omit lastModified
-  // instead of repeating a date that would never change.
-  const pages: MetadataRoute.Sitemap = fixed.map((path) => ({ url: absolute(`/${path}${path ? "/" : ""}`) }));
-  const guidePages: MetadataRoute.Sitemap = guides.map((guide) => ({
-    url: absolute(`/guides/${guide.slug}/`),
-    lastModified: new Date(guide.modified),
-  }));
-  const applePlatformPages: MetadataRoute.Sitemap = applePlatformGuides.map((guide) => ({
-    url: absolute(`/apple-platforms/${guide.slug}/`),
-    lastModified: new Date(applePlatformsReviewed),
-  }));
-  const bases = { reference: "reference", google: "google-play", growth: "growth", ai: "ai/guides", updates: "updates" } as const;
-  const fieldPages: MetadataRoute.Sitemap = Object.entries(fieldCollections).flatMap(([collection, entries]) => entries.map((entry) => ({ url: absolute(`/${bases[collection as keyof typeof bases]}/${entry.slug}/`), lastModified: new Date(entry.reviewed) })));
-  const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({ url: absolute(`/tools/${tool.slug}/`) }));
-  return [...pages, ...applePlatformPages, ...guidePages, ...fieldPages, ...toolPages];
 }

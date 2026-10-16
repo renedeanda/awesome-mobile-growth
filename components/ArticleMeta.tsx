@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Evidence } from "@/components/Evidence";
-import type { Evidence as EvidenceType } from "@/lib/content";
+import type { Evidence as EvidenceType } from "@/lib/evidence";
 import { formatDate } from "@/lib/site";
 
 // One line under every article title: evidence chips, then read time and the date sources were last checked.

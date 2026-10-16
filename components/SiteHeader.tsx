@@ -9,54 +9,56 @@ type NavLink = { href: string; label: string; note?: string };
 type NavGroup = { title: string; links: NavLink[] };
 
 const desktopLinks: NavLink[] = [
-  { href: "/apple-platforms/", label: "Launch" },
-  { href: "/guides/", label: "Guides" },
-  { href: "/growth/", label: "Growth" },
+  { href: "/launch/", label: "Launch" },
+  { href: "/store-page/", label: "Store page" },
+  { href: "/grow/", label: "Grow" },
   { href: "/tools/", label: "Tools" },
-  { href: "/updates/", label: "Changes" },
-  { href: "/podcasts/", label: "Podcasts" },
+  { href: "/changes/", label: "Changes" },
+  { href: "/learn/", label: "Learn" },
 ];
 
 const groups: NavGroup[] = [
   { title: "Launch", links: [
-    { href: "/apple-platforms/iphone-app-store-launch/", label: "iPhone" },
-    { href: "/apple-platforms/ipad-app-store-launch/", label: "iPad" },
-    { href: "/apple-platforms/macos-app-store-launch/", label: "Mac App Store" },
-    { href: "/google-play/", label: "Google Play" },
-    { href: "/aso-checklist/", label: "Launch checklist" },
+    { href: "/launch/iphone/", label: "iPhone" },
+    { href: "/launch/ipad/", label: "iPad" },
+    { href: "/launch/mac/", label: "Mac App Store" },
+    { href: "/launch/google-play/", label: "Google Play" },
+    { href: "/launch/checklist/", label: "Launch checklist" },
   ]},
   { title: "Store page", links: [
-    { href: "/guides/metadata/", label: "Name, subtitle & description" },
-    { href: "/guides/keyword-research/", label: "Keywords" },
-    { href: "/guides/screenshots/", label: "Screenshots" },
-    { href: "/guides/app-store-creative-assets/", label: "Headers & search assets" },
-    { href: "/guides/localization/", label: "Localization" },
-    { href: "/guides/product-page-testing/", label: "Testing" },
+    { href: "/store-page/metadata/", label: "Name, subtitle and description" },
+    { href: "/store-page/keywords/", label: "Keywords" },
+    { href: "/store-page/screenshots/", label: "Screenshots" },
+    { href: "/store-page/creative-assets/", label: "Headers and search assets" },
+    { href: "/store-page/localization/", label: "Localization" },
+    { href: "/store-page/testing/", label: "Testing" },
   ]},
   { title: "Grow", links: [
-    { href: "/growth/", label: "Growth after the install" },
-    { href: "/guides/ratings-retention/", label: "Ratings & retention" },
-    { href: "/reference/", label: "App Store metrics" },
+    { href: "/grow/onboarding/", label: "Onboarding" },
+    { href: "/grow/subscriptions/", label: "Subscriptions" },
+    { href: "/grow/ratings-reviews/", label: "Ratings and reviews" },
+    { href: "/grow/", label: "All growth guides" },
   ]},
   { title: "Tools", links: [
     { href: "/workbench/", label: "Workbench" },
     { href: "/tools/", label: "All tools", note: `${tools.length} free` },
-    { href: "/ai/skills/app-store-growth/", label: "AI skill" },
+    { href: "/tools/app-store-growth-skill/", label: "AI agent skill" },
   ]},
   { title: "Learn", links: [
-    { href: "/updates/", label: "Platform changes" },
-    { href: "/podcasts/", label: "Podcasts" },
-    { href: "/resources/", label: "Resources" },
-    { href: "/ai/", label: "Using AI for ASO" },
+    { href: "/changes/", label: "Platform changes" },
+    { href: "/learn/metrics/", label: "Metrics glossary" },
+    { href: "/learn/ai-for-aso/", label: "AI for ASO" },
+    { href: "/learn/podcasts/", label: "Podcasts" },
+    { href: "/learn/resources/", label: "Resources" },
     { href: "/about/", label: "About" },
   ]},
 ];
 
 const tabs: Array<NavLink & { match: string[] }> = [
-  { href: "/aso-checklist/", label: "Launch", match: ["/aso-checklist/", "/apple-platforms/", "/google-play/"] },
-  { href: "/guides/", label: "Store page", match: ["/guides/", "/app-store-optimization/", "/reference/"] },
-  { href: "/tools/", label: "Tools", match: ["/tools/", "/workbench/", "/ai/skills/"] },
-  { href: "/updates/", label: "Changes", match: ["/updates/"] },
+  { href: "/launch/", label: "Launch", match: ["/launch/"] },
+  { href: "/store-page/", label: "Store page", match: ["/store-page/", "/app-store-optimization/"] },
+  { href: "/tools/", label: "Tools", match: ["/tools/", "/workbench/"] },
+  { href: "/changes/", label: "Changes", match: ["/changes/"] },
 ];
 
 const isActive = (pathname: string, href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);

@@ -1,0 +1,47 @@
+## What a web-to-app funnel is
+
+A web-to-app funnel sends people to a web page before (or instead of) the store: an ad leads to a landing page or quiz, then to an account or offer, then to the app. Teams use it to explain a complex product, qualify people, personalize onboarding, or take payment on the web.
+
+<Example title="A typical path">
+<p>Social ad → quiz about your goals (6 questions) → personalized plan preview → email capture → web checkout or "Continue in the app" → app install → sign in → the plan is already there.</p>
+</Example>
+
+Every extra step loses people. The web step has to earn its place by explaining, qualifying or personalizing better than the store page can.
+
+## Check if it fits your app
+
+A web step makes sense when most of these are true:
+
+- The product needs explaining or setup before it makes sense.
+- Your answers to a quiz meaningfully change the first experience.
+- Accounts and purchases can follow the person into the app without friction.
+- You can measure each step without counting people twice.
+- You can support web billing: refunds, receipts, tax and cancellations.
+
+If the app is simple and the store page explains it well, send people straight to the store.
+
+## Make the handoff reliable
+
+The weakest point is the jump from web to app. Make it reliable:
+
+- **Use Universal Links (iOS) and App Links (Android)** so links open the app when it's installed and the right web page when it isn't. Firebase Dynamic Links shut down on 25 August 2025; don't build on it.
+- **Carry identity across.** Have people sign in with the same account (email link, Sign in with Apple, Google) so their quiz answers and purchase are waiting in the app.
+- **Sync entitlements.** A web purchase must unlock the app immediately. Subscription services can link web and store purchases to one customer.
+
+## Know the store rules for your country
+
+Rules about linking to web purchases differ by storefront and have changed several times since 2024. In the United States, after a 2025 court order, Apple's guidelines allow apps to include buttons and links to external purchase pages. In the EU, Apple and Google offer alternative terms under the Digital Markets Act. Other storefronts have their own programs.
+
+Read the current App Review Guidelines (section 3.1) and Google Play's payments policy for every storefront you sell in before you add a purchase link to your app, and get legal advice for anything unclear.
+
+## Measure it against going direct
+
+Run the web funnel against a direct-to-store path for the same audience and compare the whole journey: cost per install, landing completion, install, activation, paid conversion, refunds, retention at 30 days and support tickets. The web path often wins on payment margin and loses on drop-off; only the full comparison tells you which is better for your app.
+
+<DoToday>
+
+1. Draw your current path from ad to first useful moment, step by step.
+2. Mark the step with the biggest drop-off.
+3. Check your links use Universal Links and App Links, not a retired service.
+
+</DoToday>

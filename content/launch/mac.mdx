@@ -1,0 +1,76 @@
+## Pick how your app reaches the Mac
+
+There are three ways an iPhone or iPad app ends up on a Mac. They make different products, so decide before you create anything in App Store Connect.
+
+| Route | What you ship | Choose it when |
+| --- | --- | --- |
+| **Native macOS** | A Mac app built with AppKit or SwiftUI for Mac | Windows, menus, keyboard work and files are central to the product |
+| **Mac Catalyst** | Your iPad app compiled for Mac, then adapted | The iPad app is a good starting point and you will finish the Mac details |
+| **iPhone and iPad app on Mac** | Your unmodified iOS app on Apple silicon Macs | You want availability with no extra work, and accept a phone-shaped experience |
+
+The third route is availability, not a Mac app. Do not describe it as "made for Mac" in your listing.
+
+## Add macOS to your existing app record
+
+If you want one purchase to cover iPhone, iPad and Mac, add macOS as a platform on your existing iOS app record. Do not create a second record: Apple does not merge records later, and you would lose [Universal Purchase](/launch/universal-purchase/).
+
+When you add macOS:
+
+- The Mac app uses the **same Apple ID, SKU and bundle ID** as the iOS app.
+- You upload the Mac build from its own target, and its version and build numbers can differ from iOS.
+- Apple copies most app information, but you must supply the Mac **description, promotional text and screenshots**.
+- The macOS category you choose in App Store Connect must match the category in your Xcode project.
+
+<Callout tone="caution" title="This becomes permanent">
+<p>Once App Review approves versions on two platforms, the app is a Universal Purchase for good, and you can no longer remove a platform. If your iOS app was already available on Apple silicon Macs, the native Mac version replaces it and existing users get it as an update.</p>
+</Callout>
+
+## Make Mac screenshots that look like a Mac app
+
+Mac screenshots must be 16:10, landscape, with no transparency, at one of four sizes. Upload 1 to 10.
+
+<AppleScreenshotTable devices={["Mac"]} />
+
+Show what a desktop buyer looks for:
+
+1. **The main window at readable scale.** Crop to the window if the full desktop makes text tiny.
+2. **Information density.** A sidebar and a full content area, not one centered card.
+3. **Mac behavior.** Multiple windows, the menu bar, a keyboard shortcut overlay, drag and drop.
+4. **Continuity, if it's real.** The same note on iPhone and Mac, synced.
+5. **The trust frame.** Offline use, privacy, one-time purchase, or file ownership.
+
+Mac app previews are optional, landscape only, up to three per language.
+
+Write the Mac description in desktop terms: windows, documents, shortcuts, menu bar, Finder. If the Mac listing reads like the iPhone listing with "Mac" added, rewrite it.
+
+## Pass the Mac-specific checks
+
+**App Sandbox is required** for the Mac App Store. Turn on only the entitlements you need, then test the signed release build against every file, network, camera, contacts or automation path those entitlements touch. Sandbox problems rarely show up in debug builds.
+
+Then test like a Mac user:
+
+1. Open, resize, minimize, full-screen and close windows. Quit and relaunch to check restored state.
+2. Use only the keyboard for your main task. Check every menu item has a shortcut where users expect one.
+3. Sign in, restore purchases and sync as an existing iOS customer, not only as a new user.
+4. Install on an older supported macOS version.
+
+TestFlight works for Mac too: up to 10,000 external testers, with builds expiring after 90 days.
+
+## Submit the Mac version on its own
+
+Each platform version is submitted separately. Attach the Mac build to the macOS version and submit it. In review notes, explain any unusual entitlements or file access, give a demo account, and say whether the Mac app needs the iPhone app for anything.
+
+Privacy answers are shared across platforms, so update them if the Mac app collects anything new. Accessibility Nutrition Labels are per device, so declare Mac support based on what works on Mac.
+
+## Measure the Mac launch on its own terms
+
+Filter App Analytics to macOS. Mac traffic is mostly search and direct links, so conversion depends heavily on the first two screenshots and the subtitle. Track how many Mac installs come from existing iOS customers (purchase restored) versus new buyers; the first number tells you about continuity, the second about the Mac listing.
+
+<DoToday>
+
+1. Decide native, Catalyst or iOS-on-Mac, and write down why.
+2. Confirm you're adding macOS to the existing record, not creating a new one.
+3. List every entitlement the Mac app needs and remove the rest.
+4. Capture one 2880 × 1800 screenshot of the main window with realistic content.
+
+</DoToday>

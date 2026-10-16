@@ -1,0 +1,84 @@
+## Give every field one job
+
+Each text field on a store page is read by different people at a different moment. Decide what each one is for before you write any of them.
+
+| Field | App Store | Google Play | Its job |
+| --- | --- | --- | --- |
+| App name | 30 characters | 30 characters | Be recognizable; add what the app is if it fits |
+| Subtitle / short description | 30 characters | 80 characters | Say what the app does in one line |
+| Keywords | 100 bytes, hidden | None | Extra search terms (Apple only) |
+| Promotional text | 170 characters | None | Timely news; change it without an update |
+| Description | 4,000 characters | 4,000 characters | The details for someone already interested |
+| What's New | 4,000 characters | 500 characters ("Release notes") | What changed, most important first |
+
+Apple's search reads the **app name, subtitle, keywords and primary category**. It does not use promotional text, and the description doesn't help ranking either. Google Play has no keyword field, so its search reads your visible text: name, short description and full description.
+
+## Write the subtitle first
+
+The subtitle (or Google Play's short description) is the most-read sentence you will write. Write it before the name, because it forces you to decide what the app is for.
+
+<BeforeAfter
+  before={<p><strong>Name:</strong> Northstar<br/><strong>Subtitle:</strong> Your life, organized beautifully</p>}
+  after={<p><strong>Name:</strong> Northstar: Habit Tracker<br/><strong>Subtitle:</strong> Build routines in 2 minutes a day</p>}
+  note="Example app. In the first version, a stranger can't tell whether this is a calendar, a to-do list or a journal. The second says what it is, what you do with it and how long it takes, and puts two searchable words (habit, tracker) in the name."
+/>
+
+A test that works: show the name and subtitle to someone outside your team for five seconds. If they can't say what the app does, rewrite it.
+
+## Name rules on both stores
+
+- **App Store:** 2 to 30 characters. Apple asks for a simple, memorable name and warns against generic terms or names close to existing apps. You can only change it with a new version once the app has been submitted.
+- **Google Play:** 30 characters. The metadata policy restricts emoji, ALL CAPS (unless it is your brand), repeated punctuation, and words like "best", "#1", "free" or "top" in the title.
+
+Adding a short descriptor after the brand ("Northstar: Habit Tracker") is common and allowed on both stores, as long as it's accurate.
+
+## Write the description for someone already interested
+
+On the App Store, only the first sentence or two show before "more". Apple calls the first sentence the most important one. Open with what the app does and who it's for, then cover what people ask before installing:
+
+1. **What it does,** in one sentence.
+2. **The main features,** as short lines people can scan. Five to seven is plenty.
+3. **What it costs:** free, free trial, subscription, one-time purchase. Apple asks you not to put specific prices in the description, since prices vary by country.
+4. **What it needs:** account, device, accessory, internet connection.
+5. **Privacy or support,** if those matter to your audience.
+
+Leave out keyword lists, competitor names and claims you can't support. On Google Play, repeating a word many times can count as keyword spam under the metadata policy.
+
+## Use promotional text for news
+
+Promotional text sits above the description on the App Store and is up to 170 characters. You can change it at any time without submitting a new version. Use it for things with a date: a new feature, a seasonal use, a sale.
+
+<Example title="Promotional text">
+<p>New in October: shared habits. Invite a friend and keep each other on track. Free for everyone through November 30.</p>
+</Example>
+
+Give it an owner and an end date. Expired "limited time" text is worse than none.
+
+## Write What's New for your users
+
+Most people read release notes when an update looks big or something broke. List changes in order of importance, in user terms. "Fixed a crash when opening shared lists" is useful; "Bug fixes and performance improvements" is not. What's New isn't shown for an app's first version.
+
+<WorkbenchLink platform="apple" template="metadata">Draft your fields with live limits</WorkbenchLink>
+
+## Ask AI to help
+
+<AskAI
+  prompt={`Here is my app:
+- Name: [name]
+- What it does: [one sentence]
+- Who it's for: [audience]
+- Features in the current version: [list]
+- How it's priced: [free / trial / subscription / one-time]
+
+Write the opening of an App Store description: one sentence that says what the app does and for whom, then 5 short feature lines (under 60 characters each). Use plain words. No superlatives, no prices, no features that aren't on my list.`}
+  checks={["Every feature line must match the shipped build.", "Remove any price; Apple asks you not to list prices in the description.", "Read it aloud. If it sounds like an ad, cut adjectives."]}
+/>
+
+<DoToday>
+
+1. Write five subtitle options and run the five-second test on one person.
+2. Rewrite the first sentence of your description so it says what the app does.
+3. Delete any line in the description that is a list of keywords.
+4. Put an end date in your calendar for the current promotional text.
+
+</DoToday>

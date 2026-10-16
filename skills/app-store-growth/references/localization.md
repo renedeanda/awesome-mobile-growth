@@ -2,7 +2,7 @@
 
 Localize the decision, not just the words.
 
-- Preserve product truth, feature availability, and legal meaning.
+- Preserve the product facts, feature availability, and legal meaning.
 - Research how the audience describes the job in the target locale; do not claim volume without a named dataset.
 - Rebuild constrained fields for the locale rather than forcing the source-language structure.
 - Mark untranslated product names, protected terms, and deliberately retained English.

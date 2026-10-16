@@ -1,3 +1,10 @@
+import { articles, sections } from "@/lib/articles";
 import { site } from "@/lib/site";
-export const dynamic="force-static";
-export function GET(){const text=`# ${site.name}\n\n> Evidence-aware App Store Optimization and mobile growth guidance for Apple App Store and Google Play practitioners.\n\n## Start\n- ${site.origin}/app-store-optimization/\n- ${site.origin}/apple-platforms/\n- ${site.origin}/google-play/\n- ${site.origin}/growth/\n- ${site.origin}/ai/\n\n## Reference data\n- ${site.origin}/data/reference-index.json\n- ${site.origin}/data/store-specs.json\n- ${site.origin}/data/source-manifest.json\n\n## Editorial contract\nOfficial rules link to primary sources. Observation, measurement, hypothesis, and recommendation are not interchangeable. Search volume, rankings, conversion, and revenue are never invented.\n`;return new Response(text,{headers:{"Content-Type":"text/plain; charset=utf-8"}})}
+
+export const dynamic = "force-static";
+
+export function GET() {
+  const bySection = Object.values(sections).map((section) => `## ${section.name}\n- [${section.title}](${site.origin}${section.path})\n${articles.filter((article) => article.section === section.id).map((article) => `- [${article.title}](${site.origin}${article.path}): ${article.description}`).join("\n")}`).join("\n\n");
+  const text = `# ${site.name}\n\n> Practical, sourced guides for launching and growing apps on the App Store and Google Play, free browser tools, and an open AI agent skill.\n\n${bySection}\n\n## More\n- [Platform changes](${site.origin}/changes/)\n- [App Store metrics glossary](${site.origin}/learn/metrics/)\n- [Free tools](${site.origin}/tools/)\n- [Answers index](${site.origin}/llms-full.txt)\n\n## Data\n- ${site.origin}/data/reference-index.json\n- ${site.origin}/data/store-specs.json\n- ${site.origin}/data/source-manifest.json\n\n## Editorial rules\nPlatform rules link to Apple and Google's own pages. Search volume, rankings, conversion and revenue are never invented. Opinions are labeled.\n`;
+  return new Response(text, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
+}

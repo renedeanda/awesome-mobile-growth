@@ -1,6 +1,8 @@
-// Checks every official-documentation link in the built site.
+// Checks every external link in the built site.
 // Apple serves missing help pages with HTTP 200 and a "Page Not Found" title,
 // so a status-code check alone misses them; this audit reads the title too.
+// Official Apple/Google pages fail on any soft or hard 404; other sites fail only on a hard 404/410,
+// because many block automated requests (403, 429) while working fine for people.
 import fs from "node:fs";
 import path from "node:path";
 
@@ -22,7 +24,6 @@ for (const file of files) {
   const html = fs.readFileSync(file, "utf8");
   for (const [, raw] of html.matchAll(/href="(https:\/\/[^"]+)"/g)) {
     const url = raw.replace(/&amp;/g, "&").split("#")[0];
-    if (!OFFICIAL_HOSTS.includes(new URL(url).hostname)) continue;
     if (!pagesByUrl.has(url)) pagesByUrl.set(url, new Set());
     pagesByUrl.get(url).add(path.relative("out", file));
   }
@@ -34,7 +35,7 @@ async function check(url) {
     if (response.status === 404 || response.status === 410) return { url, problem: `HTTP ${response.status}` };
     if (!response.ok) return { url, warning: `HTTP ${response.status}` };
     const title = (await response.text()).match(/<title[^>]*>([^<]*)<\/title>/i)?.[1]?.trim() ?? "";
-    if (NOT_FOUND_TITLE.test(title)) return { url, problem: `soft 404 ("${title}")` };
+    if (NOT_FOUND_TITLE.test(title)) return OFFICIAL_HOSTS.includes(new URL(url).hostname) ? { url, problem: `soft 404 ("${title}")` } : { url, warning: `title looks like a 404 ("${title}")` };
     return { url };
   } catch (error) {
     return { url, warning: `unreachable (${error.cause?.code ?? error.name})` };
@@ -50,4 +51,4 @@ const warnings = results.filter((r) => r.warning);
 for (const r of warnings) console.warn(`warn  ${r.warning}  ${r.url}`);
 for (const r of problems) console.error(`FAIL  ${r.problem}  ${r.url}\n      used on: ${[...pagesByUrl.get(r.url)].slice(0, 5).join(", ")}`);
 if (problems.length) process.exit(1);
-console.log(`External link audit passed: ${urls.length} official links checked${warnings.length ? `, ${warnings.length} could not be reached` : ""}.`);
+console.log(`External link audit passed: ${urls.length} external links checked${warnings.length ? `, ${warnings.length} could not be reached` : ""}.`);

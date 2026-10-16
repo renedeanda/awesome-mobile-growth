@@ -1,0 +1,56 @@
+## iPhone, iPad and Mac at a glance
+
+| | iPhone | iPad | Mac |
+| --- | --- | --- | --- |
+| App Store Connect platform | iOS | iOS (shared with iPhone) | macOS, added to the same record |
+| Required screenshot set | Dynamic Island (medium display) | 13-inch display, if the app runs on iPad | Any of the four 16:10 sizes |
+| Screenshots allowed | 1–10 per size and language | 1–10 per size and language | 1–10 per language |
+| App previews | Optional, up to 3, up to 30 s | Optional, up to 3, up to 30 s | Optional, up to 3, landscape |
+| Build | Shared iOS build | Shared iOS build | Separate macOS build |
+| App Sandbox | Not required | Not required | Required |
+| Submitted | With the iOS version | With the iOS version | As its own version |
+
+## Text fields and limits
+
+The app name and subtitle belong to the whole app. Everything else on the product page belongs to a platform version, so iOS and macOS can have different descriptions, keywords and promotional text.
+
+| Field | Limit | Level | Notes |
+| --- | --- | --- | --- |
+| App name | 2–30 characters | App | Editable until you submit, then with a new version |
+| Subtitle | 30 characters | App | Shown under the name everywhere on the store |
+| Keywords | 100 bytes | Version | Commas, no spaces; each keyword at least 3 characters |
+| Promotional text | 170 characters | Version | Change any time without a new version; doesn't affect search |
+| Description | 4,000 characters | Version | Plain text; first sentence is visible before "more" |
+| What's New | 4,000 characters | Version | Not shown for the first version |
+| Review notes | 4,000 bytes | Version | Editable any time |
+
+Apple's marketing pages describe the keyword limit as 100 characters; App Store Connect counts 100 **bytes**. For English they are the same. For accented and non-Latin scripts, a character can take 2–4 bytes, so count bytes.
+
+## Screenshot sizes
+
+<AppleScreenshotTable devices={["iPhone", "iPad", "Mac"]} />
+
+All screenshots must be JPEG or PNG with no transparency. If your UI is identical across sizes, upload only the largest required size and App Store Connect scales it for smaller devices.
+
+<Callout tone="caution" title="Coming in April 2027: iPhone Duo">
+<p>Apple's screenshot specification says iPhone Duo screenshots become required in April 2027 for apps built with the iOS 27.1 SDK or later. The App Store Connect release notes of 5 and 15 October 2026 say any app or game submitted from April 2027. Apple usually raises the minimum SDK for new submissions each spring, so plan for the stricter reading.</p>
+</Callout>
+
+## Header and search assets
+
+Since October 2026, App Store Connect also accepts a product page header and a search result asset, shown on iOS and iPadOS 27 or later. They are optional and separate from screenshots. Sizes and video rules are in the [headers and search assets guide](/store-page/creative-assets/).
+
+## Submission model
+
+- iPhone and iPad ship together in the iOS platform version. A Mac app is a separate macOS version with its own build.
+- You can have one version per platform in review at a time.
+- For Universal Purchase, use the same record and bundle ID; versions and build numbers can differ.
+- An approved version can take up to 24 hours to appear on the store.
+
+<DoToday>
+
+1. Check which platforms your record has, and which ones you intend to add.
+2. Confirm your screenshot set includes 1206 × 2622 (iPhone) and, if you support iPad, 2064 × 2752.
+3. Count your keyword field in bytes, not characters, in every language you ship.
+
+</DoToday>
