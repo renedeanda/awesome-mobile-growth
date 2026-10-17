@@ -45,6 +45,31 @@ The production build is a static export in `out/`. Verification includes TypeScr
 
 Guides are MDX files in `content/<section>/`, registered in `lib/articles/`. Create one with `npm run content:new -- --section store-page --slug your-slug`. On a new machine, install those browsers once with `npx playwright install chromium webkit`.
 
+## Analytics
+
+The production site reports to its own Google Analytics 4 property, separate from productbuilder.net's, so its traffic and events don't mix with another site's. Analytics loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` holds a `G-` ID and the build is a Vercel production build. Advertising and Google signals are off, and events never carry workbench text, keywords, filenames or URL queries (see `lib/analytics.ts` and the privacy page).
+
+To connect a property:
+
+1. In Google Analytics, create a property for Mobile Growth and a web data stream for `https://mobile.productbuilder.net`. Turn off Enhanced measurement's page views on history changes: the site sends its own `page_view` on each route change.
+2. In Vercel, set `NEXT_PUBLIC_GA_MEASUREMENT_ID` to the stream's measurement ID for the **Production** environment only, then redeploy. `NEXT_PUBLIC_` values are inlined at build time, so a deploy is required.
+3. The build log prints the ID it used, or warns when it is missing or malformed.
+4. Register these event parameters as event-scoped custom dimensions so they appear in reports: `content_area`, `tool_id`, `platform`, `format`, `section_id`, `placement`, `destination_host`, `method`, `outcome`, `class_id`.
+
+| Event | When | Parameters |
+| --- | --- | --- |
+| `page_view` | Every route change | `page_title`, `page_location`, `content_area` |
+| `tool_started` | First real input in a tool | `tool_id`, `platform` |
+| `tool_completed` | A tool's export or copy | `tool_id`, `format`, `platform` |
+| `workbench_started`, `workbench_section_viewed`, `workbench_exported`, `workbench_imported`, `workbench_reset`, `workbench_save_changed` | Workbench actions | `section_id`, `format`, `enabled` |
+| `preview_checked` | App preview checker reads a video | `class_id` |
+| `play_assets_checked` | Play asset checker reads images | `count` |
+| `share_clicked` | Share button | `method` |
+| `install_prompt` | Add to Home Screen prompt answered | `outcome` |
+| `outbound_clicked` | A link to another site | `destination_host`, `destination_path`, `placement` |
+
+Good key events to mark: `tool_completed` and `workbench_exported`.
+
 ## Contributing
 
 Corrections and resource nominations should follow the contribution policy. A good correction identifies the exact sentence, explains what changed, and links directly to current Apple or Google documentation. Pull requests are reserved for the maintainer and invited collaborators; please do not open “add my tool” pull requests.
