@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { countdownLabel, isIsoDate, localToday, schedule, toIcs } from "@/lib/countdown";
 import { formatDate } from "@/lib/site";
@@ -18,6 +19,8 @@ export function Checklist({ groups }: { groups: ChecklistGroup[] }) {
   const [launch, setLaunch] = useState("");
   const [today, setToday] = useState("");
   const [ready, setReady] = useState(false);
+  // Announces a phase the moment its last box is ticked; nothing about it is stored.
+  const [finished, setFinished] = useState("");
 
   useEffect(() => {
     try { setDone(JSON.parse(read(STORAGE_KEY) ?? "{}")); } catch { setDone({}); }
@@ -27,11 +30,13 @@ export function Checklist({ groups }: { groups: ChecklistGroup[] }) {
     setReady(true);
   }, []);
 
-  const toggle = (id: string) => setDone((current) => {
-    const next = { ...current, [id]: !current[id] };
+  const toggle = (id: string) => {
+    const next = { ...done, [id]: !done[id] };
     write(STORAGE_KEY, JSON.stringify(next));
-    return next;
-  });
+    setDone(next);
+    const group = groups.find((candidate) => candidate.items.some((item) => item.id === id));
+    setFinished(next[id] && group?.items.every((item) => next[item.id]) ? group.title : "");
+  };
   const reset = () => { setDone({}); write(STORAGE_KEY, null); };
   const changeLaunch = (value: string) => { setLaunch(value); write(DATE_KEY, isIsoDate(value) ? value : null); };
 
@@ -62,13 +67,21 @@ export function Checklist({ groups }: { groups: ChecklistGroup[] }) {
     </div>
     {groups.map((group) => {
       const phase = phaseFor(group.title);
-      return <section key={group.title} className={`checklist__group${phase?.current ? " checklist__group--current" : ""}`}>
-        <h3>{group.title}{group.when && <small>{group.when}{phase && <> · {phase.upcoming ? "starts" : "started"} {formatDate(phase.start)}</>}{phase?.current && <span className="checklist__now">Now</span>}</small>}</h3>
+      const groupDone = group.items.every((item) => done[item.id]);
+      return <section key={group.title} className={`checklist__group${phase?.current ? " checklist__group--current" : ""}${groupDone ? " checklist__group--done" : ""}${finished === group.title ? " checklist__group--just-done" : ""}`}>
+        <h3>{groupDone && <span className="checklist__check" aria-hidden="true">✓</span>}{group.title}{group.when && <small>{group.when}{phase && <> · {phase.upcoming ? "starts" : "started"} {formatDate(phase.start)}</>}{phase?.current && <span className="checklist__now">Now</span>}</small>}</h3>
         <ul>{group.items.map((item) => <li key={item.id}>
           <label><input type="checkbox" checked={Boolean(done[item.id])} onChange={() => toggle(item.id)}/><span>{item.text}{item.store && <em>{item.store}</em>}</span></label>
         </li>)}</ul>
       </section>;
     })}
+    <p className="sr-only" aria-live="polite">{finished ? `${finished}: phase done.` : ""}</p>
+    {total > 0 && complete === total && <aside className="checklist__ready" aria-label="Ready to submit">
+      <p className="eyebrow">All {total} done</p>
+      <h3>Ready to submit.</h3>
+      <p>Run one last pass on the review requirements, then look at your listing the way a searcher will.</p>
+      <div className="checklist__ready-links"><Link className="button" href="/launch/requirements/">Review requirements</Link><Link className="button-secondary" href="/workbench/">Preview the store page</Link></div>
+    </aside>}
     <p className="table-source">Your ticks and launch date are saved in this browser only.</p>
   </div>;
 }

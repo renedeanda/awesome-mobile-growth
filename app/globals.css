@@ -763,3 +763,41 @@ p { text-wrap: pretty; }
 .code-file[data-collapsed] .code-file__body::after { content: ""; position: absolute; inset: auto 0 0; height: 6rem; background: linear-gradient(transparent, var(--code-bg)); pointer-events: none; }
 .code-file__toggle { display: block; width: 100%; min-height: 46px; border: 0; border-top: 1px solid var(--code-line); background: var(--code-bar); color: var(--code-accent); font: 700 .85rem var(--sans); cursor: pointer; }
 .code-file__toggle:hover { text-decoration: underline; }
+
+/* Screenshot sizes drawn to scale */
+.silhouettes rect { fill: color-mix(in srgb, var(--blue) 14%, var(--sheet)); stroke: var(--blue); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.silhouettes text { fill: var(--muted); font: 600 11px var(--mono); }
+.silhouette-figure { margin: 1.25rem 0 1.5rem; padding: 1.25rem; border: 1px solid var(--line); background: var(--sheet); overflow-x: auto; }
+.silhouette-figure svg { display: block; max-width: 100%; height: auto; }
+.silhouette-figure figcaption { margin-top: .6rem; color: var(--muted); font-size: .85rem; }
+.spec-index a { grid-template-columns: 30px 1fr auto; }
+.spec-index a > .silhouettes--compact { grid-row: 1 / span 2; align-self: center; width: 30px; height: 36px; }
+.spec-index a > strong, .spec-index a > span { grid-column: 2; }
+.spec-index a > small { grid-column: 3; }
+
+/* Measured keyword fields */
+.keyword-field { display: grid; gap: .45rem; }
+.keyword-field code { overflow-wrap: anywhere; }
+.keyword-field__meter { position: relative; display: block; height: 8px; overflow: hidden; border-radius: 99px; background: color-mix(in srgb, var(--ink) 12%, transparent); }
+.keyword-field__meter i { position: absolute; inset: 0 auto 0 0; border-radius: inherit; background: var(--green); }
+.keyword-field__meter i.over { background: var(--coral); }
+.keyword-field__count { color: var(--muted); font-size: .9rem; }
+.keyword-field__count strong { color: var(--ink); font: 700 .85rem var(--mono); }
+
+/* Share */
+.share { display: inline-flex; align-items: center; gap: .6rem; margin-top: .9rem; }
+.share-button { display: inline-flex; align-items: center; gap: .4rem; min-height: 38px; padding: 0 .9rem; border: 1px solid var(--line); border-radius: 99px; background: var(--sheet); color: var(--ink); font: 700 .85rem var(--sans); cursor: pointer; }
+.share-button svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.share-button:hover, .share-button:focus-visible { border-color: var(--blue); color: var(--blue); }
+.share__status { color: var(--green); font-size: .85rem; font-weight: 700; }
+.article-meta .share { margin-top: 0; }
+
+/* Checklist finish moment */
+.checklist__check { display: inline-grid; place-items: center; width: 1.4rem; height: 1.4rem; margin-right: .5rem; border-radius: 50%; background: var(--green); color: var(--paper); font-size: .8rem; vertical-align: .1em; }
+.checklist__group--done h3 { color: var(--green); }
+.checklist__group--just-done .checklist__check { animation: phase-done .55s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes phase-done { 0% { transform: scale(.4); box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 55%, transparent); } 60% { transform: scale(1.15); } 100% { transform: scale(1); box-shadow: 0 0 0 12px transparent; } }
+.checklist__ready { margin: 2rem 0 1rem; padding: 1.4rem; border: 1px solid var(--green); border-left-width: 4px; background: color-mix(in srgb, var(--green) 9%, var(--sheet)); animation: menu-fade .4s ease-out; }
+.checklist__ready h3 { margin: .2rem 0 .4rem; font-size: 1.5rem; }
+.checklist__ready p:not(.eyebrow) { color: var(--muted); }
+.checklist__ready-links { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
