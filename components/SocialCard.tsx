@@ -33,7 +33,7 @@ export function SocialCard({ desk, title, description, trail, art, checked = "20
     </div>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 40 }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 20, width: art ? 640 : 1030 }}>
-        <div style={{ display: "flex", fontSize: art ? (long ? 56 : 64) : 72, lineHeight: 1.02, letterSpacing: -2.5, fontWeight: 800 }}>{title}</div>
+        <div style={{ display: "flex", fontSize: art ? (title.length > 52 ? 50 : long ? 56 : 64) : 72, lineHeight: 1.02, letterSpacing: -2.5, fontWeight: 800 }}>{title}</div>
         <div style={{ display: "flex", color: muted, fontSize: 25, lineHeight: 1.3 }}>{description}</div>
       </div>
       {art && <div style={{ display: "flex", width: 400, height: 340, flexShrink: 0 }}>{art}</div>}

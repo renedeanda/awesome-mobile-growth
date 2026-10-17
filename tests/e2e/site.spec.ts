@@ -547,6 +547,21 @@ test("each screenshot size page shares its own social card", async ({ page, requ
   expect(readPngHeader(new Uint8Array(await response.body()))).toMatchObject({ width: 1200, height: 630 });
 });
 
+test("guides, changes and metrics each share their own social card", async ({ page, request }) => {
+  for (const path of ["/grow/onboarding/", "/changes/google-play-target-api-36/", "/learn/metrics/conversion-rate/"]) {
+    await page.goto(path);
+    const image = await page.locator('meta[property="og:image"]').getAttribute("content");
+    expect(new URL(image ?? "").pathname).toBe(`${path}opengraph-image`);
+    const response = await request.get(new URL(image ?? "").pathname);
+    expect(readPngHeader(new Uint8Array(await response.body()))).toMatchObject({ width: 1200, height: 630 });
+  }
+  const graph = JSON.parse(await page.goto("/grow/onboarding/").then(() => page.locator('script[type="application/ld+json"]').last().textContent()) ?? "[]");
+  const howTo = graph.find((node: { "@type": string }) => node["@type"] === "HowTo");
+  expect(howTo.step).toHaveLength(3);
+  expect(howTo.step[0].text).toBe("Install your app fresh and count the taps to the first useful moment.");
+  await expect(page.locator(".do-today li").first()).toContainText(howTo.step[0].text);
+});
+
 test.describe("Apple promotion", () => {
   test("the in-app event tab counts against Apple's limits and flags prices", async ({ page }) => {
     await page.goto("/workbench/?tab=event");

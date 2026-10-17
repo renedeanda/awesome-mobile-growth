@@ -140,3 +140,25 @@ export function SizesArt({ sizes, status, radius }: { sizes: Array<[number, numb
     <span style={{ display: "flex", alignSelf: "center", padding: "6px 14px", borderRadius: 999, background: required ? "#fbe3d9" : "#e7e4dc", color: required ? "#a33a18" : muted, fontSize: 16, fontWeight: 760 }}>{status}</span>
   </div>;
 }
+
+/** Shortens card text: to the last whole sentence when that keeps at least half, otherwise at a word, never after a comma. */
+export function clip(text: string, max: number) {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const sentence = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("; "));
+  if (sentence >= max / 2) return cut.slice(0, sentence + 1).replace(/;$/, ".");
+  return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:]$/, "")}…`;
+}
+
+/** Guides and changes: the page's own action list, so a shared link previews what the reader will do. */
+export function StepsArt({ heading, steps }: { heading: string; steps: string[] }) {
+  const shown = steps.slice(0, 3);
+  return <div style={{ ...panel, justifyContent: "center", gap: 14, padding: "22px 26px" }}>
+    <span style={{ fontSize: 14, color: green, fontFamily: "Geist Mono", letterSpacing: 2 }}>{heading}</span>
+    {shown.map((step, index) => <div key={step} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+      <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 30, height: 30, flexShrink: 0, borderRadius: 999, background: index === 0 ? green : "transparent", border: `2.5px solid ${index === 0 ? green : "#b9b5ab"}`, color: index === 0 ? "white" : muted, fontSize: 15, fontWeight: 800 }}>{index + 1}</span>
+      <span style={{ display: "flex", fontSize: 18, lineHeight: 1.3, color: ink }}>{clip(step, steps.length > 3 ? 64 : 72)}</span>
+    </div>)}
+    {steps.length > shown.length && <span style={{ fontSize: 14, color: muted, fontFamily: "Geist Mono" }}>+{steps.length - shown.length} MORE ON THE PAGE</span>}
+  </div>;
+}
