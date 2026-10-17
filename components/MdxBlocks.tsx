@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { CopyButton } from "@/components/CopyButton";
 import { keywordTokens, utf8Bytes } from "@/lib/workbench";
-import { appleCreativeAssets, appleInAppEventMedia, appleInAppEventMediaSource, appleScreenshotClasses, appleScreenshotSource, appleCreativeSource, formatSize, googleGraphicsSource, googlePlayGraphics, type ScreenshotClass } from "@/lib/storeSpecs";
+import { appPreviewClasses, appPreviewSource, appleCreativeAssets, appleInAppEventMedia, appleInAppEventMediaSource, appleScreenshotClasses, appleScreenshotSource, appleCreativeSource, formatSize, googleGraphicsSource, googlePlayGraphics, type ScreenshotClass } from "@/lib/storeSpecs";
 
 /** The closing action list every guide ends with. */
 export function DoToday({ children }: { children: ReactNode }) {
@@ -40,6 +40,15 @@ export function AppleScreenshotTable({ devices = ["iPhone", "iPad"] }: { devices
   return <div className="table-scroll" role="region" aria-label="Apple screenshot sizes" tabIndex={0}>
     <table><thead><tr><th scope="col">Display class</th><th scope="col">Portrait pixels (landscape swaps them)</th></tr></thead><tbody><ScreenshotRows items={items}/></tbody></table>
     <p className="table-source">Source: <a href={appleScreenshotSource}>Apple screenshot specifications</a>. 1–10 screenshots per size and language; JPEG or PNG; no transparency.</p>
+  </div>;
+}
+
+export function AppPreviewTable() {
+  const sizes = (list: Array<[number, number]>) => list.length ? list.map(formatSize).join(" or ") : "Landscape only";
+  return <div className="table-scroll" role="region" aria-label="App preview resolutions" tabIndex={0}>
+    <table><thead><tr><th scope="col">Display class</th><th scope="col">Portrait</th><th scope="col">Landscape</th><th scope="col">If missing</th></tr></thead>
+      <tbody>{appPreviewClasses.map((row) => <tr key={row.id}><th scope="row">{row.name}</th><td className="size-cell">{sizes(row.portrait)}</td><td className="size-cell">{sizes(row.landscape)}</td><td>{row.fallback ? `Scaled from ${row.fallback}` : "No preview shown"}</td></tr>)}</tbody></table>
+    <p className="table-source">Source: <a href={appPreviewSource}>Apple app preview specifications</a>. Use the accepted resolution, not the device resolution.</p>
   </div>;
 }
 

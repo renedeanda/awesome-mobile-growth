@@ -1,0 +1,62 @@
+## When a preview is worth making
+
+An app preview is a 15 to 30 second video that plays, muted, before your screenshots on the product page and in search results. It's worth the work when your app is easier to understand moving than still: a game, a camera or editing app, anything where the result appears after a gesture.
+
+You can upload up to three previews per device size and language. If one is missing for a language, Apple shows the preview from the next best available language.
+
+## The specification
+
+| Rule | Limit |
+| --- | --- |
+| Length | 15 to 30 seconds |
+| Frame rate | Up to 30 fps |
+| File size | Up to 500 MB |
+| H.264 | .mov, .m4v or .mp4, 10–12 Mbps, progressive, up to High Profile Level 4.0, stereo 256 kbps AAC |
+| ProRes 422 HQ | .mov only, about 220 Mbps, stereo PCM or 256 kbps AAC |
+| Orientation | iOS apps: portrait or landscape. Mac, Apple TV and Apple Vision Pro: landscape only |
+| Processing | Up to 24 hours after upload |
+
+## Resolutions by display class
+
+Export at Apple's **accepted resolution**, not at your device's screen resolution. A screen recording from an iPhone with Dynamic Island (medium display) is 1206 × 2622 pixels, but that class, like every other modern iPhone class, takes previews at 886 × 1920.
+
+<AppPreviewTable/>
+
+Apple suggests uploading only the highest resolution you need: smaller classes use scaled versions of it. Apple's specification lists no preview size for Apple Watch.
+
+## What to show
+
+Apple's rules for the content:
+
+- **Footage from the app itself**, captured on the device. You can record an iPhone or iPad with QuickTime Player on a Mac over a cable.
+- **No hands or devices.** Don't film people using the phone or show fingers tapping. Touch hotspots added as graphics are fine.
+- **No prices and nothing seasonal**, so the video stays accurate.
+- **Disclose what's paid.** If you show features that need an in-app purchase, a subscription or a login, say so.
+- **Transitions that don't invent features.** Dissolves and fades are safe; anything that implies a feature the app doesn't have isn't.
+
+And for the edit:
+
+1. **Show the result in the first few seconds.** Previews autoplay muted, and people can scroll past before the end.
+2. **Add captions or text overlays** that make sense without sound.
+3. **Follow one task from start to finish** instead of a montage of every screen.
+4. **Pick a poster frame that works as a still**, since people with autoplay turned off see only that frame.
+
+<Example title="A film photo log app">
+<p>0–3 s: a roll's frames appear with exposure notes already filled in. 3–12 s: logging a frame with one tap. 12–22 s: the light meter reading a scene. 22–28 s: the finished roll, searchable by lens. Captions name each step; no music is needed to follow it.</p>
+</Example>
+
+## The poster frame
+
+The poster frame is the still shown before the preview plays, during install and to people who turned off autoplay. It defaults to the frame at 5 seconds. Choose it in App Store Connect with **Edit Poster Frame** before submitting: it can't be changed after the preview is approved without uploading a new preview.
+
+## Check the file before uploading
+
+The [app preview video checker](/tools/app-preview-checker/) reads a video in your browser and checks its resolution, length, frame rate, file size and file type against the class you pick. It can't read the codec or bit rate, so confirm those in your export settings.
+
+<DoToday>
+
+1. Decide whether your app is clearer moving than still. If not, put the time into screenshots.
+2. Write a four-beat outline: the result, then three steps that get there.
+3. Export one test at 886 × 1920 and run it through the checker.
+
+</DoToday>

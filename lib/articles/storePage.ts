@@ -35,6 +35,16 @@ export const storePageArticles: ArticleSource[] = [
     related: ["/store-page/creative-assets/", "/store-page/testing/", "/launch/requirements/"],
   },
   {
+    section: "store-page", slug: "app-previews", label: "App previews",
+    title: "App previews that show the app working",
+    seoTitle: "App Store app preview specs: sizes, length, format",
+    description: "Accepted resolutions for every display class, the 15 to 30 second rule, codecs, the poster frame, Apple's content rules and how to plan the edit.",
+    answer: "Export app previews at Apple's accepted resolution, not your device's: 886 × 1920 for modern iPhones, 1200 × 1600 for current iPads, 1920 × 1080 for Mac and Apple TV. Keep them 15 to 30 seconds, up to 30 fps and 500 MB, show only footage from the app, and show the result in the first few seconds.",
+    platforms: ["apple"], evidence: ["official", "opinion"], published: "2026-10-17", reviewed: "2026-10-17",
+    sources: [apple.previewSpecs, apple.appPreviews, apple.manageAssets],
+    related: ["/store-page/screenshots/", "/tools/app-preview-checker/", "/store-page/creative-assets/"],
+  },
+  {
     section: "store-page", slug: "creative-assets", label: "Headers and search assets",
     title: "App Store product page headers and search result assets",
     seoTitle: "App Store header and search asset sizes (Oct 2026)",

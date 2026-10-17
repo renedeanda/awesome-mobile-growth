@@ -6,7 +6,7 @@ import { GooglePlayGraphicsTable } from "@/components/MdxBlocks";
 import { apple, google } from "@/lib/articles/links";
 import { absolute, formatDate, pageMetadata, site } from "@/lib/site";
 import { appleScreenshotRules, aspectRatio, getSpecPage, specPages, specPath, specsChecked, type SpecPage } from "@/lib/specPages";
-import { formatSize, googlePlayScreenshotPresets } from "@/lib/storeSpecs";
+import { appPreviewClasses, appPreviewRules, formatSize, googlePlayScreenshotPresets } from "@/lib/storeSpecs";
 import { DeviceSilhouettes } from "@/components/DeviceSilhouettes";
 import { ShareButton } from "@/components/ShareButton";
 
@@ -38,6 +38,8 @@ function AppleSpec({ page }: { page: SpecPage }) {
       {page.orientation === "landscape" && <li><strong>Orientation:</strong> landscape only.</li>}
       {page.orientation === "fixed" && <li><strong>Orientation:</strong> upload at the listed size; there is no landscape variant.</li>}
     </ul>
+
+    <PreviewSection id={spec.id}/>
 
     <h2 id="required">Is it required?</h2>
     <p>{spec.required ? <>Yes: {spec.required.replace(/^Yes, /, "").replace(/ \(see note\)$/, "")}.</> : <>No. You can skip this slot.</>} {spec.note}</p>
@@ -95,4 +97,15 @@ export default async function SpecDetail({ params }: { params: Promise<{ slug: s
       <SourceList items={page.store === "apple" ? [apple.screenshots, apple.manageAssets] : [google.graphics]}/>
     </div>
   </article>;
+}
+
+function PreviewSection({ id }: { id: string }) {
+  const preview = appPreviewClasses.find((item) => item.id === id);
+  if (!preview) return <><h2 id="app-previews">App previews</h2><p>Apple&apos;s app preview specification lists no preview size for this display class.</p></>;
+  const sizes = [...preview.portrait, ...preview.landscape].map(formatSize).join(" or ");
+  return <>
+    <h2 id="app-previews">App previews</h2>
+    <p>Export previews at <strong>{sizes}</strong>, {appPreviewRules.seconds[0]} to {appPreviewRules.seconds[1]} seconds, up to {appPreviewRules.maxFps} fps. That&apos;s Apple&apos;s accepted resolution, not the screen size above.{preview.fallback ? ` Without one, Apple scales down previews from ${preview.fallback}.` : ""}</p>
+    <p><Link href={`/tools/app-preview-checker/?class=${id}`}>Check a preview video for this class</Link> · <Link href="/store-page/app-previews/">App previews guide</Link></p>
+  </>;
 }

@@ -49,6 +49,45 @@ export const appleCreativeAssets = [
   { placement: "Search results", kind: "Video", ratio: "3:2", size: "1920 × 1280 to 3840 × 2560", formats: "MOV, M4V, MP4 · 5–30 s · 30 or 60 fps" },
 ] as const;
 
+// Read from App Store Connect Help on 2026-10-17. Apple asks for the accepted resolution, not the device resolution.
+export const appPreviewSource = "https://developer.apple.com/help/app-store-connect/reference/app-information/app-preview-specifications";
+export type PreviewClass = {
+  /** Matches an appleScreenshotClasses id where the site has a size page for it. */
+  id: string;
+  name: string;
+  /** Accepted portrait sizes as [width, height]; landscape swaps them. Empty for landscape-only platforms. */
+  portrait: Array<[number, number]>;
+  landscape: Array<[number, number]>;
+  /** The class whose previews Apple scales down when this one has none. */
+  fallback?: string;
+};
+const iphoneTall: Array<[number, number]> = [[886, 1920]];
+const swap = (sizes: Array<[number, number]>) => sizes.map(([w, h]) => [h, w] as [number, number]);
+export const appPreviewClasses: PreviewClass[] = [
+  { id: "iphone-duo", name: "iPhone Duo", portrait: iphoneTall, landscape: swap(iphoneTall) },
+  { id: "iphone-dynamic-island-large", name: "iPhone with Dynamic Island (large display)", portrait: iphoneTall, landscape: swap(iphoneTall), fallback: "iPhone with Face ID (large display)" },
+  { id: "iphone-dynamic-island-medium", name: "iPhone with Dynamic Island (medium display)", portrait: iphoneTall, landscape: swap(iphoneTall), fallback: "iPhone with Face ID (large display)" },
+  { id: "iphone-face-id-large", name: "iPhone with Face ID (large display)", portrait: iphoneTall, landscape: swap(iphoneTall), fallback: "iPhone with Dynamic Island (large display)" },
+  { id: "iphone-face-id-medium", name: "iPhone with Face ID (medium display)", portrait: iphoneTall, landscape: swap(iphoneTall), fallback: "iPhone with Dynamic Island (medium display)" },
+  { id: "iphone-home-button-large", name: "iPhone with Home Button (large display)", portrait: [[1080, 1920]], landscape: [[1920, 1080]], fallback: "iPhone with Face ID (medium display)" },
+  { id: "iphone-home-button-medium", name: "iPhone with Home Button (medium display)", portrait: [[750, 1334]], landscape: [[1334, 750]], fallback: "iPhone with Home Button (large display)" },
+  { id: "ipad-13", name: "iPad 13-inch display", portrait: [[1200, 1600]], landscape: [[1600, 1200]] },
+  { id: "ipad-11", name: "iPad 11-inch display", portrait: [[1200, 1600]], landscape: [[1600, 1200]], fallback: "iPad 13-inch display" },
+  { id: "mac", name: "Mac", portrait: [], landscape: [[1920, 1080]] },
+  { id: "apple-tv", name: "Apple TV", portrait: [], landscape: [[1920, 1080]] },
+  { id: "vision-pro", name: "Apple Vision Pro", portrait: [], landscape: [[3840, 2160]] },
+];
+export const appPreviewRules = {
+  seconds: [15, 30] as [number, number],
+  maxFps: 30,
+  maxMegabytes: 500,
+  perLocale: "Up to three app previews per supported device size and language",
+  formats: ".mov, .m4v or .mp4 with H.264 (10–12 Mbps, progressive, up to High Profile 4.0); or .mov with ProRes 422 HQ",
+  audio: "Stereo. H.264: 256 kbps AAC at 44.1 or 48 kHz. ProRes: PCM or 256 kbps AAC",
+  extensions: ["mov", "m4v", "mp4"],
+  posterFrameDefault: 5,
+} as const;
+
 // Read from App Store Connect Help on 2026-10-17. Card media is landscape, details page media is portrait.
 export const appleInAppEventMediaSource = "https://developer.apple.com/help/app-store-connect/reference/in-app-events/in-app-event-media-and-audio-specifications";
 export const appleInAppEventMedia = [

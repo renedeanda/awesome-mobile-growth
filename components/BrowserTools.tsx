@@ -12,6 +12,7 @@ import { appleScreenshotClasses, appleScreenshotRules, appleScreenshotSource, fo
 
 // The studio is the heaviest tool; only its own page loads it.
 const FrameStudio = dynamic(() => import("./FrameStudio").then((module) => module.FrameStudio), { ssr: false, loading: () => <p className="tool-caveat">Loading the studio…</p> });
+const PreviewChecker = dynamic(() => import("./PreviewChecker").then((module) => module.PreviewChecker), { ssr: false, loading: () => <p className="tool-caveat">Loading the checker…</p> });
 
 const appleLines = (device: ScreenshotClass["device"]) => appleScreenshotClasses.filter((item) => item.device === device && item.required).map((item) => `${item.name}: ${item.sizes.map(formatSize).join(" or ")} (portrait; landscape swaps them). Required: ${item.required}.`);
 const appleCommon = [`${appleScreenshotRules.count}.`, "JPEG, JPG or PNG; no transparency."];
@@ -36,6 +37,7 @@ function ToolBody({ tool }: { tool: ToolSlug }) {
   if (tool === "metadata-validator") return <MetadataTool/>;
   if (tool === "app-store-screenshot-sizes") return <ScreenshotTool/>;
   if (tool === "screenshot-frames") return <FrameStudio/>;
+  if (tool === "app-preview-checker") return <PreviewChecker/>;
   return <ExperimentTool/>;
 }
 
