@@ -47,7 +47,7 @@ export default function Home() {
 
     <section className="section workbench-feature">
       <div><p className="eyebrow">Private by default</p><h2>Draft your listing with the limits built in.</h2><p>Write Apple and Google Play metadata with live character and byte counts, map keywords, plan screenshots and keep a test log, then export it. Nothing leaves your browser, and saving is optional.</p><div className="actions"><Link className="button" href="/workbench/">Open the workbench</Link><Link className="button-secondary" href="/tools/">See all tools</Link></div></div>
-      <div className="mini-editor" aria-label="Example workbench fields"><div><span>App name</span><small>24 / 30</small></div><strong>Northstar: Habit Tracker</strong><div><span>Subtitle</span><small>27 / 30</small></div><strong>Build routines in 2 minutes</strong><div><span>Keywords</span><small>84 / 100 bytes</small></div><strong>routine,streak,daily,goal,reminder…</strong></div>
+      <div className="mini-editor" aria-label="Example workbench fields"><div><span>App name</span><small>24 / 30</small></div><strong>Rollbook: Film Photo Log</strong><div><span>Subtitle</span><small>29 / 30</small></div><strong>Exposure notes for every roll</strong><div><span>Keywords</span><small>86 / 100 bytes</small></div><strong>35mm,120,analog,camera,aperture…</strong></div>
     </section>
 
     <section className="section field-feature">

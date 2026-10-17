@@ -258,7 +258,7 @@ export function FrameStudio() {
 
     {shots.length > 0 && <details className="frame-studio__bulk">
       <summary>Paste captions, one per line</summary>
-      <label className="field"><span className="field-label">Captions</span><textarea rows={5} value={bulk} onChange={(event) => setBulk(event.target.value)} placeholder={"Plan your week in one view\nShare a list in two taps\nWorks offline"}/></label>
+      <label className="field"><span className="field-label">Captions</span><textarea rows={5} value={bulk} onChange={(event) => setBulk(event.target.value)} placeholder={"Know what worked on every roll\nLog each frame in one tap\nMeter light with your phone camera"}/></label>
       <button type="button" className="button-secondary" onClick={applyBulk}>Apply to frames in order</button>
     </details>}
 
