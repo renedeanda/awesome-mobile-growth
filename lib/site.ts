@@ -4,7 +4,7 @@ export const site = {
   name: "Awesome Mobile Growth",
   shortName: "AMG",
   origin: "https://mobile.productbuilder.net",
-  description: "Practical, sourced guides for launching and growing apps on the App Store and Google Play: store page specs, launch checklists, free private tools and platform changes.",
+  description: "Sourced guides for launching and growing apps on the App Store and Google Play: store page specs, launch checklists, free private tools and platform changes.",
   author: "René DeAnda",
   github: "https://github.com/renedeanda/awesome-mobile-growth",
 };

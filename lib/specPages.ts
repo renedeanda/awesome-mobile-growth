@@ -17,6 +17,9 @@ const short: Record<string, string> = {
   "watch": "Apple Watch",
 };
 
+
+// Search results show about 160 characters of a description; add the closing phrase only when it fits.
+const withTail = (text: string, tail: string) => (text.length + tail.length <= 160 ? text + tail : text);
 export type Orientation = "both" | "landscape" | "fixed";
 export type SpecPage = {
   slug: string;
@@ -46,7 +49,7 @@ function applePage(spec: ScreenshotClass): SpecPage {
     slug: spec.id, store: "apple", device: spec.device, short: name,
     title: `${spec.name} screenshot size`,
     seoTitle: `${name} App Store screenshot size`,
-    description: `${name} App Store screenshots: ${brief} pixels${orientation === "landscape" ? ", landscape" : ""}. ${status.replace(" (large display)", " (large)")} Formats, limits and fallbacks.`,
+    description: withTail(`${name} App Store screenshots: ${brief} pixels${orientation === "landscape" ? ", landscape" : ""}. ${status.replace(" (large display)", " (large)")}`, " Formats, limits and fallbacks."),
     answer: `Upload ${sizes}${shape}. ${status} ${spec.note ?? ""}`.trim(),
     orientation, spec,
   };
