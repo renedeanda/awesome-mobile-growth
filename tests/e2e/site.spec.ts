@@ -334,3 +334,72 @@ test("frame studio warns about cropped captures and long captions", async ({ pag
   await page.getByLabel("Frame 1 caption").fill("Log aperture, shutter, lens and notes for every single frame");
   await expect(page.getByText("10 words · aim for 7 or fewer")).toBeVisible();
 });
+
+test.describe("native touches", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("tapping the current tab scrolls back to the top", async ({ page }) => {
+    await page.goto("/store-page/");
+    await page.evaluate(() => scrollTo(0, 1200));
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(500);
+    await page.getByRole("navigation", { name: "Main sections" }).getByRole("link", { name: "Store page" }).click();
+    await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+    await expect(page).toHaveURL(/\/store-page\/$/);
+  });
+
+  test.describe("on Apple devices", () => {
+    test.use({ userAgent: phoneUA.apple });
+    test("the tab bar shrinks while scrolling down and returns on the way up", async ({ page }) => {
+      await page.goto("/store-page/");
+      const bar = page.getByRole("navigation", { name: "Main sections" });
+      await expect(bar).not.toHaveAttribute("data-compact");
+      await page.evaluate(() => scrollTo(0, 900));
+      await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(880);
+      await expect(bar).toHaveAttribute("data-compact", "true");
+      await expect(bar.getByRole("link", { name: "Tools" })).toBeVisible();
+      await page.evaluate(() => scrollTo(0, 500));
+      await expect(bar).not.toHaveAttribute("data-compact");
+    });
+  });
+
+  test.describe("with touch", () => {
+    test.use({ hasTouch: true });
+    test("swiping the menu sheet down closes it", async ({ page, browserName }) => {
+      test.skip(browserName !== "chromium", "Touch gestures are driven through the Chromium DevTools protocol.");
+      await page.goto("/store-page/");
+      await page.getByRole("button", { name: "Open menu" }).click();
+      const sheet = page.getByRole("dialog", { name: "Site menu" });
+      await expect(sheet).toBeVisible();
+      const box = (await sheet.boundingBox())!;
+      const cdp = await page.context().newCDPSession(page);
+      const touch = (type: "touchStart" | "touchMove" | "touchEnd", y: number) => cdp.send("Input.dispatchTouchEvent", { type, touchPoints: type === "touchEnd" ? [] : [{ x: box.x + box.width / 2, y }] });
+      await touch("touchStart", box.y + 20);
+      for (let step = 1; step <= 6; step++) await touch("touchMove", box.y + 20 + step * 45);
+      await touch("touchEnd", 0);
+      await expect(sheet).toBeHidden();
+    });
+  });
+});
+
+test("frame studio pastes screenshots and shares exports through the share sheet", async ({ page, browserName }) => {
+  test.skip(browserName !== "chromium", "Synthetic paste events with files need Chromium's DataTransfer.");
+  await page.addInitScript(() => {
+    const shared: string[] = [];
+    Object.assign(window, { __shared: shared });
+    Object.assign(navigator, { canShare: () => true, share: async (data: { files: File[] }) => { shared.push(...data.files.map((file) => file.name)); } });
+  });
+  await page.goto("/tools/screenshot-frames/");
+  await expect(page.getByTestId("frame-studio")).toHaveAttribute("data-ready", "true");
+  const png = testPng(118, 256, [40, 80, 220]).toString("base64");
+  await page.evaluate((data) => {
+    const bytes = Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
+    const transfer = new DataTransfer();
+    transfer.items.add(new File([bytes], "pasted.png", { type: "image/png" }));
+    document.dispatchEvent(new ClipboardEvent("paste", { clipboardData: transfer, bubbles: true }));
+  }, png);
+  await expect(page.getByRole("status")).toContainText("Added 1 screenshot");
+  await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Export 1 frame" }).click()]);
+  // iPhones get "Save to Photos" (the share sheet saves there); other devices get "Share frames".
+  await page.getByRole("button", { name: /^(Save to Photos|Share frames)$/ }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __shared: string[] }).__shared)).toEqual(["iphone-dynamic-island-medium-1206x2622-01.png"]);
+});

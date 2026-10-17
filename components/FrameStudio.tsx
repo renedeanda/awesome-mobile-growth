@@ -79,7 +79,10 @@ export function FrameStudio() {
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
   // The settings and frame list an export was made from; the handoff button shows only while both still match.
-  const [exportedFrom, setExportedFrom] = useState<{ settings: FrameSettings; shots: Shot[] } | null>(null);
+  const [exportedFrom, setExportedFrom] = useState<{ settings: FrameSettings; shots: Shot[]; files: File[] } | null>(null);
+  // On phones the share sheet saves frames straight to Photos (iOS) or the gallery (Android).
+  const [canShareFiles, setCanShareFiles] = useState(false);
+  const [platform, setPlatform] = useState("other");
   const [dragging, setDragging] = useState(false);
 
   const chooseTarget = (id: string) => {
@@ -94,6 +97,8 @@ export function FrameStudio() {
   useEffect(() => {
     const requested = new URLSearchParams(window.location.search).get("class");
     if (requested && getTarget(requested)) chooseTarget(requested);
+    try { setCanShareFiles(Boolean(navigator.canShare?.({ files: [new File([new Uint8Array(1)], "frame.png", { type: "image/png" })] }))); } catch { /* sharing files is unsupported */ }
+    setPlatform(document.documentElement.dataset.platform ?? "other");
     setReady(true);
   }, []);
 
@@ -140,6 +145,30 @@ export function FrameStudio() {
     setStatus(`Applied ${Math.min(lines.length, shots.length)} caption${lines.length === 1 ? "" : "s"}.`);
   };
 
+  // Pasting a screenshot (⌘V after a capture) adds it, so a desktop or iPad workflow needs no file picker.
+  const addFilesRef = useRef(addFiles);
+  addFilesRef.current = addFiles;
+  useEffect(() => {
+    const onPaste = (event: ClipboardEvent) => {
+      const files = [...(event.clipboardData?.files ?? [])].filter((file) => file.type.startsWith("image/"));
+      if (!files.length) return;
+      event.preventDefault();
+      void addFilesRef.current(files);
+    };
+    document.addEventListener("paste", onPaste);
+    return () => document.removeEventListener("paste", onPaste);
+  }, []);
+
+  const shareFrames = async () => {
+    if (!exportedFrom) return;
+    try {
+      await navigator.share({ files: exportedFrom.files });
+      trackEvent("tool_completed", { tool_id: "screenshot-frames", format: "share", platform: target.store });
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === "AbortError")) setStatus("This browser couldn’t open the share sheet. Use the downloaded files instead.");
+    }
+  };
+
   const onDrop = (event: DragEvent) => { event.preventDefault(); setDragging(false); void addFiles([...event.dataTransfer.files]); };
 
   const exportAll = async () => {
@@ -159,7 +188,7 @@ export function FrameStudio() {
       if (blobs.length === 1) save(blobs[0], names[0]);
       else save(zip(await Promise.all(blobs.map(async (blob, index) => ({ name: names[index], data: new Uint8Array(await blob.arrayBuffer()) })))), `${target.id}-${size[0]}x${size[1]}.zip`);
       setHandoffFrames(blobs);
-      setExportedFrom({ settings, shots });
+      setExportedFrom({ settings, shots, files: blobs.map((blob, index) => new File([blob], names[index], { type: blob.type })) });
       trackEvent("tool_completed", { tool_id: "screenshot-frames", format, platform: target.store });
       setStatus(`Saved ${blobs.length} frame${blobs.length === 1 ? "" : "s"} at ${formatSize(size)} pixels, ${format === "png" ? "24-bit PNG" : "JPEG"} with no transparency.`);
     } catch (error) {
@@ -206,7 +235,7 @@ export function FrameStudio() {
     <label className={`frame-drop${dragging ? " frame-drop--active" : ""}`} onDragOver={(event) => { event.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)} onDrop={onDrop}>
       <input type="file" accept="image/*" multiple onChange={(event) => { void addFiles([...(event.target.files ?? [])]); event.target.value = ""; }}/>
       <strong>Add screenshots</strong>
-      <span>Drop raw captures here or choose files. Up to {target.maxFrames}. They stay in this tab and are never uploaded.</span>
+      <span>Drop, paste or choose raw captures. Up to {target.maxFrames}. They stay in this tab and are never uploaded.</span>
     </label>
 
     {status && <p className="notice" role="status">{status}</p>}
@@ -236,7 +265,10 @@ export function FrameStudio() {
     <div className="frame-studio__export">
       <div className="segmented" role="group" aria-label="File format"><button type="button" aria-pressed={format === "png"} onClick={() => setFormat("png")}>PNG</button><button type="button" aria-pressed={format === "jpg"} onClick={() => setFormat("jpg")}>JPEG</button></div>
       <button type="button" className="button" onClick={exportAll} disabled={!shots.length || busy || playProblems.length > 0}>{busy ? "Exporting…" : exportCount ? `Export ${exportCount} frame${exportCount === 1 ? "" : "s"}` : "Export frames"}</button>
-      {exportedFrom?.settings === settings && exportedFrom.shots === shots && <button type="button" className="button-secondary" onClick={() => router.push("/workbench/?from=frames")}>See them in the Store preview</button>}
+      {exportedFrom?.settings === settings && exportedFrom.shots === shots && <>
+        {canShareFiles && <button type="button" className="button-secondary" onClick={shareFrames}>{platform === "apple" ? "Save to Photos" : "Share frames"}</button>}
+        <button type="button" className="button-secondary" onClick={() => router.push("/workbench/?from=frames")}>See them in the Store preview</button>
+      </>}
     </div>
     <p className="tool-caveat">Frames are generic device shapes drawn in code, not replicas of any model. Apple’s App Review Guidelines (2.3.3) ask for screenshots that show the app in use, so put real screens inside them.</p>
   </div>;

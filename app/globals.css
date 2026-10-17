@@ -698,7 +698,13 @@ p { text-wrap: pretty; }
   [data-platform="apple"] body { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
   [data-platform="apple"] .tab-bar { inset: auto max(12px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); isolation: isolate; padding: 4px; border: 1px solid var(--glass-rim); border-radius: 999px; background: var(--glass-tint); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); box-shadow: 0 10px 30px rgb(0 0 0 / 16%), inset 0 1px 0 var(--glass-sheen); }
   [data-platform="apple"] .tab-bar::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: linear-gradient(180deg, var(--glass-sheen), transparent 60%); pointer-events: none; }
-  [data-platform="apple"] .tab-bar a { min-height: 54px; border-radius: 999px; color: var(--glass-label); transition: background-color .25s ease, color .25s ease, box-shadow .25s ease; }
+  [data-platform="apple"] .tab-bar a { min-height: 54px; border-radius: 999px; color: var(--glass-label); transition: background-color .25s ease, color .25s ease, box-shadow .25s ease, transform .3s cubic-bezier(.3,1.4,.5,1); }
+  /* Scrolling down shrinks the bar to an icon-only pill, as iOS 26 tab bars do; scrolling up restores it. */
+  [data-platform="apple"] .tab-bar { transition: inset .35s cubic-bezier(.2,.8,.2,1), padding .35s cubic-bezier(.2,.8,.2,1); }
+  [data-platform="apple"] .tab-bar[data-compact] { inset: auto max(56px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(56px, env(safe-area-inset-left)); padding: 2px; }
+  [data-platform="apple"] .tab-bar[data-compact] a { min-height: 44px; }
+  [data-platform="apple"] .tab-bar[data-compact] a span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  [data-platform="apple"] .tab-bar a:active { transform: scale(.92); transition-duration: .08s; }
   [data-platform="apple"] .tab-bar a[aria-current="page"] { background: var(--glass-lens); box-shadow: inset 0 1px 0 var(--glass-sheen), 0 1px 4px rgb(0 0 0 / 10%); color: var(--blue); }
 
   [data-platform="android"] body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
