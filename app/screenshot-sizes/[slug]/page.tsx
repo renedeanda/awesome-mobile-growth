@@ -14,7 +14,7 @@ export const dynamicParams = false;
 export function generateStaticParams() { return specPages.map(({ slug }) => ({ slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const page = getSpecPage((await params).slug);
-  return page ? pageMetadata({ title: page.seoTitle, description: page.description, path: specPath(page.slug), type: "article", imagePath: "/store-page/opengraph-image", imageAlt: "App Store and Google Play screenshot sizes" }) : {};
+  return page ? pageMetadata({ title: page.seoTitle, description: page.description, path: specPath(page.slug), type: "article", imagePath: `${specPath(page.slug)}opengraph-image`, imageAlt: `${page.short} screenshot sizes` }) : {};
 }
 
 function AppleSpec({ page }: { page: SpecPage }) {

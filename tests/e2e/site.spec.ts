@@ -537,3 +537,11 @@ test.describe("app-like polish", () => {
     });
   });
 });
+
+test("each screenshot size page shares its own social card", async ({ page, request }) => {
+  await page.goto("/screenshot-sizes/ipad-13/");
+  const image = await page.locator('meta[property="og:image"]').getAttribute("content");
+  expect(new URL(image ?? "").pathname).toBe("/screenshot-sizes/ipad-13/opengraph-image");
+  const response = await request.get(new URL(image ?? "").pathname);
+  expect(readPngHeader(new Uint8Array(await response.body()))).toMatchObject({ width: 1200, height: 630 });
+});
