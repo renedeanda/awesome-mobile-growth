@@ -123,8 +123,14 @@ test("open AI skill explains its trust boundary and exposes complete source", as
   await page.goto("/tools/app-store-growth-skill/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("not permission to guess");
   await expect(page.getByText("Invent search volume or rankings")).toBeVisible();
-  await page.getByText("Read the raw SKILL.md").click();
-  await expect(page.locator(".skill-source pre code")).toContainText("# App Store Growth");
+  const file = page.locator(".skill-source .code-file");
+  await expect(file.locator("pre code")).toContainText("# App Store Growth");
+  // Long files collapse once interactive and expand in place.
+  const toggle = file.getByRole("button", { name: /^Show all \d+ lines$/ });
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await toggle.click();
+  await expect(file.getByRole("button", { name: "Collapse" })).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator(".skill-install .code-file")).toContainText("validate_listing.py");
 });
 
 test("buttons and standalone links are at least 32px tall on phones", async ({ page }) => {
