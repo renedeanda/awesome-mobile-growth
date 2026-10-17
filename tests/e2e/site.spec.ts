@@ -562,8 +562,8 @@ test("each screenshot size page shares its own social card", async ({ page, requ
   expect(readPngHeader(new Uint8Array(await response.body()))).toMatchObject({ width: 1200, height: 630 });
 });
 
-test("guides, changes and metrics each share their own social card", async ({ page, request }) => {
-  for (const path of ["/grow/onboarding/", "/changes/google-play-target-api-36/", "/learn/metrics/conversion-rate/"]) {
+test("guides, changes, metrics and tools each share their own social card", async ({ page, request }) => {
+  for (const path of ["/grow/onboarding/", "/changes/google-play-target-api-36/", "/learn/metrics/conversion-rate/", "/tools/metadata-validator/", "/tools/app-store-growth-skill/"]) {
     await page.goto(path);
     const image = await page.locator('meta[property="og:image"]').getAttribute("content");
     expect(new URL(image ?? "").pathname).toBe(`${path}opengraph-image`);
