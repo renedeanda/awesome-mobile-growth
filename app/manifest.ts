@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";
 
-const shortcut = (name: string, url: string, description: string) => ({ name, url, description, icons: [{ src: "/icons/192.png", sizes: "192x192", type: "image/png" }] });
+const shortcut = (name: string, url: string, description: string, icon = "/icons/192.png") => ({ name, url, description, icons: [{ src: icon, sizes: "192x192", type: "image/png" }] });
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -19,7 +19,7 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     shortcuts: [
       shortcut("Workbench", "/workbench/", "Check name, subtitle and keyword limits"),
-      shortcut("Frame studio", "/tools/screenshot-frames/", "Frame screenshots at store sizes"),
+      shortcut("Frame studio", "/tools/screenshot-frames/", "Frame screenshots at store sizes", "/icons/frames-192.png"),
       shortcut("Launch checklist", "/launch/checklist/", "Track what’s left before you submit"),
       shortcut("Screenshot sizes", "/screenshot-sizes/", "Pixel sizes for every device"),
     ],

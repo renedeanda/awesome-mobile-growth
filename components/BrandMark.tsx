@@ -20,3 +20,13 @@ export function BrandMark({ size, radius = 0.22, inset = 0 }: Props) {
     </g>
   </svg>;
 }
+
+/** The Frame studio's shortcut icon: a captioned phone frame on the same tile, with the badge coral as the caption. */
+export function FramesMark({ size, radius = 0.22 }: Pick<Props, "size" | "radius">) {
+  return <svg width={size} height={size} viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect width="64" height="64" rx={64 * radius} fill={brand.blue}/>
+    <rect x="18" y="9" width="28" height="46" rx="6" fill="none" stroke={brand.paper} strokeWidth="4"/>
+    <rect x="23" y="16" width="18" height="5" rx="2.5" fill={brand.coral}/>
+    <rect x="23" y="25" width="18" height="23" rx="2.5" fill={brand.paper} opacity="0.35"/>
+  </svg>;
+}
