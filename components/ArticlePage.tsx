@@ -17,13 +17,15 @@ export const articleParams = (section: SectionId) => articlesIn(section).map(({ 
 export function articleMetadata(section: SectionId, slug: string): Metadata {
   const article = getArticle(section, slug);
   if (!article) return {};
-  return pageMetadata({ title: article.seoTitle, description: article.description, path: article.path, type: "article", imagePath: `${sections[section].path}opengraph-image`, imageAlt: article.title });
+  return pageMetadata({ title: article.seoTitle, description: article.description, path: article.path, type: "article", imagePath: `${article.path}opengraph-image`, imageAlt: article.title });
 }
 
 function jsonLd(article: Article) {
   const section = sections[article.section];
   return [
-    { "@context": "https://schema.org", "@type": "Article", headline: article.title, description: article.description, datePublished: article.published, dateModified: article.reviewed, author: { "@type": "Person", name: site.author, url: absolute("/about/") }, publisher: { "@id": `${site.origin}/#publisher` }, mainEntityOfPage: absolute(article.path), image: absolute(`${section.path}opengraph-image`), citation: article.sources.map((source) => source.href) },
+    { "@context": "https://schema.org", "@type": "Article", headline: article.title, description: article.description, abstract: article.answer, datePublished: article.published, dateModified: article.reviewed, author: { "@type": "Person", name: site.author, url: absolute("/about/") }, publisher: { "@id": `${site.origin}/#publisher` }, mainEntityOfPage: absolute(article.path), image: absolute(`${article.path}opengraph-image`), citation: article.sources.map((source) => source.href) },
+    // The "Do this today" list is visible on the page, so it can be described as a HowTo without inventing anything.
+    ...(article.steps.length ? [{ "@context": "https://schema.org", "@type": "HowTo", name: `Do this today: ${article.title}`, url: absolute(article.path), step: article.steps.map((text, index) => ({ "@type": "HowToStep", position: index + 1, text })) }] : []),
     { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: absolute("/") },
       { "@type": "ListItem", position: 2, name: section.name, item: absolute(section.path) },

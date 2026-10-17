@@ -10,7 +10,7 @@ export const dynamicParams = false;
 export function generateStaticParams() { return changes.map(({ slug }) => ({ slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const change = getChange((await params).slug);
-  return change ? pageMetadata({ title: change.title, description: change.summary, path: `/changes/${change.slug}/`, type: "article", imagePath: "/changes/opengraph-image" }) : {};
+  return change ? pageMetadata({ title: change.title, description: change.summary, path: `/changes/${change.slug}/`, type: "article", imagePath: `/changes/${change.slug}/opengraph-image`, imageAlt: change.title }) : {};
 }
 
 export default async function ChangePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -19,7 +19,7 @@ export default async function ChangePage({ params }: { params: Promise<{ slug: s
   const path = `/changes/${change.slug}/`;
   const jsonLd = [
     { "@context": "https://schema.org", "@type": "NewsArticle", headline: change.title, description: change.summary, // Published when it took effect, or when first reported if it is still upcoming.
-    datePublished: change.date <= change.reviewed ? change.date : change.reviewed, dateModified: change.reviewed, author: { "@type": "Person", name: site.author, url: absolute("/about/") }, publisher: { "@id": `${site.origin}/#publisher` }, mainEntityOfPage: absolute(path), image: absolute("/changes/opengraph-image") },
+    datePublished: change.date <= change.reviewed ? change.date : change.reviewed, dateModified: change.reviewed, author: { "@type": "Person", name: site.author, url: absolute("/about/") }, publisher: { "@id": `${site.origin}/#publisher` }, mainEntityOfPage: absolute(path), image: absolute(`${path}opengraph-image`) },
     { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Home", item: absolute("/") }, { "@type": "ListItem", position: 2, name: "Changes", item: absolute("/changes/") }, { "@type": "ListItem", position: 3, name: change.title, item: absolute(path) }] },
   ];
   const related = change.related.map((item) => resolveRelated(item)).filter((item) => item !== undefined);

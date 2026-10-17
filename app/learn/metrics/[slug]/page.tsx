@@ -9,7 +9,7 @@ export const dynamicParams = false;
 export function generateStaticParams() { return metrics.map(({ slug }) => ({ slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const metric = getMetric((await params).slug);
-  return metric ? pageMetadata({ title: metric.seoTitle, description: metric.description, path: `/learn/metrics/${metric.slug}/`, type: "article", imagePath: "/learn/opengraph-image" }) : {};
+  return metric ? pageMetadata({ title: metric.seoTitle, description: metric.description, path: `/learn/metrics/${metric.slug}/`, type: "article", imagePath: `/learn/metrics/${metric.slug}/opengraph-image`, imageAlt: metric.title }) : {};
 }
 
 export default async function MetricPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -18,7 +18,7 @@ export default async function MetricPage({ params }: { params: Promise<{ slug: s
   const path = `/learn/metrics/${metric.slug}/`;
   const jsonLd = [
     { "@context": "https://schema.org", "@type": "DefinedTerm", name: metric.term, description: metric.definition, inDefinedTermSet: absolute("/learn/metrics/"), url: absolute(path) },
-    { "@context": "https://schema.org", "@type": "Article", headline: metric.title, description: metric.description, datePublished: "2026-10-12", dateModified: metric.reviewed ?? metricsReviewed, author: { "@type": "Person", name: site.author, url: absolute("/about/") }, publisher: { "@id": `${site.origin}/#publisher` }, mainEntityOfPage: absolute(path), image: absolute("/learn/opengraph-image") },
+    { "@context": "https://schema.org", "@type": "Article", headline: metric.title, description: metric.description, datePublished: "2026-10-12", dateModified: metric.reviewed ?? metricsReviewed, author: { "@type": "Person", name: site.author, url: absolute("/about/") }, publisher: { "@id": `${site.origin}/#publisher` }, mainEntityOfPage: absolute(path), image: absolute(`${path}opengraph-image`) },
     { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Home", item: absolute("/") }, { "@type": "ListItem", position: 2, name: "Metrics", item: absolute("/learn/metrics/") }, { "@type": "ListItem", position: 3, name: metric.title, item: absolute(path) }] },
   ];
   const related = metric.related.map((slug) => getMetric(slug)).filter((item) => item !== undefined);

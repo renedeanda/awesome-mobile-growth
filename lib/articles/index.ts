@@ -13,7 +13,8 @@ export type { ArticleSource, SectionId, Platform, Source } from "./types.ts";
 export { sections } from "./sections.ts";
 
 export type TocItem = { id: string; label: string };
-export type Article = ArticleSource & { path: string; file: string; reading: string; toc: TocItem[] };
+/** `steps` are the numbered "Do this today" items as plain text, for the social card and HowTo data. */
+export type Article = ArticleSource & { path: string; file: string; reading: string; toc: TocItem[]; steps: string[] };
 
 const mdxSource = (file: string) => fs.readFileSync(path.join(process.cwd(), "content", file), "utf8");
 
@@ -32,10 +33,17 @@ const plainText = (source: string) => source
   .replace(/<[^>]+>/g, " ")
   .replace(/[#>*_`|[\]()]/g, " ");
 
+/** The numbered items in a guide's <DoToday> block, with Markdown links, emphasis and code reduced to text. */
+export function doTodaySteps(source: string): string[] {
+  const block = source.match(/<DoToday>([\s\S]*?)<\/DoToday>/)?.[1] ?? "";
+  return block.split("\n").map((line) => line.match(/^\d+\.\s+(.+)$/)?.[1]).filter((step): step is string => Boolean(step))
+    .map((step) => step.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/\*\*|__|`/g, "").trim());
+}
+
 function build(source: ArticleSource): Article {
   const file = `${source.section}/${source.slug}.mdx`;
   const text = mdxSource(file);
-  return { ...source, file, path: `${sections[source.section].path}${source.slug}/`, reading: readingTime(plainText(text)), toc: toc(text) };
+  return { ...source, file, path: `${sections[source.section].path}${source.slug}/`, reading: readingTime(plainText(text)), toc: toc(text), steps: doTodaySteps(text) };
 }
 
 /** Read time for any MDX file under content/, plus text rendered around it (such as the answer box). */

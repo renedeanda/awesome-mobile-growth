@@ -40,6 +40,18 @@ for (const file of html) {
   if (!meta(source, "og:description", "property")) errors.push(`${file}: missing og:description`);
   if (!meta(source, "og:image", "property")) errors.push(`${file}: missing og:image`);
   if (!meta(source, "og:image:alt", "property")) errors.push(`${file}: missing og:image:alt`);
+  // Every social card must be a file in the export, as a 1200 × 630 PNG.
+  const image = meta(source, "og:image", "property");
+  if (image?.startsWith("https://mobile.productbuilder.net/")) {
+    const card = path.join("out", new URL(image).pathname);
+    if (!fs.existsSync(card)) errors.push(`${file}: og:image ${image} is not in out/`);
+    else {
+      const png = fs.readFileSync(card);
+      if (png.readUInt32BE(0) !== 0x89504e47 || png.readUInt32BE(16) !== 1200 || png.readUInt32BE(20) !== 630) errors.push(`${file}: og:image ${image} is not a 1200 × 630 PNG`);
+    }
+  }
+  const bare = (url) => url?.split("?")[0];
+  if (image && bare(meta(source, "twitter:image")) !== bare(image)) errors.push(`${file}: twitter:image doesn't match og:image`);
   if (!meta(source, "twitter:card")) errors.push(`${file}: missing twitter:card`);
   if (!source.includes('type="application/ld+json"')) errors.push(`${file}: missing structured data`);
   if (!source.includes('<html lang="en"')) errors.push(`${file}: missing document language`);
