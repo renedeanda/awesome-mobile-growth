@@ -142,7 +142,9 @@ export function FrameStudio() {
   const applyBulk = () => {
     const lines = bulk.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
     setShots((current) => current.map((shot, index) => lines[index] !== undefined ? { ...shot, caption: lines[index] } : shot));
-    setStatus(`Applied ${Math.min(lines.length, shots.length)} caption${lines.length === 1 ? "" : "s"}.`);
+    const applied = Math.min(lines.length, shots.length);
+    const extra = lines.length - applied;
+    setStatus(`Applied ${applied} caption${applied === 1 ? "" : "s"}.${extra > 0 ? ` ${extra} line${extra === 1 ? " has" : "s have"} no frame yet.` : ""}`);
   };
 
   // Pasting a screenshot (⌘V after a capture) adds it, so a desktop or iPad workflow needs no file picker.

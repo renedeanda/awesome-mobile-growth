@@ -11,9 +11,12 @@ function useImages() {
   const [urls, setUrls] = useState<string[]>([]);
   useEffect(() => () => urls.forEach((url) => URL.revokeObjectURL(url)), [urls]);
   const fromBlobs = (blobs: Blob[]) => { if (blobs.length) setUrls(blobs.map((blob) => URL.createObjectURL(blob))); };
-  const pick = (event: ChangeEvent<HTMLInputElement>, max: number) => {
-    fromBlobs([...(event.target.files ?? [])].filter((file) => file.type.startsWith("image/")).slice(0, max));
+  const pick = async (event: ChangeEvent<HTMLInputElement>, max: number) => {
+    const files = [...(event.target.files ?? [])].filter((file) => file.type.startsWith("image/")).slice(0, max);
     event.target.value = "";
+    // The type comes from the file name, so decode each file and drop any that isn't really an image.
+    const decodes = await Promise.all(files.map((file) => createImageBitmap(file).then((bitmap) => { bitmap.close(); return true; }, () => false)));
+    fromBlobs(files.filter((_, index) => decodes[index]));
   };
   return [urls, pick, fromBlobs] as const;
 }

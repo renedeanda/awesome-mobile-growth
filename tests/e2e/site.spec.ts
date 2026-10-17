@@ -58,6 +58,21 @@ test("mobile navigation and hero remain usable", async ({ page }) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
+test("workbench opens any tab from the URL, moves by arrow keys, and refuses unrelated JSON", async ({ page }) => {
+  await page.goto("/workbench/?tab=Google");
+  await expect(page.getByTestId("workbench")).toHaveAttribute("data-ready", "true");
+  await expect(page.getByRole("tab", { name: "Google Play" })).toHaveAttribute("aria-selected", "true");
+  await page.getByRole("tab", { name: "Google Play" }).focus();
+  await page.keyboard.press("ArrowLeft");
+  await expect(page.getByRole("tab", { name: "In-app event" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tab", { name: "In-app event" })).toBeFocused();
+  await page.getByRole("tab", { name: "Apple" }).click();
+  await page.getByLabel(/^App name/).fill("Rollbook");
+  await page.locator('input[type="file"][accept*="json"]').setInputFiles({ name: "other.json", mimeType: "application/json", buffer: Buffer.from('{"foo":1}') });
+  await expect(page.getByText(/no App Store metadata the workbench recognizes/)).toBeVisible();
+  await expect(page.getByLabel(/^App name/)).toHaveValue("Rollbook");
+});
+
 test("workbench fits a phone screen", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/workbench/");

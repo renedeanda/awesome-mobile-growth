@@ -5,7 +5,7 @@ import type { CheckRow } from "./previews.ts";
 import { googlePlayIcon } from "./storeSpecs.ts";
 
 export type PlayAssetKind = "icon" | "feature-graphic" | "screenshot";
-export type ImageFacts = { width: number; height: number; format: "png" | "jpeg" | "other"; alpha?: boolean; bitDepth?: number; bytes: number };
+export type ImageFacts = { width: number; height: number; format: "png" | "jpeg" | "other"; alpha?: boolean; bitDepth?: number; colorType?: number; bytes: number };
 
 export const playAssetLabels: Record<PlayAssetKind, string> = { icon: "App icon", "feature-graphic": "Feature graphic", screenshot: "Screenshot" };
 
@@ -14,13 +14,13 @@ export const guessKind = ({ width, height }: { width: number; height: number }):
   width === height && width <= 1024 ? "icon" : width / height > 2 ? "feature-graphic" : "screenshot";
 
 /** Reads the facts the checks need from a file's first bytes. Dimensions for JPEG come from the browser. */
-export function imageFormat(bytes: Uint8Array): Pick<ImageFacts, "format" | "alpha" | "bitDepth"> & { width?: number; height?: number } {
+export function imageFormat(bytes: Uint8Array): Pick<ImageFacts, "format" | "alpha" | "bitDepth" | "colorType"> & { width?: number; height?: number } {
   if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) {
     const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     const colorType = bytes[25];
     // Color types 4 and 6 carry an alpha channel; a tRNS chunk can add transparency to the others.
     const hasTrns = new TextDecoder().decode(bytes.subarray(0, Math.min(bytes.length, 4096))).includes("tRNS");
-    return { format: "png", width: view.getUint32(16), height: view.getUint32(20), bitDepth: bytes[24], alpha: colorType === 4 || colorType === 6 || hasTrns };
+    return { format: "png", width: view.getUint32(16), height: view.getUint32(20), bitDepth: bytes[24], colorType, alpha: colorType === 4 || colorType === 6 || hasTrns };
   }
   if (bytes[0] === 0xff && bytes[1] === 0xd8) return { format: "jpeg", alpha: false };
   return { format: "other" };
@@ -34,8 +34,11 @@ export function checkPlayAsset(kind: PlayAssetKind, image: ImageFacts): CheckRow
   if (kind === "icon") {
     const { size, maxKilobytes } = googlePlayIcon;
     rows.push({ label: "Size", status: image.width === size && image.height === size ? "pass" : "fail", detail: `${px(image.width, image.height)}. Google Play asks for ${px(size, size)}.` });
-    const rgba = image.format === "png" && image.alpha && image.bitDepth === 8;
-    rows.push({ label: "Format", status: rgba ? "pass" : "fail", detail: rgba ? "32-bit PNG (8-bit RGBA)." : `Export as a 32-bit PNG (8-bit RGBA). This file is ${image.format === "png" ? `a PNG without an 8-bit alpha channel` : image.format === "jpeg" ? "a JPEG" : "not a PNG"}.` });
+    // 32-bit means truecolor with alpha (PNG color type 6) at 8 bits per channel; palette and grayscale PNGs can carry
+    // transparency too, so alpha alone isn't enough.
+    const rgba = image.format === "png" && image.colorType === 6 && image.bitDepth === 8;
+    const pngKind = image.colorType === 3 ? "a palette (8-bit indexed) PNG" : image.colorType === 0 || image.colorType === 4 ? "a grayscale PNG" : image.colorType === 6 ? `a ${(image.bitDepth ?? 8) * 4}-bit RGBA PNG` : "a PNG without an alpha channel";
+    rows.push({ label: "Format", status: rgba ? "pass" : "fail", detail: rgba ? "32-bit PNG (8-bit RGBA)." : `Export as a 32-bit PNG (8-bit RGBA). This file is ${image.format === "png" ? pngKind : image.format === "jpeg" ? "a JPEG" : "not a PNG"}.` });
     rows.push({ label: "File size", status: kb <= maxKilobytes ? "pass" : "fail", detail: `${kb} KB. The limit is ${maxKilobytes} KB.` });
     rows.push({ label: "Shape and color", status: "check", detail: "Use a full square in sRGB. Google Play applies the rounded mask itself, so don't round the corners or add a shadow." });
     return rows;

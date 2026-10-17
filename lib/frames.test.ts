@@ -65,6 +65,19 @@ describe("frame layout", () => {
     assert.ok(cropShare(1206 / 2622, landscape) > 0.5);
     assert.ok(cropShare(1206 / 2622, layoutFrame([1320, 2868], "dynamic-island", null).screen) < 0.01);
   });
+  it("breaks a caption with no spaces between characters", () => {
+    const lines = wrapCaption("毎日の記録をかんたんに残せる", 50, 10, measure);
+    assert.ok(lines.length > 1);
+    assert.equal(lines.join(""), "毎日の記録をかんたんに残せる");
+    lines.forEach((line) => assert.ok(measure(line, 10) <= 50, line));
+  });
+  it("marks a caption cut to three lines", () => {
+    const fit = fitCaption(Array.from({ length: 60 }, (_, index) => `word${index}`).join(" "), [400, 800], measure);
+    assert.equal(fit?.lines.length, 3);
+    assert.ok(fit?.truncated);
+    assert.ok(fit?.lines[2].endsWith("…"));
+  });
+  it("counts Japanese caption words", () => assert.ok(wordCount("毎日の記録をかんたんに残せるプライベートな日記アプリ") > 3));
   it("counts caption words", () => { assert.equal(wordCount("  Log each\nframe in one tap "), 6); assert.equal(wordCount(""), 0); });
   it("offers at least one style for every target", () => assert.ok(frameTargets.every((target) => target.styles.length > 0)));
 });
