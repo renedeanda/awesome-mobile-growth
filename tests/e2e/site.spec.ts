@@ -569,3 +569,31 @@ test.describe("Apple promotion", () => {
     await expect(page.getByRole("heading", { name: "When subscribers have to agree to a price increase" })).toBeVisible();
   });
 });
+
+test.describe("app preview checker", () => {
+  test("passes a preview at Apple's accepted size and explains the rest", async ({ page }) => {
+    await page.goto("/tools/app-preview-checker/");
+    await expect(page.getByTestId("browser-tool")).toHaveAttribute("data-ready", "true");
+    await page.locator('.preview-checker input[type="file"]').setInputFiles("tests/fixtures/preview-886x1920-16s.webm");
+    const rows = page.getByRole("list", { name: "Preview checks" });
+    await expect(rows).toContainText("Pass · Resolution");
+    await expect(rows).toContainText("Pass · Length");
+    await expect(rows).toContainText("Fix · File type");
+    await expect(rows).toContainText("Check · Codec and audio");
+  });
+
+  test("names the size to export and the length to hit", async ({ page }) => {
+    await page.goto("/tools/app-preview-checker/?class=iphone-dynamic-island-medium");
+    await expect(page.getByTestId("browser-tool")).toHaveAttribute("data-ready", "true");
+    await page.locator('.preview-checker input[type="file"]').setInputFiles("tests/fixtures/preview-1920x1080-6s.webm");
+    const rows = page.getByRole("list", { name: "Preview checks" });
+    await expect(rows).toContainText("Export at 1920 × 886");
+    await expect(rows).toContainText("6 s is too short");
+  });
+
+  test("size pages link to the checker for their class", async ({ page }) => {
+    await page.goto("/screenshot-sizes/ipad-13/");
+    await expect(page.getByRole("heading", { name: "App previews" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Check a preview video for this class" })).toHaveAttribute("href", "/tools/app-preview-checker/?class=ipad-13");
+  });
+});

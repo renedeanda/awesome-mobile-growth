@@ -19,6 +19,7 @@ export const articleLoaders: Record<string, () => Promise<MdxModule>> = {
   "store-page/metadata": () => import("@/content/store-page/metadata.mdx"),
   "store-page/screenshots": () => import("@/content/store-page/screenshots.mdx"),
   "store-page/testing": () => import("@/content/store-page/testing.mdx"),
+  "store-page/app-previews": () => import("@/content/store-page/app-previews.mdx"),
   "grow/app-store-connect": () => import("@/content/grow/app-store-connect.mdx"),
   "grow/growth-loop": () => import("@/content/grow/growth-loop.mdx"),
   "grow/onboarding": () => import("@/content/grow/onboarding.mdx"),

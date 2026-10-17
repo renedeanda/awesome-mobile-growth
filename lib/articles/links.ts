@@ -48,6 +48,8 @@ export const apple = {
   subscriptionPricing: { label: "Apple · Manage pricing for auto-renewable subscriptions", href: "https://developer.apple.com/help/app-store-connect/manage-subscriptions/manage-pricing-for-auto-renewable-subscriptions" },
   priceIncreaseThresholds: { label: "Apple · Subscription price increase thresholds", href: "https://developer.apple.com/help/app-store-connect/reference/in-app-purchases-and-subscriptions/auto-renewable-subscription-price-increase-thresholds" },
   offerCodes: { label: "Apple · Set up subscription offer codes", href: "https://developer.apple.com/help/app-store-connect/manage-subscriptions/set-up-subscription-offer-codes" },
+  previewSpecs: { label: "Apple · App preview specifications", href: "https://developer.apple.com/help/app-store-connect/reference/app-information/app-preview-specifications" },
+  appPreviews: { label: "Apple · Show more with app previews", href: "https://developer.apple.com/app-store/app-previews/" },
   ppoOverview: { label: "Apple · Overview of product page optimization", href: "https://developer.apple.com/help/app-store-connect/create-product-page-optimization-tests/overview-of-product-page-optimization" },
 } as const;
 
