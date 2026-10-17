@@ -510,12 +510,12 @@ p { text-wrap: pretty; }
 .hero-preview { display: grid; gap: .9rem; margin: 0; justify-items: center; }
 .hero-preview__phone { width: min(100%, 340px); padding: 1rem; border: 1px solid var(--line); border-radius: 28px; background: var(--sheet); box-shadow: var(--shadow); }
 .hero-preview__search { padding: .55rem .8rem; border-radius: 10px; background: var(--paper); color: var(--muted); font-size: .9rem; }
-.hero-preview__result { display: grid; grid-template-columns: 54px 1fr auto; align-items: center; gap: .75rem; margin: 1rem 0 .85rem; }
-.hero-preview__icon { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 13px; background: linear-gradient(140deg, var(--blue), var(--green)); color: white; font: 800 1.4rem var(--sans); }
+.hero-preview__result { display: grid; grid-template-columns: 50px 1fr auto; align-items: center; gap: .6rem; margin: 1rem 0 .85rem; }
+.hero-preview__icon { display: grid; place-items: center; width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(140deg, var(--blue), var(--green)); color: white; font: 800 1.4rem var(--sans); }
 .hero-preview__result div { display: grid; min-width: 0; }
-.hero-preview__result strong { overflow: hidden; font-size: .95rem; white-space: nowrap; text-overflow: ellipsis; }
-.hero-preview__result span, .hero-preview__result small { overflow: hidden; color: var(--muted); font-size: .8rem; white-space: nowrap; text-overflow: ellipsis; }
-.hero-preview__get { padding: .35rem 1rem; border-radius: 99px; background: var(--blue-soft); color: var(--blue); font-weight: 800; font-size: .85rem; }
+.hero-preview__result strong { overflow: hidden; font-size: .9rem; white-space: nowrap; text-overflow: ellipsis; }
+.hero-preview__result div span, .hero-preview__result small { overflow: hidden; color: var(--muted); font-size: .8rem; white-space: nowrap; text-overflow: ellipsis; }
+.hero-preview__get { padding: .35rem .85rem; border-radius: 99px; background: var(--blue-soft); color: var(--blue); font-weight: 800; font-size: .85rem; }
 .hero-preview__shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: .45rem; }
 .hero-preview__shot { display: grid; align-content: start; gap: .35rem; aspect-ratio: 9 / 19.5; padding: .55rem .45rem; border-radius: 12px; background: var(--paper); border: 1px solid var(--line); }
 .hero-preview__shot p { margin: 0 0 .3rem; font-size: .66rem; font-weight: 800; line-height: 1.2; }
