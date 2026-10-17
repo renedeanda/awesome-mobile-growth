@@ -472,7 +472,8 @@ test.describe("app-like polish", () => {
     const manifest = await (await request.get(manifestHref ?? "/manifest.webmanifest")).json();
     expect(manifest.shortcuts.map((item: { url: string }) => item.url)).toEqual(["/workbench/", "/tools/screenshot-frames/", "/launch/checklist/", "/screenshot-sizes/"]);
     expect(manifest.icons.some((icon: { purpose?: string }) => icon.purpose === "maskable")).toBe(true);
-    for (const [path, size] of [["/icons/192.png", 192], ["/icons/512.png", 512], ["/icons/maskable-512.png", 512]] as const) {
+    expect(manifest.shortcuts.find((item: { url: string }) => item.url === "/tools/screenshot-frames/").icons[0].src).toBe("/icons/frames-192.png");
+    for (const [path, size] of [["/icons/192.png", 192], ["/icons/512.png", 512], ["/icons/maskable-512.png", 512], ["/icons/frames-192.png", 192]] as const) {
       const response = await request.get(path);
       expect(response.headers()["content-type"]).toContain("image/png");
       expect(readPngHeader(new Uint8Array(await response.body()))).toMatchObject({ width: size, height: size });
