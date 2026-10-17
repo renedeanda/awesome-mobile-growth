@@ -409,3 +409,43 @@ test("frame studio pastes screenshots and shares exports through the share sheet
   await page.getByRole("button", { name: /^(Save to Photos|Share frames)$/ }).click();
   await expect.poll(() => page.evaluate(() => (window as unknown as { __shared: string[] }).__shared)).toEqual(["iphone-dynamic-island-medium-1206x2622-01.png"]);
 });
+
+test.describe("content delight", () => {
+  test("screenshot sizes are drawn to scale", async ({ page }) => {
+    await page.goto("/screenshot-sizes/iphone-duo/");
+    const figure = page.locator(".silhouette-figure svg");
+    await expect(figure).toHaveAttribute("aria-label", /1398 × 2034, 2007 × 2853/);
+    await expect(figure.locator("rect")).toHaveCount(2);
+    await page.goto("/screenshot-sizes/");
+    await expect(page.locator(".spec-index .silhouettes--compact")).toHaveCount(14);
+  });
+
+  test("keyword examples show measured bytes", async ({ page }) => {
+    await page.goto("/store-page/keywords/");
+    await expect(page.locator(".keyword-field__count").first()).toContainText("88/100 bytes");
+    await expect(page.locator(".keyword-field__count").nth(1)).toContainText("86/100 bytes · 13 terms");
+  });
+
+  test("finishing the launch checklist offers the next step", async ({ page }) => {
+    await page.goto("/launch/checklist/");
+    await expect(page.locator(".checklist")).toHaveAttribute("data-ready", "true");
+    const boxes = page.locator(".checklist input[type=checkbox]");
+    const count = await boxes.count();
+    for (let index = 0; index < count; index++) await boxes.nth(index).check();
+    await expect(page.locator(".checklist__group--done")).toHaveCount(await page.locator(".checklist__group").count());
+    await expect(page.getByRole("complementary", { name: "Ready to submit" })).toContainText(`All ${count} done`);
+    await boxes.first().uncheck();
+    await expect(page.getByRole("complementary", { name: "Ready to submit" })).toHaveCount(0);
+  });
+
+  test("guides open the share sheet", async ({ page }) => {
+    await page.addInitScript(() => {
+      const shared: Array<{ title?: string; url?: string }> = [];
+      Object.assign(window, { __shared: shared });
+      Object.assign(navigator, { share: async (data: { title?: string; url?: string }) => { shared.push(data); } });
+    });
+    await page.goto("/store-page/keywords/");
+    await page.getByRole("button", { name: "Share" }).click();
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __shared: Array<{ url: string }> }).__shared.map((item) => new URL(item.url).pathname))).toEqual(["/store-page/keywords/"]);
+  });
+});

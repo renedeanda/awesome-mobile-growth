@@ -6,7 +6,9 @@ import { GooglePlayGraphicsTable } from "@/components/MdxBlocks";
 import { apple, google } from "@/lib/articles/links";
 import { absolute, formatDate, pageMetadata, site } from "@/lib/site";
 import { appleScreenshotRules, aspectRatio, getSpecPage, specPages, specPath, specsChecked, type SpecPage } from "@/lib/specPages";
-import { formatSize } from "@/lib/storeSpecs";
+import { formatSize, googlePlayScreenshotPresets } from "@/lib/storeSpecs";
+import { DeviceSilhouettes } from "@/components/DeviceSilhouettes";
+import { ShareButton } from "@/components/ShareButton";
 
 export const dynamicParams = false;
 export function generateStaticParams() { return specPages.map(({ slug }) => ({ slug })); }
@@ -20,6 +22,7 @@ function AppleSpec({ page }: { page: SpecPage }) {
   const siblings = specPages.filter((item) => item.device === page.device && item.slug !== page.slug);
   return <>
     <h2 id="sizes">Accepted sizes</h2>
+    <figure className="silhouette-figure"><DeviceSilhouettes device={page.device} sizes={spec.sizes}/><figcaption>Every accepted size, drawn to scale.</figcaption></figure>
     <div className="table-scroll" role="region" aria-label={`${page.short} screenshot sizes`} tabIndex={0}>
       <table><thead><tr><th scope="col">{page.orientation === "both" ? "Portrait" : "Pixels"}</th>{page.orientation === "both" && <th scope="col">Landscape</th>}<th scope="col">Aspect ratio</th></tr></thead>
         <tbody>{spec.sizes.map((size) => <tr key={formatSize(size)}><th scope="row" className="nowrap-cells">{formatSize(size)}</th>{page.orientation === "both" && <td className="nowrap-cells">{formatSize([size[1], size[0]])}</td>}<td>{aspectRatio(size)}</td></tr>)}</tbody></table>
@@ -48,6 +51,7 @@ function AppleSpec({ page }: { page: SpecPage }) {
 function GoogleSpec() {
   return <>
     <h2 id="sizes">Graphic assets</h2>
+    <figure className="silhouette-figure"><DeviceSilhouettes device="Google Play" sizes={googlePlayScreenshotPresets.map((preset) => preset.size)}/><figcaption>Portrait and landscape phone screenshots at 1080 pixels, drawn to scale.</figcaption></figure>
     <GooglePlayGraphicsTable/>
     <h2 id="rules">What to check before upload</h2>
     <ul>
@@ -76,7 +80,7 @@ export default async function SpecDetail({ params }: { params: Promise<{ slug: s
       <p className="eyebrow">{page.store === "apple" ? `App Store · ${page.device}` : "Google Play"}</p>
       <h1>{page.title}</h1>
       <p className="lede">{page.store === "apple" ? `Accepted pixel sizes, upload rules, and what happens if you skip the ${page.short} slot.` : "Screenshot limits, the feature graphic, the icon and video rules for a Google Play store listing."}</p>
-      <div className="article-meta"><p className="article-meta__facts"><span>Checked <time dateTime={specsChecked}>{formatDate(specsChecked)}</time></span></p></div>
+      <div className="article-meta"><p className="article-meta__facts"><span>Checked <time dateTime={specsChecked}>{formatDate(specsChecked)}</time></span></p><ShareButton title={page.title} path={path}/></div>
     </header>
     <DirectAnswer><p>{page.answer}</p></DirectAnswer>
     <div className="prose">
