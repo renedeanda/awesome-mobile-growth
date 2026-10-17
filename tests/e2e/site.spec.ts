@@ -546,3 +546,26 @@ test("each screenshot size page shares its own social card", async ({ page, requ
   const response = await request.get(new URL(image ?? "").pathname);
   expect(readPngHeader(new Uint8Array(await response.body()))).toMatchObject({ width: 1200, height: 630 });
 });
+
+test.describe("Apple promotion", () => {
+  test("the in-app event tab counts against Apple's limits and flags prices", async ({ page }) => {
+    await page.goto("/workbench/?tab=event");
+    await expect(page.getByTestId("workbench")).toHaveAttribute("data-ready", "true");
+    await expect(page.getByRole("tab", { name: "In-app event" })).toHaveAttribute("aria-selected", "true");
+    const fields = page.getByRole("region", { name: "In-app event fields" });
+    await fields.getByLabel("Event name").fill("Golden Hour Week Photo Challenge");
+    await expect(fields.getByText("32/30")).toHaveClass(/over/);
+    await fields.getByLabel("Short description").fill("Shoot one roll at sunset for $4.99");
+    await expect(fields.getByRole("list", { name: "Review notes" })).toContainText("specific prices");
+    await fields.getByRole("combobox").selectOption("Challenge");
+    await expect(page.getByLabel("Illustrative event card")).toContainText("CHALLENGE");
+  });
+
+  test("the new guides render their limits and media tables", async ({ page }) => {
+    await page.goto("/grow/in-app-events/");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("in-app events");
+    await expect(page.getByRole("region", { name: "In-app event media sizes" })).toContainText("1920 × 1080 to 3840 × 2160");
+    await page.goto("/grow/pricing/");
+    await expect(page.getByRole("heading", { name: "When subscribers have to agree to a price increase" })).toBeVisible();
+  });
+});

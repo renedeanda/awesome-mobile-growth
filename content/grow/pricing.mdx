@@ -1,0 +1,63 @@
+## Set one base price and let Apple fill in the rest
+
+In App Store Connect you choose a price for your **base country or region**, and Apple generates prices for the other 174 storefronts and 43 currencies from it. Apple never changes the price in your base country, and always notifies you in advance before it changes the others.
+
+You can override any storefront with your own price. Once you do, Apple stops adjusting that storefront for you, so you own its updates from then on.
+
+There are up to 800 price points by default, and you can request 100 higher price points, up to $10,000.
+
+## Schedule changes instead of making them live
+
+Apple supports three kinds of scheduled price change for apps:
+
+| Type | What it does |
+| --- | --- |
+| Global | Changes the base price and the generated prices with it |
+| Temporary | A sale or test price for a set period, then back to the old price |
+| Custom | A different price in chosen countries or regions |
+
+You can schedule changes from today up to the end of the next calendar year, and a temporary change can last up to one year.
+
+## Subscription price changes
+
+Changing a subscription's price has rules that one-time purchases don't.
+
+- You can schedule **one future price change at a time** per country or region, per billing plan type.
+- Apple doesn't adjust subscription prices for you.
+- **Decreases** apply to existing subscribers automatically at renewal, and can't be reversed once they take effect.
+- You can **keep the current price for existing subscribers**. People whose subscription lapsed can still resubscribe at that preserved price within 60 days.
+
+### When subscribers have to agree to a price increase
+
+A subscriber must accept the new price if any of these is true:
+
+1. They're in a region that requires consent for any price change.
+2. The increase is more than 50% and more than about US$5 per period (non-annual) or US$50 per year (annual). Apple publishes the threshold for every storefront.
+3. They already had a price increase on that subscription in the past 12 months.
+
+Apple starts asking 60 days before renewal for plans from two months to a year, 27 days before for monthly plans and 7 days before for weekly plans. Anyone who doesn't agree stays subscribed until the end of the period they paid for at the old price, then the subscription expires.
+
+When consent isn't needed, Apple tells subscribers by email or push 27 or 7 days before renewal, and shows a message in the app on iOS 13.4 and later.
+
+<Example title="Reading the threshold">
+<p>A US monthly plan going from $4.99 to $6.99 is a 40% increase, under 50%, so subscribers who haven't had an increase in the past year don't need to agree. Going from $4.99 to $11.99 is 140% and $7 more, so every subscriber must agree or the subscription expires.</p>
+</Example>
+
+## Testing prices
+
+Apple doesn't offer a price A/B test. [Product page optimization](/store-page/testing/) tests icons, screenshots and app previews only, with up to three treatments for up to 90 days.
+
+What you can do with Apple's own tools:
+
+- **Temporary price changes** in chosen countries or regions, compared with the weeks before and after. This is a before-and-after comparison, not a controlled test, so watch for seasonality.
+- **Subscription offer codes**: free or discounted periods for new, existing or lapsed subscribers, as one-time-use codes or custom codes such as SPRINGPROMO, up to 1 million redemptions per app per quarter.
+
+Judge any price change by revenue per visitor or proceeds per install over the same window, not by conversion rate alone: a lower price almost always converts better.
+
+<DoToday>
+
+1. Check which storefronts you've overridden by hand and whether those prices are still what you want.
+2. Before raising a subscription price, check the increase against Apple's threshold for your main storefronts.
+3. Write down the metric and the window you'll use to judge the next price change before you make it.
+
+</DoToday>

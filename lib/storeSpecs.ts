@@ -49,6 +49,18 @@ export const appleCreativeAssets = [
   { placement: "Search results", kind: "Video", ratio: "3:2", size: "1920 × 1280 to 3840 × 2560", formats: "MOV, M4V, MP4 · 5–30 s · 30 or 60 fps" },
 ] as const;
 
+// Read from App Store Connect Help on 2026-10-17. Card media is landscape, details page media is portrait.
+export const appleInAppEventMediaSource = "https://developer.apple.com/help/app-store-connect/reference/in-app-events/in-app-event-media-and-audio-specifications";
+export const appleInAppEventMedia = [
+  { placement: "Event card", kind: "Image", ratio: "16:9", size: "1920 × 1080 to 3840 × 2160", formats: "JPEG, JPG, PNG · up to 500 MB" },
+  { placement: "Event card", kind: "Video", ratio: "16:9", size: "1920 × 1080 to 3840 × 2160", formats: "MOV, M4V, MP4 · 30 or 60 fps · up to 500 MB" },
+  { placement: "Event details page", kind: "Image", ratio: "9:16", size: "1080 × 1920 to 2160 × 3840", formats: "JPEG, JPG, PNG · up to 500 MB" },
+  { placement: "Event details page", kind: "Video", ratio: "9:16", size: "1080 × 1920 to 2160 × 3840", formats: "MOV, M4V, MP4 · 30 or 60 fps · up to 500 MB" },
+] as const;
+
+/** The badges Apple lets an event carry. */
+export const appleInAppEventBadges = ["Live Event", "Premiere", "Challenge", "Competition", "New Season", "Major Update", "Special Event"] as const;
+
 // Google's help pages were not reachable from the verification environment; these figures match
 // the Play Console upload rules as reported consistently by multiple 2026 sources. CI checks the link.
 export const googlePlayGraphics = [

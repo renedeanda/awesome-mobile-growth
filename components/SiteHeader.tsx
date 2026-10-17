@@ -41,6 +41,7 @@ const groups: NavGroup[] = [
     { href: "/grow/onboarding/", label: "Onboarding" },
     { href: "/grow/subscriptions/", label: "Subscriptions" },
     { href: "/grow/ratings-reviews/", label: "Ratings and reviews" },
+    { href: "/grow/in-app-events/", label: "In-app events" },
     { href: "/grow/", label: "All growth guides" },
   ]},
   { title: "Tools", links: [

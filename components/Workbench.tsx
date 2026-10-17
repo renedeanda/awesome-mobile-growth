@@ -1,6 +1,7 @@
 "use client";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { EventDraft } from "./EventDraft";
 import { StorePreview } from "./StorePreview";
 import { LIMITS, WorkbenchData, duplicates, emptyWorkbench, migrateWorkbench, parseLocaleBundle, toMarkdown, utf8Bytes, warnings } from "@/lib/workbench";
 
@@ -18,8 +19,8 @@ const googleFields = [
   ["googleName", "App name", LIMITS.googleName], ["googleShort", "Short description", LIMITS.googleShort], ["googleFull", "Full description", LIMITS.googleFull]
 ] as const;
 
-type Tab = "preview" | "brief" | "apple" | "google" | "planning";
-const tabs: Array<[Tab, string]> = [["preview", "Store preview"], ["brief", "Product brief"], ["apple", "Apple"], ["google", "Google Play"], ["planning", "Plan & learn"]];
+type Tab = "preview" | "brief" | "apple" | "event" | "google" | "planning";
+const tabs: Array<[Tab, string]> = [["preview", "Store preview"], ["brief", "Product brief"], ["apple", "Apple"], ["event", "In-app event"], ["google", "Google Play"], ["planning", "Plan & learn"]];
 
 function download(name: string, content: string, type: string) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([content], { type })); a.download = name; a.click(); URL.revokeObjectURL(a.href); }
 
@@ -41,6 +42,8 @@ export function Workbench() {
     } else if (template === "screenshots" || template === "experiment") {
       setTab("planning");
       setNotice(template === "screenshots" ? "Screenshot planning is ready." : "The experiment log is ready.");
+    } else if (params.get("tab") === "event") {
+      setTab("event");
     } else if (platform === "google-play") {
       setTab("google");
       setNotice("Google Play metadata is ready.");
@@ -68,6 +71,7 @@ export function Workbench() {
     {tab === "preview" && <StorePreview fields={data.fields}/>}
     {tab === "brief" && <section className="brief-grid" aria-label="Product brief"><div><p className="eyebrow">Start before keywords</p><h2>Write the facts once.</h2><p>Describe the app here, then check every field and screenshot against it. A specific claim you can show beats a big one you can't.</p></div><div>{([['product','Product','What is it, in plain language?'],['audience','Audience','Who is it genuinely for?'],['job','Job to be done','What progress is that person trying to make?'],['promise','Promise','What concrete outcome can the listing responsibly promise?'],['proof','Proof','What product behavior, screen, result, or trust signal substantiates it?'],['exclusions','Not for','Who or what should the listing avoid attracting?']] as const).map(([key,label,placeholder]) => <label className="field" key={key}><span className="field-label">{label}</span><textarea rows={3} placeholder={placeholder} value={data.brief[key]} onChange={e => { markStarted(); setData(d=>({...d,brief:{...d.brief,[key]:e.target.value},updatedAt:new Date().toISOString()})); }}/></label>)}</div></section>}
     {tab === "apple" && <div className="workbench-grid"><section className="fields" aria-label="Apple metadata fields">{fields.map(([key, label, help, limit, bytes]) => { const value = data.fields[key]; const count = bytes ? utf8Bytes(value) : value.length; const bad = limit !== undefined && count > limit; return <label className="field" key={key}><span className="field-label">{label}{limit && <small className={bad ? "over" : ""}>{count}/{limit}{bytes ? " bytes" : ""}</small>}</span><span className="field-help">{help}</span>{limit && limit <= 170 ? <input value={value} onChange={e => updateField(key, e.target.value)} aria-invalid={bad}/> : <textarea rows={key === "appleDescription" ? 12 : 5} value={value} onChange={e => updateField(key, e.target.value)} aria-invalid={bad}/>}</label>})}</section><Preview name={data.fields.appleName} subtitle={data.fields.appleSubtitle} promo={data.fields.applePromotional} description={data.fields.appleDescription}/></div>}
+    {tab === "event" && <EventDraft fields={data.fields} badge={data.eventBadge} onField={updateField} onBadge={(eventBadge) => { markStarted(); setData(d => ({ ...d, eventBadge, updatedAt: new Date().toISOString() })); }}/>}
     {tab === "google" && <div className="workbench-grid"><section className="fields" aria-label="Google Play metadata fields">{googleFields.map(([key, label, limit]) => { const value=data.fields[key]; return <label className="field" key={key}><span className="field-label">{label}<small className={value.length > limit ? "over" : ""}>{value.length}/{limit}</small></span>{limit > 100 ? <textarea rows={14} value={value} onChange={e=>updateField(key,e.target.value)} aria-invalid={value.length > limit}/> : <input value={value} onChange={e=>updateField(key,e.target.value)} aria-invalid={value.length > limit}/>}</label>})}</section><Preview name={data.fields.googleName} subtitle={data.fields.googleShort} description={data.fields.googleFull}/></div>}
     {tab === "planning" && <section className="planning-grid">{([['keywordMap','Keyword map','Intent → phrase → page promise → proof'],['screenshotPlan','Screenshot plan','Frame → message → product evidence → asset status'],['experimentLog','Experiment log','Decision, hypothesis, primary measure, dates, result, next move'],['launchRetro','Launch retrospective','What changed, what we learned, and what deserves another look'],['monthlyReview','Monthly ASO review','Signal → interpretation → decision → owner → review date']] as const).map(([key,label,placeholder]) => <label className="field" key={key}><span className="field-label">{label}</span><textarea rows={9} placeholder={placeholder} value={data[key]} onChange={e => { markStarted(); setData(d=>({...d,[key]:e.target.value,updatedAt:new Date().toISOString()})); }}/></label>)}</section>}
     {(duplicates(data.fields.appleKeywords).length > 0 || allWarnings.length > 0) && <aside className="advisor" aria-label="Metadata review"><p className="eyebrow">Review, don’t obey blindly</p>{duplicates(data.fields.appleKeywords).length > 0 && <p><strong>Duplicate keywords:</strong> {duplicates(data.fields.appleKeywords).join(", ")}</p>}{allWarnings.map(w => <p key={w}>{w}</p>)}</aside>}

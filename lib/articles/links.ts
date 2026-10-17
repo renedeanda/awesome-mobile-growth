@@ -36,6 +36,19 @@ export const apple = {
   universalLinks: { label: "Apple · Universal Links", href: "https://developer.apple.com/ios/universal-links/" },
   subscriptionsGuide: { label: "Apple · Auto-renewable subscriptions", href: "https://developer.apple.com/app-store/subscriptions/" },
   search: { label: "Apple · App Store search", href: "https://developer.apple.com/app-store/search/" },
+  inAppEvents: { label: "Apple · Offer In-App Events", href: "https://developer.apple.com/help/app-store-connect/offer-in-app-events/offer-in-app-events" },
+  inAppEventsOverview: { label: "Apple · Overview of In-App Events", href: "https://developer.apple.com/help/app-store-connect/offer-in-app-events/overview-of-in-app-events" },
+  inAppEventsGuide: { label: "Apple · In-app events", href: "https://developer.apple.com/app-store/in-app-events/" },
+  inAppEventMedia: { label: "Apple · In-App Event media and audio specifications", href: "https://developer.apple.com/help/app-store-connect/reference/in-app-events/in-app-event-media-and-audio-specifications" },
+  inAppEventBadges: { label: "Apple · In-App Event badges", href: "https://developer.apple.com/help/app-store-connect/reference/in-app-events/in-app-event-badges" },
+  submitInAppEvent: { label: "Apple · Submit an In-App Event", href: "https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-event" },
+  gettingFeatured: { label: "Apple · Getting featured on the App Store", href: "https://developer.apple.com/app-store/getting-featured/" },
+  setPrice: { label: "Apple · Set a price", href: "https://developer.apple.com/help/app-store-connect/manage-app-pricing/set-a-price" },
+  schedulePrice: { label: "Apple · Schedule price changes for apps", href: "https://developer.apple.com/help/app-store-connect/manage-app-pricing/schedule-price-changes-for-apps" },
+  subscriptionPricing: { label: "Apple · Manage pricing for auto-renewable subscriptions", href: "https://developer.apple.com/help/app-store-connect/manage-subscriptions/manage-pricing-for-auto-renewable-subscriptions" },
+  priceIncreaseThresholds: { label: "Apple · Subscription price increase thresholds", href: "https://developer.apple.com/help/app-store-connect/reference/in-app-purchases-and-subscriptions/auto-renewable-subscription-price-increase-thresholds" },
+  offerCodes: { label: "Apple · Set up subscription offer codes", href: "https://developer.apple.com/help/app-store-connect/manage-subscriptions/set-up-subscription-offer-codes" },
+  ppoOverview: { label: "Apple · Overview of product page optimization", href: "https://developer.apple.com/help/app-store-connect/create-product-page-optimization-tests/overview-of-product-page-optimization" },
 } as const;
 
 export const google = {

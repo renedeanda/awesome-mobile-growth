@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { CopyButton } from "@/components/CopyButton";
 import { keywordTokens, utf8Bytes } from "@/lib/workbench";
-import { appleCreativeAssets, appleScreenshotClasses, appleScreenshotSource, appleCreativeSource, formatSize, googleGraphicsSource, googlePlayGraphics, type ScreenshotClass } from "@/lib/storeSpecs";
+import { appleCreativeAssets, appleInAppEventMedia, appleInAppEventMediaSource, appleScreenshotClasses, appleScreenshotSource, appleCreativeSource, formatSize, googleGraphicsSource, googlePlayGraphics, type ScreenshotClass } from "@/lib/storeSpecs";
 
 /** The closing action list every guide ends with. */
 export function DoToday({ children }: { children: ReactNode }) {
@@ -40,6 +40,14 @@ export function AppleScreenshotTable({ devices = ["iPhone", "iPad"] }: { devices
   return <div className="table-scroll" role="region" aria-label="Apple screenshot sizes" tabIndex={0}>
     <table><thead><tr><th scope="col">Display class</th><th scope="col">Portrait pixels (landscape swaps them)</th></tr></thead><tbody><ScreenshotRows items={items}/></tbody></table>
     <p className="table-source">Source: <a href={appleScreenshotSource}>Apple screenshot specifications</a>. 1–10 screenshots per size and language; JPEG or PNG; no transparency.</p>
+  </div>;
+}
+
+export function AppleEventMediaTable() {
+  return <div className="table-scroll" role="region" aria-label="In-app event media sizes" tabIndex={0}>
+    <table><thead><tr><th scope="col">Placement</th><th scope="col">Type</th><th scope="col">Ratio</th><th scope="col">Pixels</th><th scope="col">Formats</th></tr></thead>
+      <tbody>{appleInAppEventMedia.map((row) => <tr key={`${row.placement}-${row.kind}`}><th scope="row">{row.placement}</th><td>{row.kind}</td><td>{row.ratio}</td><td>{row.size}</td><td>{row.formats}</td></tr>)}</tbody></table>
+    <p className="table-source">Source: <a href={appleInAppEventMediaSource}>Apple In-App Event media and audio specifications</a>. Card media is landscape; details page media is portrait.</p>
   </div>;
 }
 
