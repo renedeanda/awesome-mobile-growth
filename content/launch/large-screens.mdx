@@ -1,6 +1,6 @@
 ## What changed with Android 16
 
-If your app targets Android 16 (API level 36), Android ignores its orientation, resizability and aspect ratio restrictions on any display at least 600dp wide: tablets, unfolded foldables and desktop windows.
+If your app targets Android 16 (API level 36), Android ignores its orientation, resizability and aspect ratio restrictions on any display whose smallest width is 600dp or more (sw600dp): tablets, unfolded foldables and desktop windows.
 
 > "Apps fill the entire display window, regardless of aspect ratio or a user's preferred orientation, and pillarboxing isn't used."
 > Android, Behavior changes: apps targeting Android 16
@@ -18,7 +18,7 @@ Since 31 August 2026, [new apps and updates on Google Play must target API level
 The change doesn't apply to:
 
 - **Games**, identified by the `android:appCategory` flag in the manifest.
-- **Screens narrower than 600dp**, such as phones and folded foldables.
+- **Screens smaller than sw600dp**, such as phones and folded foldables.
 - **People who choose your app's default behavior** in their device's aspect ratio settings.
 
 ## The temporary opt-out
