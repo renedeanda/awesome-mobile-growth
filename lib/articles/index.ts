@@ -38,6 +38,9 @@ function build(source: ArticleSource): Article {
   return { ...source, file, path: `${sections[source.section].path}${source.slug}/`, reading: readingTime(plainText(text)), toc: toc(text) };
 }
 
+/** Read time for any MDX file under content/, plus text rendered around it (such as the answer box). */
+export const readingFor = (file: string, extra = "") => readingTime(`${extra} ${plainText(mdxSource(file))}`);
+
 export const articles: Article[] = [...launchArticles, ...storePageArticles, ...growArticles, ...learnArticles].map(build);
 
 export const articlesIn = (section: SectionId) => articles.filter((article) => article.section === section);
