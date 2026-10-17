@@ -59,4 +59,10 @@ export const googlePlayGraphics = [
   { asset: "Preview video", spec: "A public or unlisted YouTube URL, no ads, not age-restricted." },
 ] as const;
 
+/** Sizes the frame studio exports for Play: 1080 px or more at 9:16 or 16:9, the recommendation-eligible shapes above. */
+export const googlePlayScreenshotPresets: Array<{ id: string; name: string; size: [number, number] }> = [
+  { id: "google-play-portrait", name: "Phone, portrait 9:16", size: [1080, 1920] },
+  { id: "google-play-landscape", name: "Phone, landscape 16:9", size: [1920, 1080] },
+];
+
 export const formatSize = ([w, h]: [number, number]) => `${w} × ${h}`;

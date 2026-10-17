@@ -1,4 +1,8 @@
 import { test, expect } from "@playwright/test";
+import fs from "node:fs";
+import zlib from "node:zlib";
+import { readPngHeader } from "../../lib/png.ts";
+import { unzipStored } from "../../lib/zip.ts";
 
 test("home leads to launch, store page and tools", async ({ page }) => {
   await page.goto("/");
@@ -125,8 +129,9 @@ test("open AI skill explains its trust boundary and exposes complete source", as
 
 test("buttons and standalone links are at least 32px tall on phones", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const path of ["/", "/launch/iphone/", "/store-page/screenshots/", "/learn/metrics/conversion-rate/", "/launch/checklist/", "/changes/", "/tools/", "/workbench/", "/learn/podcasts/", "/screenshot-sizes/", "/screenshot-sizes/iphone-duo/", "/tools/app-store-keyword-field/"]) {
+  for (const path of ["/", "/launch/iphone/", "/store-page/screenshots/", "/learn/metrics/conversion-rate/", "/launch/checklist/", "/changes/", "/tools/", "/workbench/", "/learn/podcasts/", "/screenshot-sizes/", "/screenshot-sizes/iphone-duo/", "/tools/app-store-keyword-field/", "/tools/screenshot-frames/"]) {
     await page.goto(path);
+    if (path === "/tools/screenshot-frames/") await expect(page.getByTestId("frame-studio")).toHaveAttribute("data-ready", "true");
     const small = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>("a, button, summary, input, select, textarea")]
       .filter((el) => {
         const style = getComputedStyle(el);
@@ -193,4 +198,53 @@ test("search finds a device size page and opens it", async ({ page }) => {
   await expect(page).toHaveURL(/\/screenshot-sizes\/iphone-duo\/$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("iPhone Duo screenshot size");
   await expect(page.getByRole("region", { name: "iPhone Duo screenshot sizes" })).toContainText("2034 × 1398");
+});
+
+// A solid-color PNG made in the test, so uploads don't depend on fixture files.
+function testPng(width: number, height: number, [r, g, b]: [number, number, number]) {
+  const row = Buffer.concat([Buffer.from([0]), Buffer.alloc(width * 3).map((_, i) => [r, g, b][i % 3])]);
+  const chunk = (type: string, data: Buffer) => { const body = Buffer.concat([Buffer.from(type), data]); const out = Buffer.alloc(12 + data.length); out.writeUInt32BE(data.length); body.copy(out, 4); out.writeUInt32BE(zlib.crc32(body), 8 + data.length); return out; };
+  const header = Buffer.alloc(13); header.writeUInt32BE(width); header.writeUInt32BE(height, 4); header.set([8, 2, 0, 0, 0], 8);
+  return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk("IHDR", header), chunk("IDAT", zlib.deflateSync(Buffer.concat(Array(height).fill(row)))), chunk("IEND", Buffer.alloc(0))]);
+}
+const shots = [[220, 40, 40], [40, 160, 80], [40, 80, 220]].map((rgb, index) => ({ name: `capture-${index + 1}.png`, mimeType: "image/png", buffer: testPng(118, 256, rgb as [number, number, number]) }));
+
+test("frame studio exports exact-size RGB frames and hands them to the store preview", async ({ page }) => {
+  await page.goto("/tools/screenshot-frames/?class=iphone-dynamic-island-large");
+  const studio = page.getByTestId("frame-studio");
+  await expect(studio).toHaveAttribute("data-ready", "true");
+  await expect(page.getByLabel("Store slot")).toHaveValue("iphone-dynamic-island-large");
+  await expect(page.getByLabel("Export size")).toHaveValue("1320 × 2868");
+  await studio.locator(".frame-drop input").setInputFiles(shots);
+  await expect(page.getByRole("status")).toContainText("Added 3 screenshots");
+  await page.getByLabel("Frame 1 caption").fill("Plan the week in one view");
+  await page.getByText("Paste captions, one per line").click();
+  await page.getByLabel("Captions", { exact: true }).fill("Plan the week in one view\nShare a list in two taps\nWorks offline");
+  await page.getByRole("button", { name: "Apply to frames in order" }).click();
+  await expect(page.getByLabel("Frame 3 caption")).toHaveValue("Works offline");
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Export 3 frames" }).click()]);
+  expect(download.suggestedFilename()).toBe("iphone-dynamic-island-large-1320x2868.zip");
+  const entries = unzipStored(new Uint8Array(fs.readFileSync(await download.path())));
+  expect(entries.map((entry) => entry.name)).toEqual(["01", "02", "03"].map((n) => `iphone-dynamic-island-large-1320x2868-${n}.png`));
+  for (const entry of entries) expect(readPngHeader(entry.data)).toEqual({ width: 1320, height: 2868, bitDepth: 8, colorType: 2 });
+  await page.getByRole("button", { name: "See them in the Store preview" }).click();
+  await expect(page).toHaveURL(/\/workbench\/\?from=frames/);
+  await expect(page.getByText("Showing 3 frames from the screenshot frame studio.")).toBeVisible();
+  await expect(page.locator(".store-shots--result img")).toHaveCount(3);
+});
+
+test("frame studio exports a Google Play JPEG and size pages preselect their slot", async ({ page }) => {
+  await page.goto("/screenshot-sizes/ipad-13/");
+  await page.getByRole("link", { name: "screenshot frame studio" }).click();
+  await expect(page.getByTestId("frame-studio")).toHaveAttribute("data-ready", "true");
+  await expect(page.getByLabel("Store slot")).toHaveValue("ipad-13");
+  await expect(page.getByLabel("Export size")).toHaveValue("2064 × 2752");
+  await page.getByLabel("Store slot").selectOption("google-play");
+  await expect(page.getByLabel("Export size")).toHaveValue("1080 × 1920");
+  await page.getByTestId("frame-studio").locator(".frame-drop input").setInputFiles(shots[0]);
+  await page.getByRole("button", { name: "JPEG" }).click();
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Export 1 frame" }).click()]);
+  expect(download.suggestedFilename()).toBe("google-play-1080x1920-01.jpg");
+  const bytes = fs.readFileSync(await download.path());
+  expect([...bytes.subarray(0, 2)]).toEqual([0xff, 0xd8]);
 });
