@@ -18,14 +18,14 @@ export default async function MetricPage({ params }: { params: Promise<{ slug: s
   const path = `/learn/metrics/${metric.slug}/`;
   const jsonLd = [
     { "@context": "https://schema.org", "@type": "DefinedTerm", name: metric.term, description: metric.definition, inDefinedTermSet: absolute("/learn/metrics/"), url: absolute(path) },
-    { "@context": "https://schema.org", "@type": "Article", headline: metric.title, description: metric.description, datePublished: "2026-10-12", dateModified: metricsReviewed, author: { "@type": "Person", name: site.author, url: absolute("/about/") }, publisher: { "@id": `${site.origin}/#publisher` }, mainEntityOfPage: absolute(path), image: absolute("/learn/opengraph-image") },
+    { "@context": "https://schema.org", "@type": "Article", headline: metric.title, description: metric.description, datePublished: "2026-10-12", dateModified: metric.reviewed ?? metricsReviewed, author: { "@type": "Person", name: site.author, url: absolute("/about/") }, publisher: { "@id": `${site.origin}/#publisher` }, mainEntityOfPage: absolute(path), image: absolute("/learn/opengraph-image") },
     { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Home", item: absolute("/") }, { "@type": "ListItem", position: 2, name: "Metrics", item: absolute("/learn/metrics/") }, { "@type": "ListItem", position: 3, name: metric.title, item: absolute(path) }] },
   ];
   const related = metric.related.map((slug) => getMetric(slug)).filter((item) => item !== undefined);
   return <article className="single-article">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}/>
     <nav className="breadcrumbs" aria-label="Breadcrumb"><Link href="/learn/">Learn</Link><span aria-hidden="true">/</span><Link href="/learn/metrics/">Metrics</Link></nav>
-    <header className="article-head"><p className="eyebrow">App Store Connect metric</p><h1>{metric.title}</h1><p className="lede">{metric.description}</p><div className="article-meta"><p className="article-meta__facts"><span>Apple definition</span><span>Checked <time dateTime={metricsReviewed}>{formatDate(metricsReviewed)}</time></span></p></div></header>
+    <header className="article-head"><p className="eyebrow">{metric.store === "Google Play" ? "Google Play Console metric" : "App Store Connect metric"}</p><h1>{metric.title}</h1><p className="lede">{metric.description}</p><div className="article-meta"><p className="article-meta__facts"><span>{metric.store === "Google Play" ? "Google definition" : "Apple definition"}</span><span>Checked <time dateTime={metric.reviewed ?? metricsReviewed}>{formatDate(metric.reviewed ?? metricsReviewed)}</time></span></p></div></header>
     <section className="direct-answer"><p className="micro-label">Definition</p><div><p>{metric.definition}</p>{metric.formula && <p className="formula"><code>{metric.formula}</code></p>}</div></section>
     <div className="prose">
       <h2 id="where">Where to find it</h2><p>{metric.where}</p>

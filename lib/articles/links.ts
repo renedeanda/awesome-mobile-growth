@@ -68,5 +68,11 @@ export const google = {
   permissions: { label: "Android · Permissions", href: "https://developer.android.com/guide/topics/permissions/overview" },
   inAppReview: { label: "Android · In-app reviews", href: "https://developer.android.com/guide/playcore/in-app-review" },
   dynamicLinks: { label: "Firebase · Dynamic Links deprecation FAQ", href: "https://firebase.google.com/support/dynamic-links-faq" },
+  vitals: { label: "Android · Android vitals", href: "https://developer.android.com/topic/performance/vitals" },
+  iconSpec: { label: "Android · Google Play icon design specifications", href: "https://developer.android.com/distribute/google-play/resources/icon-design-specifications" },
+  android16: { label: "Android · Behavior changes: apps targeting Android 16", href: "https://developer.android.com/about/versions/16/behavior-changes-16" },
+  android17: { label: "Android · Behavior changes: apps targeting Android 17", href: "https://developer.android.com/about/versions/17/behavior-changes-17" },
+  adaptiveQuality: { label: "Android · Adaptive app quality guidelines", href: "https://developer.android.com/docs/quality-guidelines/adaptive-app-quality" },
+  youTab: { label: "Android Developers Blog · New tools and programs on Google Play", href: "https://developer.android.com/blog/posts/new-tools-and-programs-to-accelerate-your-success-on-google-play" },
   dataSafety: { label: "Google Play · Data safety section", href: "https://support.google.com/googleplay/android-developer/answer/10787469" },
 } as const;

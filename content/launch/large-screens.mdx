@@ -1,0 +1,63 @@
+## What changed with Android 16
+
+If your app targets Android 16 (API level 36), Android ignores its orientation, resizability and aspect ratio restrictions on any display at least 600dp wide: tablets, unfolded foldables and desktop windows.
+
+> "Apps fill the entire display window, regardless of aspect ratio or a user's preferred orientation, and pillarboxing isn't used."
+> Android, Behavior changes: apps targeting Android 16
+
+That means these settings stop working on large screens:
+
+- `android:resizeableActivity="false"`
+- `android:minAspectRatio` and `android:maxAspectRatio`
+- portrait-only or landscape-only `android:screenOrientation`, and `setRequestedOrientation()`
+
+Since 31 August 2026, [new apps and updates on Google Play must target API level 36](/changes/google-play-target-api-36/), so this applies to every release you ship from now on.
+
+## Who's exempt
+
+The change doesn't apply to:
+
+- **Games**, identified by the `android:appCategory` flag in the manifest.
+- **Screens narrower than 600dp**, such as phones and folded foldables.
+- **People who choose your app's default behavior** in their device's aspect ratio settings.
+
+## The temporary opt-out
+
+You can opt out for now with a manifest property, on one activity or the whole application:
+
+```xml
+<property
+  android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY"
+  android:value="true" />
+```
+
+It's temporary: the opt-out stops working when your app targets API level 37 (Android 17). Use the time to fix layouts, not to postpone them.
+
+## Make it work instead
+
+Android's adaptive app quality guidelines give three tiers to aim for:
+
+| Tier | What it means |
+| --- | --- |
+| Tier 3: Adaptive ready | Runs full screen or full window on every device, with no letterboxing. The layout might not be ideal yet. |
+| Tier 2: Adaptive optimized | Layouts tuned for every screen size and configuration, plus good keyboard, mouse and stylus input. |
+| Tier 1: Adaptive differentiated | Multitasking, foldable postures, drag and drop and stylus input. |
+
+Tier 3 is the minimum once Android ignores your restrictions. In practice:
+
+1. **Test on a large screen.** Use the resizable emulator or a tablet and a foldable, in both orientations and in split screen.
+2. **Fix stretched layouts.** Cap the reading width of text, and switch to two panes or a grid when the window is wide.
+3. **Keep state through changes.** Rotating, folding or resizing shouldn't lose what someone typed or where they were.
+4. **Check the camera preview and video.** Fixed-orientation previews are the most common thing to break.
+
+## Show it on your store listing
+
+Google's guidance is to update your Play listing when you improve large-screen support: "Upload screenshots that show off the app on tablets and foldables." Google Play's own rules on tablet screenshots are on the [Google Play size page](/screenshot-sizes/google-play/).
+
+<DoToday>
+
+1. Search your manifest for `screenOrientation`, `resizeableActivity` and the aspect ratio attributes.
+2. Run the app on a tablet emulator in landscape and in split screen, and note every screen that looks wrong.
+3. If you add the opt-out, put a date on removing it before you target API 37.
+
+</DoToday>

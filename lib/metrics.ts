@@ -1,4 +1,4 @@
-import { apple } from "./articles/links.ts";
+import { apple, google } from "./articles/links.ts";
 import type { Source } from "./articles/types.ts";
 
 // App Store Connect metric definitions, quoted from Apple's metric reference (checked 2026-10-16).
@@ -6,6 +6,10 @@ export const metricsReviewed = "2026-10-16";
 
 export type Metric = {
   slug: string;
+  /** Where the metric lives. Defaults to the App Store. */
+  store?: "App Store" | "Google Play";
+  /** When this entry was last checked, if different from metricsReviewed. */
+  reviewed?: string;
   term: string;
   title: string;
   seoTitle: string;
@@ -113,6 +117,28 @@ export const metrics: Metric[] = [
     useFor: "Unit economics such as average proceeds per paying user. Reconcile anything important with the financial reports.",
     sources: [apple.metrics, apple.subscriptions],
     related: ["conversion-rate"],
+  },
+  {
+    slug: "user-perceived-crash-rate", store: "Google Play", reviewed: "2026-10-17", term: "User-perceived crash rate", title: "Android vitals: user-perceived crash rate",
+    seoTitle: "Android vitals crash rate: the 1.09% Google Play threshold",
+    description: "Google Play's bad behavior thresholds for crashes, what happens when you cross them and how to watch the number before a rollout.",
+    definition: "The share of daily active users who saw a crash while using the app. Google Play's bad behavior threshold is 1.09% overall and 8% on any single phone model (4% per watch model), measured over the last 28 days.",
+    where: "The Android vitals dashboard in Play Console, or the Google Play Developer Reporting API",
+    misread: "Android vitals counts issues per daily active user, while tools like Crashlytics count per session, so the numbers won't match. Google's example: one crash in three sessions on one day is a 100% crash rate in Android vitals and 33% in Crashlytics. The overall rate can also look fine while one popular phone model is over 8%, so check the device breakdown.",
+    useFor: "A release gate. During a staged rollout, compare the new version's crash rate with the previous one before raising the percentage. Google says that over a threshold, Play may reduce your app's visibility and show a warning on your store listing.",
+    sources: [google.vitals],
+    related: ["user-perceived-anr-rate"],
+  },
+  {
+    slug: "user-perceived-anr-rate", store: "Google Play", reviewed: "2026-10-17", term: "User-perceived ANR rate", title: "Android vitals: user-perceived ANR rate",
+    seoTitle: "Android vitals ANR rate: the 0.47% Google Play threshold",
+    description: "What an ANR is, Google Play's 0.47% bad behavior threshold, the per-device limit and how it affects your store visibility.",
+    definition: "The share of daily active users who saw an \"App not responding\" error while using the app. Google Play's bad behavior threshold is 0.47% overall and 8% on any single phone model (5% per watch model), measured over the last 28 days.",
+    where: "The Android vitals dashboard in Play Console, or the Google Play Developer Reporting API",
+    misread: "ANRs often come from work on the main thread that only stalls on slower devices, so a fast test phone can hide them. Read the per-device rate, not just the overall one.",
+    useFor: "Finding slow startup and blocking work. Google says Android vitals flags emerging issues after 7 days of the 28-day window, which leaves about 21 days to fix them before they count against you.",
+    sources: [google.vitals],
+    related: ["user-perceived-crash-rate"],
   },
 ];
 

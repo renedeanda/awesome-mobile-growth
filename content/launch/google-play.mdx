@@ -42,11 +42,17 @@ Use the tracks in order. **Internal testing** (up to 100 testers) is available w
 
 For production, use a **staged rollout**: release to a small percentage, watch the Android vitals crash and ANR rates for a day or two, then raise it. You can halt a rollout if something breaks.
 
-Before each release, check on a real device: fresh install, upgrade from the previous version, purchase and restore, deep links, notifications, and a small phone plus a tablet or foldable.
+Those two rates affect how visible your app is. Google's bad behavior thresholds are a [user-perceived crash rate](/learn/metrics/user-perceived-crash-rate/) of 1.09% and an [ANR rate](/learn/metrics/user-perceived-anr-rate/) of 0.47% overall, or 8% on any single phone model, over the last 28 days. Above them, Play may reduce your app's visibility and show a warning on your store listing.
+
+Before each release, check on a real device: fresh install, upgrade from the previous version, purchase and restore, deep links, notifications, and a small phone plus a tablet or foldable. Targeting API 36 also means Android ignores orientation and resizability limits on large screens; the [large screens guide](/launch/large-screens/) covers what changes.
+
+Before you upload graphics, run the icon, feature graphic and screenshots through the [Play icon and graphics checker](/tools/play-asset-checker/).
 
 ## Read the first weeks
 
 Google Play's store listing reports changed in mid-2026. They now count **unique users who tap Install, Open or Pre-register** and report a click-through rate, where they previously reported acquisitions and conversion rate. The older acquisition metrics are still in the Statistics tab. If you compare before and after July 2026, compare like with like.
+
+Games can also re-engage players on the **You tab**, which Google describes as "a brand new, personalized destination on the Play Store". Promotional content, YouTube video listings and Play Points coupons are open to all game developers there.
 
 After launch, follow installs into your product analytics: activation, day-7 retention, reviews and crashes by device. A spike in installs from a new country with poor retention usually means the listing wasn't localized, not that the market loves you.
 
