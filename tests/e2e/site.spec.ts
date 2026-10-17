@@ -293,3 +293,44 @@ test.describe("glass falls back to solid surfaces", () => {
     expect((await chrome(page)).blur).not.toContain("blur");
   });
 });
+
+// Reads one row of RGB pixels from a PNG written by lib/png.ts (Sub filter on every row).
+function pngRow(png: Buffer, y: number) {
+  const { width } = readPngHeader(new Uint8Array(png));
+  const idat: Buffer[] = [];
+  for (let at = 8; at < png.length;) { const length = png.readUInt32BE(at); if (png.toString("ascii", at + 4, at + 8) === "IDAT") idat.push(png.subarray(at + 8, at + 8 + length)); at += 12 + length; }
+  const stride = width * 3 + 1, row = zlib.inflateSync(Buffer.concat(idat)).subarray(y * stride, (y + 1) * stride);
+  const out = [...row.subarray(1)];
+  for (let i = 3; i < out.length; i++) out[i] = (out[i] + out[i - 3]) & 255;
+  return (x: number) => out.slice(x * 3, x * 3 + 3);
+}
+
+test("frame studio pads a too-tall capture for Play and hides a stale handoff", async ({ page }) => {
+  await page.goto("/tools/screenshot-frames/?class=google-play");
+  await expect(page.getByTestId("frame-studio")).toHaveAttribute("data-ready", "true");
+  await page.getByLabel("Device frame").selectOption("none");
+  await page.getByRole("button", { name: "Solid" }).click();
+  await page.getByTestId("frame-studio").locator(".frame-drop input").setInputFiles({ name: "tall.png", mimeType: "image/png", buffer: testPng(1080, 2400, [220, 40, 40]) });
+  await expect(page.locator(".frame-card__crop")).toHaveCount(0);
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Export 1 frame" }).click()]);
+  const png = fs.readFileSync(await download.path());
+  expect(readPngHeader(new Uint8Array(png))).toEqual({ width: 1080, height: 1920, bitDepth: 8, colorType: 2 });
+  // 1080 × 2400 scaled to 1920 tall is 864 wide: 108 px of background on each side, the capture in the middle.
+  const pixel = pngRow(png, 960);
+  expect(pixel(20)).toEqual([0x1d, 0x5b, 0xd8]);
+  expect(pixel(540)).toEqual([220, 40, 40]);
+  const handoff = page.getByRole("button", { name: "See them in the Store preview" });
+  await expect(handoff).toBeVisible();
+  await page.getByLabel("Frame 1 caption").fill("Now with a caption");
+  await expect(handoff).toHaveCount(0);
+});
+
+test("frame studio warns about cropped captures and long captions", async ({ page }) => {
+  await page.goto("/tools/screenshot-frames/");
+  await expect(page.getByTestId("frame-studio")).toHaveAttribute("data-ready", "true");
+  await page.getByRole("button", { name: "Landscape" }).click();
+  await page.getByTestId("frame-studio").locator(".frame-drop input").setInputFiles(shots[0]);
+  await expect(page.locator(".frame-card__crop")).toContainText("of this capture is cropped. Use a landscape capture");
+  await page.getByLabel("Frame 1 caption").fill("Track every single habit you have in one simple place");
+  await expect(page.getByText("10 words · aim for 7 or fewer")).toBeVisible();
+});

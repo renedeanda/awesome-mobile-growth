@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { fitCaption, frameFileName, frameTargets, getTarget, largestSize, layoutFrame, playRuleCheck, wrapCaption, type FrameStyle, type Rect, type Size } from "./frames.ts";
+import { cropShare, fitCaption, frameFileName, frameTargets, getTarget, largestSize, layoutFrame, playRuleCheck, wordCount, wrapCaption, type FrameStyle, type Rect, type Size } from "./frames.ts";
 import { appleScreenshotClasses, googlePlayScreenshotPresets } from "./storeSpecs.ts";
 
 // Roughly how wide system sans text runs: about 0.55 em per character.
@@ -58,5 +58,13 @@ describe("frame layout", () => {
     assert.ok(Math.abs(landscape.screen.h / landscape.screen.w - 1206 / 2622) < 0.001);
   });
   it("fills the canvas with no frame and no caption", () => assert.deepEqual(layoutFrame([1920, 1080], "none", null).screen, { x: 0, y: 0, w: 1920, h: 1080 }));
+  it("pads a capture of another shape instead of cropping it", () => assert.deepEqual(layoutFrame([1080, 1920], "none", null, 1080 / 2400).screen, { x: 108, y: 0, w: 864, h: 1920 }));
+  it("fills the canvas when the capture is within 2% of its shape", () => assert.deepEqual(layoutFrame([1206, 2622], "none", null, 1179 / 2556).screen, { x: 0, y: 0, w: 1206, h: 2622 }));
+  it("measures how much of a capture a frame crops", () => {
+    const landscape = layoutFrame([2868, 1320], "dynamic-island", null).screen;
+    assert.ok(cropShare(1206 / 2622, landscape) > 0.5);
+    assert.ok(cropShare(1206 / 2622, layoutFrame([1320, 2868], "dynamic-island", null).screen) < 0.01);
+  });
+  it("counts caption words", () => { assert.equal(wordCount("  Check off habits\nwith one tap "), 6); assert.equal(wordCount(""), 0); });
   it("offers at least one style for every target", () => assert.ok(frameTargets.every((target) => target.styles.length > 0)));
 });
