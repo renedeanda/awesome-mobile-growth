@@ -4,11 +4,11 @@
 
 <AppleScreenshotTable devices={["iPhone", "iPad"]} />
 
-**Google Play.** Upload 2 to 8 phone screenshots, JPEG or 24-bit PNG, each side between 320 and 3,840 pixels, with the long side no more than twice the short side. A 1080 × 1920 or 1080 × 2400 image works well. For tablets, upload at least four screenshots of 1080 pixels or more to be considered for large-screen recommendations.
+**Google Play.** Upload 2 to 8 phone screenshots, JPEG or 24-bit PNG, each side between 320 and 3,840 pixels, with the long side no more than twice the short side. A 1080 × 1920 or 1080 × 2160 image works; a full-screen 1080 × 2400 capture breaks the 2:1 rule, so crop or pad it. The [screenshot frame studio](/tools/screenshot-frames/) pads a capture to 1080 × 1920, or puts it in a device frame with a caption, and exports at the exact size. For tablets, upload at least four screenshots of 1080 pixels or more to be considered for large-screen recommendations.
 
 <GooglePlayGraphicsTable />
 
-Mac, Apple TV, Vision Pro and Apple Watch sizes are in the [requirements reference](/launch/requirements/).
+Each display class has its own page with landscape sizes and fallbacks: see [every screenshot size, by device](/screenshot-sizes/). Mac, Apple TV, Vision Pro and Apple Watch are there too, and in the [requirements reference](/launch/requirements/).
 
 ## The first three frames do most of the work
 
@@ -18,9 +18,9 @@ Plan the first three as a set:
 
 | Frame | Job | Caption example |
 | --- | --- | --- |
-| 1 | The outcome someone gets | "Build routines in 2 minutes a day" |
-| 2 | The main screen, working | "Check off habits with one tap" |
-| 3 | What makes you different | "See how habits affect your mood" |
+| 1 | The outcome someone gets | "Know what worked on every roll" |
+| 2 | The main screen, working | "Log each frame in one tap" |
+| 3 | What makes you different | "Meter light with your phone camera" |
 
 *Example app.* Frames 4 and later answer objections: sync, widgets, privacy, price, accessibility, Apple Watch.
 
@@ -34,8 +34,8 @@ A screenshot that looks great at full size on your monitor becomes a small card 
 - **Real content.** Realistic names and data, not "Lorem ipsum" or "Test User 1".
 
 <BeforeAfter
-  before={<p>A full-height app screen with a 14-word caption at the top: "Track all of your daily habits and routines easily with our simple and beautiful interface".</p>}
-  after={<p>The checklist screen, zoomed so the three checkboxes fill the frame, with the caption "Check off habits with one tap".</p>}
+  before={<p>A full-height app screen with a 16-word caption at the top: "Keep track of all of your film photography settings and notes easily with our beautiful interface".</p>}
+  after={<p>The logging screen, zoomed so the aperture and shutter dials fill the frame, with the caption "Log each frame in one tap".</p>}
   note="The first caption is too long to read in a search result and describes the design, not the benefit."
 />
 
@@ -74,5 +74,6 @@ Suggest a 6-frame screenshot sequence. For each frame: the one claim, the exact 
 2. Rewrite any caption longer than seven words.
 3. Recapture any frame that shows placeholder data.
 4. Confirm you have the 1206 × 2622 iPhone set (and 2064 × 2752 for iPad).
+5. Frame and export the set in the [screenshot frame studio](/tools/screenshot-frames/), then read it as a search result in the [Workbench store preview](/workbench/).
 
 </DoToday>

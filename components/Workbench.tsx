@@ -1,6 +1,7 @@
 "use client";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { StorePreview } from "./StorePreview";
 import { LIMITS, WorkbenchData, duplicates, emptyWorkbench, migrateWorkbench, parseLocaleBundle, toMarkdown, utf8Bytes, warnings } from "@/lib/workbench";
 
 const STORAGE = "awesome-mobile-growth-workbench.v3";
@@ -17,6 +18,9 @@ const googleFields = [
   ["googleName", "App name", LIMITS.googleName], ["googleShort", "Short description", LIMITS.googleShort], ["googleFull", "Full description", LIMITS.googleFull]
 ] as const;
 
+type Tab = "preview" | "brief" | "apple" | "google" | "planning";
+const tabs: Array<[Tab, string]> = [["preview", "Store preview"], ["brief", "Product brief"], ["apple", "Apple"], ["google", "Google Play"], ["planning", "Plan & learn"]];
+
 function download(name: string, content: string, type: string) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([content], { type })); a.download = name; a.click(); URL.revokeObjectURL(a.href); }
 
 export function Workbench() {
@@ -24,7 +28,7 @@ export function Workbench() {
   const [saveLocal, setSaveLocal] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [notice, setNotice] = useState("");
-  const [tab, setTab] = useState<"brief" | "apple" | "google" | "planning">("brief");
+  const [tab, setTab] = useState<Tab>("preview");
   const [started, setStarted] = useState(false);
   useEffect(() => {
     const raw = localStorage.getItem(STORAGE) ?? LEGACY_STORAGE.map(key => localStorage.getItem(key)).find(Boolean);
@@ -32,7 +36,9 @@ export function Workbench() {
     const params = new URLSearchParams(window.location.search);
     const platform = params.get("platform");
     const template = params.get("template");
-    if (template === "screenshots" || template === "experiment") {
+    if (params.get("from") === "frames") {
+      setTab("preview");
+    } else if (template === "screenshots" || template === "experiment") {
       setTab("planning");
       setNotice(template === "screenshots" ? "Screenshot planning is ready." : "The experiment log is ready.");
     } else if (platform === "google-play") {
@@ -49,16 +55,17 @@ export function Workbench() {
   const handleImport = async (e: ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0]; if (!file) return; try { const parsed = JSON.parse(await file.text()); if ([1, 2, 3].includes(parsed.version) && parsed.fields) setData(migrateWorkbench(parsed)); else setData(d => ({ ...d, fields: { ...d.fields, ...parseLocaleBundle(parsed) } })); markStarted(); trackEvent("workbench_imported"); setNotice("Imported into this browser. Nothing was published."); } catch (error) { setNotice(error instanceof Error ? error.message : "Could not read that file."); } e.target.value = ""; };
   const toggleSave = () => { if (saveLocal) { localStorage.removeItem(STORAGE); setSaveLocal(false); trackEvent("workbench_save_changed", { enabled: false }); setNotice("Local saving is off and the saved draft was deleted."); } else { setSaveLocal(true); trackEvent("workbench_save_changed", { enabled: true }); setNotice("Draft saving is on for this browser."); } };
   const reset = () => { if (!confirm("Clear every field in this browser?")) return; localStorage.removeItem(STORAGE); setData(emptyWorkbench()); setSaveLocal(false); setStarted(false); trackEvent("workbench_reset"); setNotice("Workbench cleared."); };
-  const selectTask = (next: "brief" | "apple" | "google" | "planning", task: string) => { setTab(next); trackEvent("workbench_section_viewed", { section_id: task }); };
+  const selectTask = (next: Tab, task: string) => { setTab(next); trackEvent("workbench_section_viewed", { section_id: task }); };
   const exportFile = (format: "json" | "markdown") => { trackEvent("workbench_exported", { format }); if (format === "json") download("aso-workbench.json", JSON.stringify(data, null, 2), "application/json"); else download("aso-brief.md", toMarkdown(data), "text/markdown"); };
   return <div className="workbench-shell" data-testid="workbench" data-ready={hydrated}>
-    <nav className="workbench-tasks" aria-label="Choose a workflow"><span>What are you doing today?</span><button onClick={() => selectTask("brief", "launch")}>Planning a launch</button><button onClick={() => selectTask("apple", "metadata")}>Writing metadata</button><button onClick={() => selectTask("planning", "screenshots")}>Storyboarding screenshots</button><button onClick={() => selectTask("planning", "experiment")}>Planning a test</button><button onClick={() => selectTask("planning", "monthly_review")}>Monthly review</button></nav>
+    <nav className="workbench-tasks" aria-label="Choose a workflow"><span>What are you doing today?</span><button onClick={() => selectTask("preview", "preview")}>Previewing my store page</button><button onClick={() => selectTask("brief", "launch")}>Planning a launch</button><button onClick={() => selectTask("apple", "metadata")}>Writing metadata</button><button onClick={() => selectTask("planning", "screenshots")}>Storyboarding screenshots</button><button onClick={() => selectTask("planning", "experiment")}>Planning a test</button><button onClick={() => selectTask("planning", "monthly_review")}>Monthly review</button></nav>
     <div className="workbench-toolbar">
-      <div className="tabs" role="tablist" aria-label="Workbench sections">{(["brief", "apple", "google", "planning"] as const).map(t => <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}>{t === "planning" ? "Plan & learn" : t === "brief" ? "Product brief" : t === "apple" ? "Apple" : "Google Play"}</button>)}</div>
+      <div className="tabs" role="tablist" aria-label="Workbench sections">{tabs.map(([t, label]) => <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}>{label}</button>)}</div>
       <div className="tool-actions"><label className="file-button">Import JSON<input type="file" accept="application/json,.json" onChange={handleImport}/></label><button onClick={() => exportFile("json")}>Export JSON</button><button onClick={() => exportFile("markdown")}>Export Markdown</button></div>
     </div>
     <div className="privacy-strip"><label className="switch"><input type="checkbox" checked={saveLocal} onChange={toggleSave}/><span>Save draft in this browser</span></label><span>Private by default. Your copy never leaves this page.</span><button className="text-button" onClick={reset}>Reset</button></div>
     {notice && <p className="notice" role="status">{notice}</p>}
+    {tab === "preview" && <StorePreview fields={data.fields}/>}
     {tab === "brief" && <section className="brief-grid" aria-label="Product brief"><div><p className="eyebrow">Start before keywords</p><h2>Write the facts once.</h2><p>Describe the app here, then check every field and screenshot against it. A specific claim you can show beats a big one you can't.</p></div><div>{([['product','Product','What is it, in plain language?'],['audience','Audience','Who is it genuinely for?'],['job','Job to be done','What progress is that person trying to make?'],['promise','Promise','What concrete outcome can the listing responsibly promise?'],['proof','Proof','What product behavior, screen, result, or trust signal substantiates it?'],['exclusions','Not for','Who or what should the listing avoid attracting?']] as const).map(([key,label,placeholder]) => <label className="field" key={key}><span className="field-label">{label}</span><textarea rows={3} placeholder={placeholder} value={data.brief[key]} onChange={e => { markStarted(); setData(d=>({...d,brief:{...d.brief,[key]:e.target.value},updatedAt:new Date().toISOString()})); }}/></label>)}</div></section>}
     {tab === "apple" && <div className="workbench-grid"><section className="fields" aria-label="Apple metadata fields">{fields.map(([key, label, help, limit, bytes]) => { const value = data.fields[key]; const count = bytes ? utf8Bytes(value) : value.length; const bad = limit !== undefined && count > limit; return <label className="field" key={key}><span className="field-label">{label}{limit && <small className={bad ? "over" : ""}>{count}/{limit}{bytes ? " bytes" : ""}</small>}</span><span className="field-help">{help}</span>{limit && limit <= 170 ? <input value={value} onChange={e => updateField(key, e.target.value)} aria-invalid={bad}/> : <textarea rows={key === "appleDescription" ? 12 : 5} value={value} onChange={e => updateField(key, e.target.value)} aria-invalid={bad}/>}</label>})}</section><Preview name={data.fields.appleName} subtitle={data.fields.appleSubtitle} promo={data.fields.applePromotional} description={data.fields.appleDescription}/></div>}
     {tab === "google" && <div className="workbench-grid"><section className="fields" aria-label="Google Play metadata fields">{googleFields.map(([key, label, limit]) => { const value=data.fields[key]; return <label className="field" key={key}><span className="field-label">{label}<small className={value.length > limit ? "over" : ""}>{value.length}/{limit}</small></span>{limit > 100 ? <textarea rows={14} value={value} onChange={e=>updateField(key,e.target.value)} aria-invalid={value.length > limit}/> : <input value={value} onChange={e=>updateField(key,e.target.value)} aria-invalid={value.length > limit}/>}</label>})}</section><Preview name={data.fields.googleName} subtitle={data.fields.googleShort} description={data.fields.googleFull}/></div>}

@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { tools } from "@/lib/tools";
+import { SearchDialog } from "./SearchDialog";
+import { BrandMark } from "./BrandMark";
+import { InstallRow, useInstallPrompt } from "./InstallRow";
 
 type NavLink = { href: string; label: string; note?: string };
 type NavGroup = { title: string; links: NavLink[] };
@@ -29,6 +32,7 @@ const groups: NavGroup[] = [
     { href: "/store-page/metadata/", label: "Name, subtitle and description" },
     { href: "/store-page/keywords/", label: "Keywords" },
     { href: "/store-page/screenshots/", label: "Screenshots" },
+    { href: "/screenshot-sizes/", label: "Screenshot sizes by device" },
     { href: "/store-page/creative-assets/", label: "Headers and search assets" },
     { href: "/store-page/localization/", label: "Localization" },
     { href: "/store-page/testing/", label: "Testing" },
@@ -61,6 +65,71 @@ const tabs: Array<NavLink & { match: string[] }> = [
   { href: "/changes/", label: "Changes", match: ["/changes/"] },
 ];
 
+const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** Lets the menu sheet follow a downward swipe and closes it past a distance or a quick flick, like a native sheet. */
+function useSwipeToClose(sheetRef: React.RefObject<HTMLDivElement | null>, open: boolean, onClose: () => void) {
+  useEffect(() => {
+    const sheet = sheetRef.current;
+    if (!open || !sheet) return;
+    let startY = 0, startTime = 0, dragging = false, offset = 0;
+    const list = sheet.querySelector<HTMLElement>(".menu-groups");
+    const settle = (value: string) => { sheet.style.transition = reducedMotion() ? "" : "transform .22s cubic-bezier(.2,.8,.2,1)"; sheet.style.transform = value; };
+    const start = (event: TouchEvent) => {
+      // Drag from the handle area, or from the list once it is scrolled to the top, as native sheets do.
+      const fromHead = (event.target as HTMLElement).closest(".menu-sheet__head");
+      if (!fromHead && (list?.scrollTop ?? 0) > 0) return;
+      startY = event.touches[0].clientY; startTime = event.timeStamp; dragging = true; offset = 0;
+      sheet.style.transition = "";
+    };
+    const move = (event: TouchEvent) => {
+      if (!dragging) return;
+      offset = Math.max(0, event.touches[0].clientY - startY);
+      if (offset > 0) { event.preventDefault(); sheet.style.transform = `translateY(${offset}px)`; }
+    };
+    const end = (event: TouchEvent) => {
+      if (!dragging) return;
+      dragging = false;
+      const speed = offset / Math.max(1, event.timeStamp - startTime);
+      if (offset > Math.min(140, sheet.offsetHeight * 0.3) || (offset > 24 && speed > 0.6)) {
+        if (reducedMotion()) { onClose(); return; }
+        settle("translateY(100%)");
+        setTimeout(onClose, 200);
+      } else settle("");
+    };
+    sheet.addEventListener("touchstart", start, { passive: true });
+    sheet.addEventListener("touchmove", move, { passive: false });
+    sheet.addEventListener("touchend", end);
+    sheet.addEventListener("touchcancel", end);
+    return () => {
+      sheet.removeEventListener("touchstart", start);
+      sheet.removeEventListener("touchmove", move);
+      sheet.removeEventListener("touchend", end);
+      sheet.removeEventListener("touchcancel", end);
+      sheet.style.transform = ""; sheet.style.transition = "";
+    };
+  }, [sheetRef, open, onClose]);
+}
+
+/** True while the reader scrolls down a page, false as soon as they scroll back up or near the top. */
+function useScrollingDown() {
+  const [down, setDown] = useState(false);
+  useEffect(() => {
+    let last = scrollY, frame = 0;
+    const check = () => {
+      frame = 0;
+      const y = scrollY, delta = y - last;
+      if (y < 80 || delta < -8) setDown(false);
+      else if (delta > 8) setDown(true);
+      if (Math.abs(delta) > 8 || y < 80) last = y;
+    };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(check); };
+    addEventListener("scroll", onScroll, { passive: true });
+    return () => { removeEventListener("scroll", onScroll); cancelAnimationFrame(frame); };
+  }, []);
+  return down;
+}
+
 const isActive = (pathname: string, href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
 
 function TabIcon({ name }: { name: string }) {
@@ -80,7 +149,16 @@ export function SiteHeader() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   // Focus returns to the menu button only for an explicit close; after navigation it belongs to the new page.
   const returnFocus = useRef(false);
-  const close = () => { returnFocus.current = true; setOpen(false); };
+  const close = useCallback(() => { returnFocus.current = true; setOpen(false); }, []);
+  const scrollingDown = useScrollingDown();
+  const installPrompt = useInstallPrompt();
+  useSwipeToClose(sheetRef, open, close);
+  // Tapping the tab you are already on scrolls back to the top, the way iOS and Android tab bars do.
+  const onTab = (event: React.MouseEvent, href: string) => {
+    if (pathname !== href) return;
+    event.preventDefault();
+    scrollTo({ top: 0, behavior: reducedMotion() ? "auto" : "smooth" });
+  };
 
   // Close whenever the route changes: the header stays mounted across client navigations.
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -114,12 +192,13 @@ export function SiteHeader() {
   return <>
     <header className="site-header">
       <Link className="brand" href="/" aria-label="Awesome Mobile Growth home">
-        <span className="brand-mark" aria-hidden="true">AMG</span>
+        <span className="brand-mark"><BrandMark size={38}/></span>
         <span className="brand-name"><span className="brand-name__extra">Awesome </span>Mobile Growth</span>
       </Link>
       <nav className="desktop-nav" aria-label="Primary">
         {desktopLinks.map(item => <Link key={item.href} href={item.href} aria-current={isActive(pathname, item.href) ? "page" : undefined}>{item.label}</Link>)}
       </nav>
+      <SearchDialog/>
       <button ref={toggleRef} type="button" className="menu-toggle" aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen(true)}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         <span className="sr-only">Open menu</span>
@@ -143,13 +222,14 @@ export function SiteHeader() {
             </li>)}</ul>
           </section>)}
         </nav>
+        <InstallRow {...installPrompt}/>
       </div>
     </div>
 
-    <nav className="tab-bar" aria-label="Main sections">
+    <nav className="tab-bar" aria-label="Main sections" data-compact={scrollingDown && !open ? "true" : undefined}>
       {tabs.map(tab => {
         const active = tab.match.some(prefix => pathname.startsWith(prefix));
-        return <Link key={tab.href} href={tab.href} aria-current={active ? "page" : undefined}><TabIcon name={tab.label}/><span>{tab.label}</span></Link>;
+        return <Link key={tab.href} href={tab.href} aria-current={active ? "page" : undefined} onClick={(event) => onTab(event, tab.href)}><TabIcon name={tab.label}/><span>{tab.label}</span></Link>;
       })}
     </nav>
   </>;

@@ -1,10 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import Link from "next/link";
+import { CodeFile } from "@/components/CodeFile";
 import { SkillViewer } from "@/components/SkillViewer";
 import { pageMetadata } from "@/lib/site";
 
-export const metadata = pageMetadata({ title: "App Store Growth skill for AI agents", description: "An open AI agent skill for App Store and Google Play listings: current limits, review checklists and a validator script, with rules against invented data and unapproved store changes.", path: "/tools/app-store-growth-skill/", imagePath: "/tools/opengraph-image", imageAlt: "App Store Growth skill for AI agents" });
+export const metadata = pageMetadata({ title: "App Store Growth skill for AI agents", description: "An open AI agent skill for App Store and Google Play listings: current limits, a review checklist and a validator, with rules against invented data.", path: "/tools/app-store-growth-skill/", imagePath: "/tools/opengraph-image", imageAlt: "App Store Growth skill for AI agents" });
 
 const modes = [
   "Audit an existing listing without changing it",
@@ -29,7 +30,7 @@ export default function SkillPage() {
       <aside><p className="eyebrow">The agent will refuse to</p><ul><li>Invent search volume or rankings</li><li>Claim features you haven't listed</li><li>Publish to a store console without approval</li><li>Read private data it doesn't need</li><li>Hand back generic copy as final</li></ul></aside>
     </header>
     <section className="section skill-story"><div><p className="eyebrow">Six tasks</p><h2>It loads only what the task needs.</h2></div><ol>{modes.map((mode, index) => <li key={mode}><span>0{index + 1}</span>{mode}</li>)}</ol></section>
-    <section className="section skill-install"><div><p className="eyebrow">Install</p><h2>Works with any agent that reads skill folders.</h2><p>Extract the package into your agent's skills directory, or copy the folder from GitHub. It includes the main skill file, focused references, a local listing validator and a review report template.</p></div><pre><code>tar -xzf app-store-growth-v1.0.0.tgz{"\n"}python3 app-store-growth/scripts/validate_listing.py listing.json</code></pre></section>
+    <section className="section skill-install"><div><p className="eyebrow">Install</p><h2>Works with any agent that reads skill folders.</h2><p>Extract the package into your agent's skills directory, or copy the folder from GitHub. It includes the main skill file, focused references, a local listing validator and a review report template.</p></div><CodeFile label="Terminal" shell text={"tar -xzf app-store-growth-v1.0.0.tgz\npython3 app-store-growth/scripts/validate_listing.py listing.json"}/></section>
     <SkillViewer source={source}/>
     <section className="section"><p className="eyebrow">You stay in charge</p><h2>Read it, change it, and approve every store change.</h2><p className="wide-copy">The skill starts read-only, asks before any live store change, and never makes up metrics. For the prompts it is built around, see <Link href="/learn/ai-for-aso/">Use AI for App Store Optimization</Link>.</p><p className="also-by">Also by the author: <a href="https://www.productbuilder.net/learn/agent-skills/">Agent skills, explained</a> on Product Builder.</p></section>
   </article>;

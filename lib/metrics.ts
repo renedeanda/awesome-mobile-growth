@@ -48,7 +48,7 @@ export const metrics: Metric[] = [
   },
   {
     slug: "conversion-rate", term: "Conversion rate", title: "App Store conversion rate",
-    seoTitle: "App Store conversion rate: Apple's formula and how to read it",
+    seoTitle: "App Store conversion rate: Apple's formula explained",
     description: "Apple's conversion rate is downloads and pre-orders divided by unique device impressions. Here's what that means and why third-party benchmarks often don't compare.",
     definition: "Total downloads and pre-orders divided by unique device impressions. A pre-order counts once, when it's made, not again when it downloads.",
     formula: "(Total downloads + pre-orders) ÷ unique device impressions",
@@ -61,7 +61,7 @@ export const metrics: Metric[] = [
   },
   {
     slug: "first-time-downloads", term: "First-time downloads", title: "First-time downloads",
-    seoTitle: "App Store first-time downloads vs redownloads vs total downloads",
+    seoTitle: "App Store first-time downloads vs redownloads",
     description: "How Apple counts first-time downloads, how they differ from redownloads and installs, and when to use each.",
     definition: "The number of first-time downloads on devices with iOS, macOS, tvOS or visionOS. Total Downloads is first-time downloads plus redownloads.",
     where,
@@ -83,7 +83,7 @@ export const metrics: Metric[] = [
   },
   {
     slug: "acquisition-sources", term: "Source types", title: "App Store acquisition source types",
-    seoTitle: "App Store Connect source types: Search, Browse, app and web referrers",
+    seoTitle: "App Store Connect source types: Search, Browse, referrers",
     description: "What each App Store Connect source type means, the caveats behind them, and how to compare sources fairly.",
     definition: "App Analytics attributes impressions, downloads and later activity to source types including App Store Search, App Store Browse, app referrers, web referrers and campaigns.",
     where: "App Store Connect › Analytics › Acquisition › Source type",

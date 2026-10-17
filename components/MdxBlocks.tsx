@@ -1,5 +1,7 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { CopyButton } from "@/components/CopyButton";
+import { keywordTokens, utf8Bytes } from "@/lib/workbench";
 import { appleCreativeAssets, appleScreenshotClasses, appleScreenshotSource, appleCreativeSource, formatSize, googleGraphicsSource, googlePlayGraphics, type ScreenshotClass } from "@/lib/storeSpecs";
 
 /** The closing action list every guide ends with. */
@@ -30,7 +32,7 @@ export function AskAI({ prompt, checks }: { prompt: string; checks?: string[] })
 }
 
 function ScreenshotRows({ items }: { items: ScreenshotClass[] }) {
-  return <>{items.map((item) => <tr key={item.id}><th scope="row">{item.name}{item.required && <small className="required-tag">Required: {item.required}</small>}</th><td className="nowrap-cells">{item.sizes.map((size) => <span key={formatSize(size)}>{formatSize(size)}</span>)}</td></tr>)}</>;
+  return <>{items.map((item) => <tr key={item.id}><th scope="row"><Link href={`/screenshot-sizes/${item.id}/`}>{item.name}</Link>{item.required && <small className="required-tag">Required: {item.required}</small>}</th><td className="nowrap-cells">{item.sizes.map((size) => <span key={formatSize(size)}>{formatSize(size)}</span>)}</td></tr>)}</>;
 }
 
 export function AppleScreenshotTable({ devices = ["iPhone", "iPad"] }: { devices?: Array<ScreenshotClass["device"]> }) {
@@ -59,4 +61,15 @@ export function GooglePlayGraphicsTable() {
 /** A disclosed link to another site by the same author (see docs/EDITORIAL.md, First-party disclosure). */
 export function AlsoBy({ href, title, children }: { href: string; title: string; children: ReactNode }) {
   return <aside className="also-by-block"><p className="micro-label">Also by the author</p><p><a href={href}>{title} ↗</a> {children}</p></aside>;
+}
+
+/** An Apple keyword field example with its byte count measured, never typed by hand. */
+export function KeywordField({ value, note }: { value: string; note?: ReactNode }) {
+  const bytes = utf8Bytes(value);
+  const terms = keywordTokens(value).length;
+  return <span className="keyword-field">
+    <code>{value}</code>
+    <span className="keyword-field__meter" role="img" aria-label={`${bytes} of 100 bytes`}><i style={{ width: `${Math.min(bytes, 100)}%` }} className={bytes > 100 ? "over" : undefined}/></span>
+    <span className="keyword-field__count"><strong>{bytes}/100 bytes</strong> · {terms} term{terms === 1 ? "" : "s"}{note ? <>. {note}</> : null}</span>
+  </span>;
 }

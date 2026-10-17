@@ -16,9 +16,9 @@ A phrase list is only useful once it's grouped by intent. For each group, write 
 
 | Intent | Example phrases | Page promise | Proof on the page |
 | --- | --- | --- | --- |
-| Build a habit | habit tracker, daily routine, streaks | Build routines in 2 minutes a day | Screenshot 1: today's checklist |
-| Track mood | mood journal, mood tracker | See how habits affect your mood | Screenshot 3: mood chart |
-| Stay accountable | habit buddy, accountability | Share goals with a friend | Screenshot 4: shared habit |
+| Remember settings | film photo log, exposure notes | Know what worked on every roll | Screenshot 1: a finished roll, settings on every frame |
+| Meter light | light meter, exposure meter | Meter light with your phone camera | Screenshot 3: the meter screen |
+| Work with a lab | film lab, scan notes | Send notes with every roll | Screenshot 4: a roll shared with a lab |
 
 *Example app.* If a group has no proof column, you can't support it yet, so leave those words out. Ranking for a phrase your app doesn't serve brings installs that leave in a day.
 
@@ -28,15 +28,15 @@ App Store search reads your app name, subtitle, keyword field and primary catego
 
 Apple's rules and advice:
 
-- Separate terms with **commas and no spaces**: `habit,routine,streak`. Spaces inside a phrase are fine: `daily planner`.
+- Separate terms with **commas and no spaces**: `35mm,exposure,meter`. Spaces inside a phrase are fine: `light meter`.
 - Each keyword must be **at least 3 characters**.
 - **Don't repeat** words from your name, subtitle or category; they're already indexed.
 - **Skip plurals** of words you already have, the word "app", filler like "the", and special characters.
 - **Never** add competitor names, trademarks you don't own, celebrity names or unrelated terms. Apple calls improper keywords a common reason for rejection.
 
 <BeforeAfter
-  before={<p><code>habit tracker, habits, habit app, daily habits, routine, routines, best habit tracker</code><br/>85 bytes, about 3 distinct useful words.</p>}
-  after={<p><code>routine,streak,daily,goal,reminder,mood,journal,planner,discipline,morning,checklist</code><br/>84 bytes, 11 distinct words, none repeated from the name "Northstar: Habit Tracker".</p>}
+  before={<KeywordField value="film camera, film app, photo log, film photography, film photo log, best film camera app" note="About 2 useful words the name doesn't already cover"/>}
+  after={<KeywordField value="35mm,120,analog,camera,aperture,shutter,iso,meter,rangefinder,journal,darkroom,lab,slr" note={<>None repeated from the name "Rollbook: Film Photo Log" or its subtitle</>}/>}
   note="Example. The first wastes bytes on spaces, plurals, the word 'app', and words already in the name. The second covers far more searches in less space."
 />
 

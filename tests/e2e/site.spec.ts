@@ -1,4 +1,8 @@
 import { test, expect } from "@playwright/test";
+import fs from "node:fs";
+import zlib from "node:zlib";
+import { readPngHeader } from "../../lib/png.ts";
+import { unzipStored } from "../../lib/zip.ts";
 
 test("home leads to launch, store page and tools", async ({ page }) => {
   await page.goto("/");
@@ -81,7 +85,7 @@ test("old URLs are covered by the new structure", async ({ page }) => {
 test("podcast shelf filters and offers current editorial picks", async ({ page }) => {
   await page.goto("/learn/podcasts/");
   await expect(page.locator(".podcast-explorer")).toHaveAttribute("data-ready", "true");
-  await page.getByLabel("Search").fill("subscription");
+  await page.getByLabel("Search", { exact: true }).fill("subscription");
   await expect(page.getByRole("link", { name: /Sub Club/ }).first()).toBeVisible();
   await expect(page.getByRole("link", { name: /Launched/ })).toBeHidden();
   await expect(page.getByRole("link", { name: /Nancy Anderson/ })).toHaveAttribute("href", /revenuecat\.com/);
@@ -119,14 +123,21 @@ test("open AI skill explains its trust boundary and exposes complete source", as
   await page.goto("/tools/app-store-growth-skill/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("not permission to guess");
   await expect(page.getByText("Invent search volume or rankings")).toBeVisible();
-  await page.getByText("Read the raw SKILL.md").click();
-  await expect(page.locator(".skill-source pre code")).toContainText("# App Store Growth");
+  const file = page.locator(".skill-source .code-file");
+  await expect(file.locator("pre code")).toContainText("# App Store Growth");
+  // Long files collapse once interactive and expand in place.
+  const toggle = file.getByRole("button", { name: /^Show all \d+ lines$/ });
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await toggle.click();
+  await expect(file.getByRole("button", { name: "Collapse" })).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator(".skill-install .code-file")).toContainText("validate_listing.py");
 });
 
 test("buttons and standalone links are at least 32px tall on phones", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const path of ["/", "/launch/iphone/", "/store-page/screenshots/", "/learn/metrics/conversion-rate/", "/launch/checklist/", "/changes/", "/tools/", "/workbench/", "/learn/podcasts/"]) {
+  for (const path of ["/", "/launch/iphone/", "/store-page/screenshots/", "/learn/metrics/conversion-rate/", "/launch/checklist/", "/changes/", "/tools/", "/workbench/", "/learn/podcasts/", "/screenshot-sizes/", "/screenshot-sizes/iphone-duo/", "/tools/app-store-keyword-field/", "/tools/screenshot-frames/"]) {
     await page.goto(path);
+    if (path === "/tools/screenshot-frames/") await expect(page.getByTestId("frame-studio")).toHaveAttribute("data-ready", "true");
     const small = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>("a, button, summary, input, select, textarea")]
       .filter((el) => {
         const style = getComputedStyle(el);
@@ -139,4 +150,398 @@ test("buttons and standalone links are at least 32px tall on phones", async ({ p
       .map((el) => `${el.tagName.toLowerCase()}.${el.className} "${(el.textContent ?? "").trim().slice(0, 30)}"`));
     expect(small, `small tap targets on ${path}`).toEqual([]);
   }
+});
+
+test("workbench opens on a store preview that flags a clipped name", async ({ page }) => {
+  await page.goto("/workbench/");
+  await expect(page.getByTestId("workbench")).toHaveAttribute("data-ready", "true");
+  await expect(page.getByRole("tab", { name: "Store preview" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByText("The name fits on one line in the search result.")).toBeVisible();
+  await page.getByRole("tab", { name: "Apple" }).click();
+  await page.getByLabel("App name").fill("Daybook Private Journal Mood");
+  await page.getByLabel("Subtitle").fill("Write a few lines every day, privately and calmly");
+  await page.getByRole("tab", { name: "Store preview" }).click();
+  await expect(page.getByRole("region", { name: "Store preview" })).toContainText("Daybook Private Journal Mood");
+  await expect(page.getByText(/subtitle is cut off/)).toBeVisible();
+});
+
+test("keyword packer fills the field in priority order and skips name words", async ({ page }) => {
+  await page.goto("/tools/app-store-keyword-field/");
+  await expect(page.getByTestId("browser-tool")).toHaveAttribute("data-ready", "true");
+  await page.getByLabel("App name and subtitle").fill("Daybook: Private Journal");
+  await page.getByLabel("Candidates, most important first").fill("mood tracker\njournal\ngratitude");
+  await expect(page.locator(".packer__field code")).toHaveText("mood,tracker,gratitude");
+  await expect(page.getByText("journal (already in name or subtitle)", { exact: false })).toBeVisible();
+  await page.getByRole("button", { name: "Check this field above" }).click();
+  await expect(page.getByLabel("Keywords")).toHaveValue("mood,tracker,gratitude");
+});
+
+test("launch countdown dates each phase and remembers the launch", async ({ page }) => {
+  await page.goto("/launch/checklist/");
+  await expect(page.locator(".checklist")).toHaveAttribute("data-ready", "true");
+  const launch = await page.evaluate(() => { const d = new Date(); d.setDate(d.getDate() + 10); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; });
+  await page.getByLabel("Launch date").fill(launch);
+  await expect(page.getByText("10 days to launch")).toBeVisible();
+  await expect(page.locator(".checklist__group--current h3")).toHaveText([/Store page/, /Testing/]);
+  await expect(page.getByRole("button", { name: /Add phases to calendar/ })).toBeVisible();
+  await page.reload();
+  await expect(page.getByLabel("Launch date")).toHaveValue(launch);
+});
+
+test("changes marks entries that are new since the last visit", async ({ page }) => {
+  await page.addInitScript(() => { if (!sessionStorage.getItem("amg-changes-previous.v1")) localStorage.setItem("amg-changes-visit.v1", "2026-01-01"); });
+  await page.goto("/changes/");
+  await expect(page.getByText(/new or updated since your last visit on 1 Jan 2026/)).toBeVisible();
+  await expect(page.locator(".new-badge").first()).toBeVisible();
+});
+
+test("search finds a device size page and opens it", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Search the site" }).click();
+  await page.getByRole("searchbox", { name: "Search the site" }).fill("iphone duo");
+  await expect(page.getByRole("option").first()).toBeVisible();
+  await page.getByRole("option", { name: /iPhone Duo screenshot size/ }).click();
+  await expect(page).toHaveURL(/\/screenshot-sizes\/iphone-duo\/$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("iPhone Duo screenshot size");
+  await expect(page.getByRole("region", { name: "iPhone Duo screenshot sizes" })).toContainText("2034 × 1398");
+});
+
+// A solid-color PNG made in the test, so uploads don't depend on fixture files.
+function testPng(width: number, height: number, [r, g, b]: [number, number, number]) {
+  const row = Buffer.concat([Buffer.from([0]), Buffer.alloc(width * 3).map((_, i) => [r, g, b][i % 3])]);
+  const chunk = (type: string, data: Buffer) => { const body = Buffer.concat([Buffer.from(type), data]); const out = Buffer.alloc(12 + data.length); out.writeUInt32BE(data.length); body.copy(out, 4); out.writeUInt32BE(zlib.crc32(body), 8 + data.length); return out; };
+  const header = Buffer.alloc(13); header.writeUInt32BE(width); header.writeUInt32BE(height, 4); header.set([8, 2, 0, 0, 0], 8);
+  return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk("IHDR", header), chunk("IDAT", zlib.deflateSync(Buffer.concat(Array(height).fill(row)))), chunk("IEND", Buffer.alloc(0))]);
+}
+const shots = [[220, 40, 40], [40, 160, 80], [40, 80, 220]].map((rgb, index) => ({ name: `capture-${index + 1}.png`, mimeType: "image/png", buffer: testPng(118, 256, rgb as [number, number, number]) }));
+
+test("frame studio exports exact-size RGB frames and hands them to the store preview", async ({ page }) => {
+  await page.goto("/tools/screenshot-frames/?class=iphone-dynamic-island-large");
+  const studio = page.getByTestId("frame-studio");
+  await expect(studio).toHaveAttribute("data-ready", "true");
+  await expect(page.getByLabel("Store slot")).toHaveValue("iphone-dynamic-island-large");
+  await expect(page.getByLabel("Export size")).toHaveValue("1320 × 2868");
+  await studio.locator(".frame-drop input").setInputFiles(shots);
+  await expect(page.getByRole("status")).toContainText("Added 3 screenshots");
+  await page.getByLabel("Frame 1 caption").fill("Know what worked on every roll");
+  await page.getByText("Paste captions, one per line").click();
+  await page.getByLabel("Captions", { exact: true }).fill("Know what worked on every roll\nLog each frame in one tap\nMeter light with your phone camera");
+  await page.getByRole("button", { name: "Apply to frames in order" }).click();
+  await expect(page.getByLabel("Frame 3 caption")).toHaveValue("Meter light with your phone camera");
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Export 3 frames" }).click()]);
+  expect(download.suggestedFilename()).toBe("iphone-dynamic-island-large-1320x2868.zip");
+  const entries = unzipStored(new Uint8Array(fs.readFileSync(await download.path())));
+  expect(entries.map((entry) => entry.name)).toEqual(["01", "02", "03"].map((n) => `iphone-dynamic-island-large-1320x2868-${n}.png`));
+  for (const entry of entries) expect(readPngHeader(entry.data)).toEqual({ width: 1320, height: 2868, bitDepth: 8, colorType: 2 });
+  await page.getByRole("button", { name: "See them in the Store preview" }).click();
+  await expect(page).toHaveURL(/\/workbench\/\?from=frames/);
+  await expect(page.getByText("Showing 3 frames from the screenshot frame studio.")).toBeVisible();
+  await expect(page.locator(".store-shots--result img")).toHaveCount(3);
+});
+
+test("frame studio exports a Google Play JPEG and size pages preselect their slot", async ({ page }) => {
+  await page.goto("/screenshot-sizes/ipad-13/");
+  await page.getByRole("link", { name: "screenshot frame studio" }).click();
+  await expect(page.getByTestId("frame-studio")).toHaveAttribute("data-ready", "true");
+  await expect(page.getByLabel("Store slot")).toHaveValue("ipad-13");
+  await expect(page.getByLabel("Export size")).toHaveValue("2064 × 2752");
+  await page.getByLabel("Store slot").selectOption("google-play");
+  await expect(page.getByLabel("Export size")).toHaveValue("1080 × 1920");
+  await page.getByTestId("frame-studio").locator(".frame-drop input").setInputFiles(shots[0]);
+  await page.getByRole("button", { name: "JPEG" }).click();
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Export 1 frame" }).click()]);
+  expect(download.suggestedFilename()).toBe("google-play-1080x1920-01.jpg");
+  const bytes = fs.readFileSync(await download.path());
+  expect([...bytes.subarray(0, 2)]).toEqual([0xff, 0xd8]);
+});
+
+const phoneUA = {
+  apple: "Mozilla/5.0 (iPhone; CPU iPhone OS 19_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1",
+  android: "Mozilla/5.0 (Linux; Android 16; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36",
+  other: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+};
+const chrome = (page: import("@playwright/test").Page) => page.locator(".tab-bar").evaluate((el) => {
+  const style = getComputedStyle(el);
+  const blur = style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter");
+  return { blur, radius: parseFloat(style.borderTopLeftRadius), height: el.getBoundingClientRect().height, bottom: innerHeight - el.getBoundingClientRect().bottom };
+});
+
+for (const platform of ["apple", "android", "other"] as const) test.describe(`${platform} navigation chrome`, () => {
+  test.use({ userAgent: phoneUA[platform], viewport: { width: 390, height: 844 } });
+  test(`marks the page and styles the tab bar for ${platform}`, async ({ page }) => {
+    await page.goto("/store-page/");
+    await expect(page.locator("html")).toHaveAttribute("data-platform", platform);
+    const bar = await chrome(page);
+    if (platform === "apple") { expect(bar.blur).toContain("blur"); expect(bar.radius).toBeGreaterThan(20); expect(bar.bottom).toBeGreaterThanOrEqual(8); }
+    if (platform === "android") { expect(bar.blur === "" || bar.blur === "none").toBe(true); expect(bar.height).toBeGreaterThanOrEqual(80); }
+    if (platform === "other") expect(bar.radius).toBe(0);
+    await page.locator(".tab-bar").screenshot({ path: test.info().outputPath(`tab-bar-${platform}.png`) });
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await expect(page.getByRole("dialog", { name: "Site menu" })).toBeVisible();
+    await page.screenshot({ path: test.info().outputPath(`menu-${platform}.png`) });
+    await page.getByRole("button", { name: "Close", exact: true }).click();
+    await page.getByRole("button", { name: "Search the site" }).click();
+    await page.getByRole("searchbox").fill("iPhone");
+    await page.screenshot({ path: test.info().outputPath(`search-${platform}.png`) });
+  });
+});
+
+test.describe("glass falls back to solid surfaces", () => {
+  test.use({ userAgent: phoneUA.apple, viewport: { width: 390, height: 844 } });
+  test("under Increase Contrast and Reduce Transparency", async ({ page, browserName }) => {
+    await page.emulateMedia({ contrast: "more" });
+    await page.goto("/store-page/");
+    expect((await chrome(page)).blur).not.toContain("blur");
+    test.skip(browserName !== "chromium", "Only Chromium can emulate prefers-reduced-transparency.");
+    await page.emulateMedia({ contrast: "no-preference" });
+    const session = await page.context().newCDPSession(page);
+    await session.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-transparency", value: "reduce" }] });
+    expect((await chrome(page)).blur).not.toContain("blur");
+  });
+});
+
+// Reads one row of RGB pixels from a PNG written by lib/png.ts (Sub filter on every row).
+function pngRow(png: Buffer, y: number) {
+  const { width } = readPngHeader(new Uint8Array(png));
+  const idat: Buffer[] = [];
+  for (let at = 8; at < png.length;) { const length = png.readUInt32BE(at); if (png.toString("ascii", at + 4, at + 8) === "IDAT") idat.push(png.subarray(at + 8, at + 8 + length)); at += 12 + length; }
+  const stride = width * 3 + 1, row = zlib.inflateSync(Buffer.concat(idat)).subarray(y * stride, (y + 1) * stride);
+  const out = [...row.subarray(1)];
+  for (let i = 3; i < out.length; i++) out[i] = (out[i] + out[i - 3]) & 255;
+  return (x: number) => out.slice(x * 3, x * 3 + 3);
+}
+
+test("frame studio pads a too-tall capture for Play and hides a stale handoff", async ({ page }) => {
+  await page.goto("/tools/screenshot-frames/?class=google-play");
+  await expect(page.getByTestId("frame-studio")).toHaveAttribute("data-ready", "true");
+  await page.getByLabel("Device frame").selectOption("none");
+  await page.getByRole("button", { name: "Solid" }).click();
+  await page.getByTestId("frame-studio").locator(".frame-drop input").setInputFiles({ name: "tall.png", mimeType: "image/png", buffer: testPng(1080, 2400, [220, 40, 40]) });
+  await expect(page.locator(".frame-card__crop")).toHaveCount(0);
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Export 1 frame" }).click()]);
+  const png = fs.readFileSync(await download.path());
+  expect(readPngHeader(new Uint8Array(png))).toEqual({ width: 1080, height: 1920, bitDepth: 8, colorType: 2 });
+  // 1080 × 2400 scaled to 1920 tall is 864 wide: 108 px of background on each side, the capture in the middle.
+  const pixel = pngRow(png, 960);
+  expect(pixel(20)).toEqual([0x1d, 0x5b, 0xd8]);
+  expect(pixel(540)).toEqual([220, 40, 40]);
+  const handoff = page.getByRole("button", { name: "See them in the Store preview" });
+  await expect(handoff).toBeVisible();
+  await page.getByLabel("Frame 1 caption").fill("Now with a caption");
+  await expect(handoff).toHaveCount(0);
+});
+
+test("frame studio warns about cropped captures and long captions", async ({ page }) => {
+  await page.goto("/tools/screenshot-frames/");
+  await expect(page.getByTestId("frame-studio")).toHaveAttribute("data-ready", "true");
+  await page.getByRole("button", { name: "Landscape" }).click();
+  await page.getByTestId("frame-studio").locator(".frame-drop input").setInputFiles(shots[0]);
+  await expect(page.locator(".frame-card__crop")).toContainText("of this capture is cropped. Use a landscape capture");
+  await page.getByLabel("Frame 1 caption").fill("Log aperture, shutter, lens and notes for every single frame");
+  await expect(page.getByText("10 words · aim for 7 or fewer")).toBeVisible();
+});
+
+test.describe("native touches", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("tapping the current tab scrolls back to the top", async ({ page }) => {
+    await page.goto("/store-page/");
+    await page.evaluate(() => scrollTo(0, 1200));
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(500);
+    await page.getByRole("navigation", { name: "Main sections" }).getByRole("link", { name: "Store page" }).click();
+    await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+    await expect(page).toHaveURL(/\/store-page\/$/);
+  });
+
+  test.describe("on Apple devices", () => {
+    test.use({ userAgent: phoneUA.apple });
+    test("the tab bar shrinks while scrolling down and returns on the way up", async ({ page }) => {
+      await page.goto("/store-page/");
+      const bar = page.getByRole("navigation", { name: "Main sections" });
+      await expect(bar).not.toHaveAttribute("data-compact");
+      await page.evaluate(() => scrollTo(0, 900));
+      await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(880);
+      await expect(bar).toHaveAttribute("data-compact", "true");
+      await expect(bar.getByRole("link", { name: "Tools" })).toBeVisible();
+      await page.evaluate(() => scrollTo(0, 500));
+      await expect(bar).not.toHaveAttribute("data-compact");
+    });
+  });
+
+  test.describe("with touch", () => {
+    test.use({ hasTouch: true });
+    test("swiping the menu sheet down closes it", async ({ page, browserName }) => {
+      test.skip(browserName !== "chromium", "Touch gestures are driven through the Chromium DevTools protocol.");
+      await page.goto("/store-page/");
+      await page.getByRole("button", { name: "Open menu" }).click();
+      const sheet = page.getByRole("dialog", { name: "Site menu" });
+      await expect(sheet).toBeVisible();
+      const box = (await sheet.boundingBox())!;
+      const cdp = await page.context().newCDPSession(page);
+      const touch = (type: "touchStart" | "touchMove" | "touchEnd", y: number) => cdp.send("Input.dispatchTouchEvent", { type, touchPoints: type === "touchEnd" ? [] : [{ x: box.x + box.width / 2, y }] });
+      await touch("touchStart", box.y + 20);
+      for (let step = 1; step <= 6; step++) await touch("touchMove", box.y + 20 + step * 45);
+      await touch("touchEnd", 0);
+      await expect(sheet).toBeHidden();
+    });
+  });
+});
+
+test("frame studio pastes screenshots and shares exports through the share sheet", async ({ page, browserName }) => {
+  test.skip(browserName !== "chromium", "Synthetic paste events with files need Chromium's DataTransfer.");
+  await page.addInitScript(() => {
+    const shared: string[] = [];
+    Object.assign(window, { __shared: shared });
+    Object.assign(navigator, { canShare: () => true, share: async (data: { files: File[] }) => { shared.push(...data.files.map((file) => file.name)); } });
+  });
+  await page.goto("/tools/screenshot-frames/");
+  await expect(page.getByTestId("frame-studio")).toHaveAttribute("data-ready", "true");
+  const png = testPng(118, 256, [40, 80, 220]).toString("base64");
+  await page.evaluate((data) => {
+    const bytes = Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
+    const transfer = new DataTransfer();
+    transfer.items.add(new File([bytes], "pasted.png", { type: "image/png" }));
+    document.dispatchEvent(new ClipboardEvent("paste", { clipboardData: transfer, bubbles: true }));
+  }, png);
+  await expect(page.getByRole("status")).toContainText("Added 1 screenshot");
+  await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Export 1 frame" }).click()]);
+  // iPhones get "Save to Photos" (the share sheet saves there); other devices get "Share frames".
+  await page.getByRole("button", { name: /^(Save to Photos|Share frames)$/ }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __shared: string[] }).__shared)).toEqual(["iphone-dynamic-island-medium-1206x2622-01.png"]);
+});
+
+test.describe("content delight", () => {
+  test("screenshot sizes are drawn to scale", async ({ page }) => {
+    await page.goto("/screenshot-sizes/iphone-duo/");
+    const figure = page.locator(".silhouette-figure svg");
+    await expect(figure).toHaveAttribute("aria-label", /1398 × 2034, 2007 × 2853/);
+    await expect(figure.locator("rect")).toHaveCount(2);
+    await page.goto("/screenshot-sizes/");
+    await expect(page.locator(".spec-index .silhouettes--compact")).toHaveCount(14);
+  });
+
+  test("keyword examples show measured bytes", async ({ page }) => {
+    await page.goto("/store-page/keywords/");
+    await expect(page.locator(".keyword-field__count").first()).toContainText("88/100 bytes");
+    await expect(page.locator(".keyword-field__count").nth(1)).toContainText("86/100 bytes · 13 terms");
+  });
+
+  test("finishing the launch checklist offers the next step", async ({ page }) => {
+    await page.goto("/launch/checklist/");
+    await expect(page.locator(".checklist")).toHaveAttribute("data-ready", "true");
+    const boxes = page.locator(".checklist input[type=checkbox]");
+    const count = await boxes.count();
+    for (let index = 0; index < count; index++) await boxes.nth(index).check();
+    await expect(page.locator(".checklist__group--done")).toHaveCount(await page.locator(".checklist__group").count());
+    await expect(page.getByRole("complementary", { name: "Ready to submit" })).toContainText(`All ${count} done`);
+    await boxes.first().uncheck();
+    await expect(page.getByRole("complementary", { name: "Ready to submit" })).toHaveCount(0);
+  });
+
+  test("guides open the share sheet", async ({ page }) => {
+    await page.addInitScript(() => {
+      const shared: Array<{ title?: string; url?: string }> = [];
+      Object.assign(window, { __shared: shared });
+      Object.assign(navigator, { share: async (data: { title?: string; url?: string }) => { shared.push(data); } });
+    });
+    await page.goto("/store-page/keywords/");
+    await page.getByRole("button", { name: "Share" }).click();
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __shared: Array<{ url: string }> }).__shared.map((item) => new URL(item.url).pathname))).toEqual(["/store-page/keywords/"]);
+  });
+});
+
+test.describe("app-like polish", () => {
+  test("the manifest ships PNG icons, a maskable icon and shortcuts", async ({ page, request }) => {
+    await page.goto("/");
+    const manifestHref = await page.locator('link[rel="manifest"]').getAttribute("href");
+    const manifest = await (await request.get(manifestHref ?? "/manifest.webmanifest")).json();
+    expect(manifest.shortcuts.map((item: { url: string }) => item.url)).toEqual(["/workbench/", "/tools/screenshot-frames/", "/launch/checklist/", "/screenshot-sizes/"]);
+    expect(manifest.icons.some((icon: { purpose?: string }) => icon.purpose === "maskable")).toBe(true);
+    for (const [path, size] of [["/icons/192.png", 192], ["/icons/512.png", 512], ["/icons/maskable-512.png", 512]] as const) {
+      const response = await request.get(path);
+      expect(response.headers()["content-type"]).toContain("image/png");
+      expect(readPngHeader(new Uint8Array(await response.body()))).toMatchObject({ width: size, height: size });
+    }
+    const appleHref = await page.locator('link[rel="apple-touch-icon"]').getAttribute("href");
+    expect(appleHref).toBe("/icons/apple-touch-icon.png");
+    expect(readPngHeader(new Uint8Array(await (await request.get(appleHref ?? "")).body()))).toMatchObject({ width: 180, height: 180 });
+  });
+
+  test("a broken link suggests the closest pages and prefills search", async ({ page }) => {
+    await page.goto("/screenshot-size/ipad/");
+    await expect(page.locator(".not-found")).toHaveAttribute("data-ready", "");
+    const suggestions = page.getByRole("region", { name: "Pages you might have meant" }).getByRole("listitem");
+    await expect(suggestions.first()).toContainText("iPad");
+    await page.getByRole("button", { name: "Search for “screenshot size ipad”" }).click();
+    await expect(page.getByRole("dialog", { name: "Site search" }).getByRole("searchbox")).toHaveValue("screenshot size ipad");
+  });
+
+  test("copying shows a check and confirms", async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "clipboard", { value: { writeText: async () => {} }, configurable: true });
+    });
+    await page.goto("/tools/app-store-growth-skill/");
+    const copy = page.locator(".copy-button").first();
+    await expect(async () => {
+      await copy.click();
+      await expect(copy).toHaveAttribute("data-copied", "", { timeout: 500 });
+    }).toPass();
+    await expect(copy).toContainText("Copied");
+    await expect(copy.locator("svg")).toBeVisible();
+  });
+
+  test.describe("install row", () => {
+    test.use({ viewport: { width: 390, height: 844 } });
+
+    test("Chromium offers the native install prompt from the menu", async ({ page }) => {
+      await page.addInitScript(() => {
+        // Hand the page a fake beforeinstallprompt as soon as it starts listening for one.
+        const add = window.addEventListener.bind(window);
+        window.addEventListener = ((type: string, listener: EventListener, options?: AddEventListenerOptions) => {
+          add(type, listener, options);
+          if (type !== "beforeinstallprompt") return;
+          const event = Object.assign(new Event("beforeinstallprompt", { cancelable: true }), {
+            prompt: async () => { (window as unknown as { __prompted: boolean }).__prompted = true; },
+            userChoice: Promise.resolve({ outcome: "accepted" }),
+          });
+          setTimeout(() => listener(event), 0);
+        }) as typeof window.addEventListener;
+      });
+      await page.goto("/");
+      await page.getByRole("button", { name: "Open menu" }).click();
+      await page.getByRole("dialog", { name: "Site menu" }).getByRole("button", { name: "Install" }).click();
+      await expect.poll(() => page.evaluate(() => (window as unknown as { __prompted?: boolean }).__prompted)).toBe(true);
+      await expect(page.locator(".menu-install")).toHaveCount(0);
+    });
+
+    test.describe("on iPhone", () => {
+      test.use({ userAgent: phoneUA.apple });
+
+      test("explains Share, then Add to Home Screen", async ({ page }) => {
+        await page.goto("/");
+        await page.getByRole("button", { name: "Open menu" }).click();
+        await expect(page.locator(".menu-install")).toContainText("Add to Home Screen");
+        await expect(page.locator(".menu-install")).toContainText("Tap Share");
+      });
+
+      test("stays hidden once installed", async ({ page }) => {
+        await page.addInitScript(() => {
+          const original = window.matchMedia.bind(window);
+          window.matchMedia = (query: string) => query === "(display-mode: standalone)" ? { ...original(query), matches: true, media: query } as MediaQueryList : original(query);
+        });
+        await page.goto("/");
+        await page.getByRole("button", { name: "Open menu" }).click();
+        await expect(page.getByRole("dialog", { name: "Site menu" })).toBeVisible();
+        await expect(page.locator(".menu-install")).toHaveCount(0);
+      });
+    });
+  });
+});
+
+test("each screenshot size page shares its own social card", async ({ page, request }) => {
+  await page.goto("/screenshot-sizes/ipad-13/");
+  const image = await page.locator('meta[property="og:image"]').getAttribute("content");
+  expect(new URL(image ?? "").pathname).toBe("/screenshot-sizes/ipad-13/opengraph-image");
+  const response = await request.get(new URL(image ?? "").pathname);
+  expect(readPngHeader(new Uint8Array(await response.body()))).toMatchObject({ width: 1200, height: 630 });
 });

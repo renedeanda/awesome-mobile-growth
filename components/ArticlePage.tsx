@@ -1,3 +1,4 @@
+import { ShareButton } from "@/components/ShareButton";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -55,6 +56,7 @@ export async function ArticlePage({ section, slug }: { section: SectionId; slug:
         <h1>{article.title}</h1>
         <p className="lede">{article.description}</p>
         <ArticleMeta evidence={article.evidence} reading={article.reading} checked={article.reviewed}/>
+        <ShareButton title={article.title} path={article.path}/>
       </header>
       <DirectAnswer><p>{article.answer}</p></DirectAnswer>
       <TocBar items={article.toc}/>
