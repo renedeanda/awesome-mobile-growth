@@ -449,3 +449,91 @@ test.describe("content delight", () => {
     await expect.poll(() => page.evaluate(() => (window as unknown as { __shared: Array<{ url: string }> }).__shared.map((item) => new URL(item.url).pathname))).toEqual(["/store-page/keywords/"]);
   });
 });
+
+test.describe("app-like polish", () => {
+  test("the manifest ships PNG icons, a maskable icon and shortcuts", async ({ page, request }) => {
+    await page.goto("/");
+    const manifestHref = await page.locator('link[rel="manifest"]').getAttribute("href");
+    const manifest = await (await request.get(manifestHref ?? "/manifest.webmanifest")).json();
+    expect(manifest.shortcuts.map((item: { url: string }) => item.url)).toEqual(["/workbench/", "/tools/screenshot-frames/", "/launch/checklist/", "/screenshot-sizes/"]);
+    expect(manifest.icons.some((icon: { purpose?: string }) => icon.purpose === "maskable")).toBe(true);
+    for (const [path, size] of [["/icons/192.png", 192], ["/icons/512.png", 512], ["/icons/maskable-512.png", 512]] as const) {
+      const response = await request.get(path);
+      expect(response.headers()["content-type"]).toContain("image/png");
+      expect(readPngHeader(new Uint8Array(await response.body()))).toMatchObject({ width: size, height: size });
+    }
+    const appleHref = await page.locator('link[rel="apple-touch-icon"]').getAttribute("href");
+    expect(appleHref).toBe("/icons/apple-touch-icon.png");
+    expect(readPngHeader(new Uint8Array(await (await request.get(appleHref ?? "")).body()))).toMatchObject({ width: 180, height: 180 });
+  });
+
+  test("a broken link suggests the closest pages and prefills search", async ({ page }) => {
+    await page.goto("/screenshot-size/ipad/");
+    await expect(page.locator(".not-found")).toHaveAttribute("data-ready", "");
+    const suggestions = page.getByRole("region", { name: "Pages you might have meant" }).getByRole("listitem");
+    await expect(suggestions.first()).toContainText("iPad");
+    await page.getByRole("button", { name: "Search for “screenshot size ipad”" }).click();
+    await expect(page.getByRole("dialog", { name: "Site search" }).getByRole("searchbox")).toHaveValue("screenshot size ipad");
+  });
+
+  test("copying shows a check and confirms", async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "clipboard", { value: { writeText: async () => {} }, configurable: true });
+    });
+    await page.goto("/tools/app-store-growth-skill/");
+    const copy = page.locator(".copy-button").first();
+    await expect(async () => {
+      await copy.click();
+      await expect(copy).toHaveAttribute("data-copied", "", { timeout: 500 });
+    }).toPass();
+    await expect(copy).toContainText("Copied");
+    await expect(copy.locator("svg")).toBeVisible();
+  });
+
+  test.describe("install row", () => {
+    test.use({ viewport: { width: 390, height: 844 } });
+
+    test("Chromium offers the native install prompt from the menu", async ({ page }) => {
+      await page.addInitScript(() => {
+        // Hand the page a fake beforeinstallprompt as soon as it starts listening for one.
+        const add = window.addEventListener.bind(window);
+        window.addEventListener = ((type: string, listener: EventListener, options?: AddEventListenerOptions) => {
+          add(type, listener, options);
+          if (type !== "beforeinstallprompt") return;
+          const event = Object.assign(new Event("beforeinstallprompt", { cancelable: true }), {
+            prompt: async () => { (window as unknown as { __prompted: boolean }).__prompted = true; },
+            userChoice: Promise.resolve({ outcome: "accepted" }),
+          });
+          setTimeout(() => listener(event), 0);
+        }) as typeof window.addEventListener;
+      });
+      await page.goto("/");
+      await page.getByRole("button", { name: "Open menu" }).click();
+      await page.getByRole("dialog", { name: "Site menu" }).getByRole("button", { name: "Install" }).click();
+      await expect.poll(() => page.evaluate(() => (window as unknown as { __prompted?: boolean }).__prompted)).toBe(true);
+      await expect(page.locator(".menu-install")).toHaveCount(0);
+    });
+
+    test.describe("on iPhone", () => {
+      test.use({ userAgent: phoneUA.apple });
+
+      test("explains Share, then Add to Home Screen", async ({ page }) => {
+        await page.goto("/");
+        await page.getByRole("button", { name: "Open menu" }).click();
+        await expect(page.locator(".menu-install")).toContainText("Add to Home Screen");
+        await expect(page.locator(".menu-install")).toContainText("Tap Share");
+      });
+
+      test("stays hidden once installed", async ({ page }) => {
+        await page.addInitScript(() => {
+          const original = window.matchMedia.bind(window);
+          window.matchMedia = (query: string) => query === "(display-mode: standalone)" ? { ...original(query), matches: true, media: query } as MediaQueryList : original(query);
+        });
+        await page.goto("/");
+        await page.getByRole("button", { name: "Open menu" }).click();
+        await expect(page.getByRole("dialog", { name: "Site menu" })).toBeVisible();
+        await expect(page.locator(".menu-install")).toHaveCount(0);
+      });
+    });
+  });
+});

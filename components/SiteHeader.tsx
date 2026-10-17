@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { tools } from "@/lib/tools";
 import { SearchDialog } from "./SearchDialog";
+import { BrandMark } from "./BrandMark";
+import { InstallRow, useInstallPrompt } from "./InstallRow";
 
 type NavLink = { href: string; label: string; note?: string };
 type NavGroup = { title: string; links: NavLink[] };
@@ -149,6 +151,7 @@ export function SiteHeader() {
   const returnFocus = useRef(false);
   const close = useCallback(() => { returnFocus.current = true; setOpen(false); }, []);
   const scrollingDown = useScrollingDown();
+  const installPrompt = useInstallPrompt();
   useSwipeToClose(sheetRef, open, close);
   // Tapping the tab you are already on scrolls back to the top, the way iOS and Android tab bars do.
   const onTab = (event: React.MouseEvent, href: string) => {
@@ -189,7 +192,7 @@ export function SiteHeader() {
   return <>
     <header className="site-header">
       <Link className="brand" href="/" aria-label="Awesome Mobile Growth home">
-        <span className="brand-mark" aria-hidden="true">AMG</span>
+        <span className="brand-mark"><BrandMark size={38}/></span>
         <span className="brand-name"><span className="brand-name__extra">Awesome </span>Mobile Growth</span>
       </Link>
       <nav className="desktop-nav" aria-label="Primary">
@@ -219,6 +222,7 @@ export function SiteHeader() {
             </li>)}</ul>
           </section>)}
         </nav>
+        <InstallRow {...installPrompt}/>
       </div>
     </div>
 

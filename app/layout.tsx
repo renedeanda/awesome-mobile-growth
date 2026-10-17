@@ -29,6 +29,7 @@ export const metadata: Metadata = {
   creator: site.author,
   alternates: { canonical: "/", types: { "application/atom+xml": "/feed.xml" } },
   manifest: "/manifest.webmanifest",
+  icons: { apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }] },
   openGraph: { type: "website", title: site.name, description: site.description, url: site.origin, siteName: site.name, images: [image] },
   twitter: { card: "summary_large_image", title: site.name, description: site.description, images: [image.url] },
   robots: { index: true, follow: true },
