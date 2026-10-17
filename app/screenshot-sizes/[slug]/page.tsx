@@ -70,7 +70,7 @@ export default async function SpecDetail({ params }: { params: Promise<{ slug: s
   if (!page) notFound();
   const path = specPath(page.slug);
   const jsonLd = [
-    { "@context": "https://schema.org", "@type": "TechArticle", headline: page.title, description: page.description, datePublished: "2026-10-16", dateModified: specsChecked, author: { "@type": "Person", name: site.author, url: absolute("/about/") }, publisher: { "@id": `${site.origin}/#publisher` }, mainEntityOfPage: absolute(path), image: absolute("/store-page/opengraph-image") },
+    { "@context": "https://schema.org", "@type": "TechArticle", headline: page.title, description: page.description, datePublished: "2026-10-16", dateModified: specsChecked, author: { "@type": "Person", name: site.author, url: absolute("/about/") }, publisher: { "@id": `${site.origin}/#publisher` }, mainEntityOfPage: absolute(path), image: absolute(`${path}opengraph-image`) },
     { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Home", item: absolute("/") }, { "@type": "ListItem", position: 2, name: "Screenshot sizes", item: absolute("/screenshot-sizes/") }, { "@type": "ListItem", position: 3, name: page.short, item: absolute(path) }] },
   ];
   return <article className="single-article spec-article">

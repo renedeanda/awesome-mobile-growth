@@ -7,7 +7,7 @@ const shortcut = (name: string, url: string, description: string) => ({ name, ur
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/", scope: "/", start_url: "/",
-    name: "Awesome Mobile Growth", short_name: "Mobile Growth",
+    name: "Awesome Mobile Growth", short_name: "Growth",
     description: "Sourced guides, specs and free tools for launching and growing apps on the App Store and Google Play.",
     display: "standalone", background_color: "#f2efe7", theme_color: "#f2efe7",
     categories: ["business", "developer", "productivity"],
@@ -20,7 +20,7 @@ export default function manifest(): MetadataRoute.Manifest {
     shortcuts: [
       shortcut("Workbench", "/workbench/", "Check name, subtitle and keyword limits"),
       shortcut("Frame studio", "/tools/screenshot-frames/", "Frame screenshots at store sizes"),
-      shortcut("Launch checklist", "/launch/checklist/", "Track what's left before you submit"),
+      shortcut("Launch checklist", "/launch/checklist/", "Track what’s left before you submit"),
       shortcut("Screenshot sizes", "/screenshot-sizes/", "Pixel sizes for every device"),
     ],
   };

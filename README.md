@@ -13,7 +13,8 @@ Awesome Mobile Growth began as a link collection. It is now a maintained set of 
 - **Grow:** the growth loop, onboarding, subscriptions, ratings, web-to-app, paid and organic, App Store Connect and choosing tools
 - **Changes:** dated App Store and Google Play changes, each with actions and official sources (also in the RSS feed)
 - **Learn:** an App Store Connect metrics glossary, AI for ASO, a podcast list and an independent resource list
-- **Tools:** browser-local keyword, metadata, screenshot-size and experiment tools, a workbench, and the open App Store Growth skill for AI agents
+- **Tools:** browser-local keyword, metadata and experiment tools, a screenshot frame studio that exports exact store sizes, a workbench with a store search preview, and the open App Store Growth skill for AI agents
+- **Screenshot sizes:** a page per Apple display class and Google Play, with every accepted size drawn to scale
 
 Every guide links to Apple's and Google's own documentation, shows when its sources were last checked, and ends with a short "Do this today" list.
 

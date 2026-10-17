@@ -10,7 +10,8 @@ type Mode = "hidden" | "prompt" | "ios";
 const standalone = () => matchMedia("(display-mode: standalone)").matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
 const isIOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-/** Chromium fires beforeinstallprompt once, early, so the header listens for the whole visit, not just while the menu is open. */
+/** The header listens for the whole visit, not just while the menu is open. Chromium can fire beforeinstallprompt before
+ * hydration; then the row stays hidden on that page view and appears on the next full page load. */
 export function useInstallPrompt() {
   const [event, setEvent] = useState<InstallPrompt | null>(null);
   const [mode, setMode] = useState<Mode>("hidden");
@@ -25,11 +26,14 @@ export function useInstallPrompt() {
   }, []);
   const install = async () => {
     if (!event) return;
-    await event.prompt();
-    const { outcome } = await event.userChoice;
-    trackEvent("install_prompt", { outcome });
+    // A prompt can only be shown once, so the row goes away whatever the answer.
     setEvent(null);
-    if (outcome === "accepted") setMode("hidden");
+    setMode("hidden");
+    try {
+      await event.prompt();
+      const { outcome } = await event.userChoice;
+      trackEvent("install_prompt", { outcome });
+    } catch { /* the browser refused to show it */ }
   };
   return { mode, install };
 }
