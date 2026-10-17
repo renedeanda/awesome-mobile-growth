@@ -36,7 +36,9 @@ export function Workbench() {
     const params = new URLSearchParams(window.location.search);
     const platform = params.get("platform");
     const template = params.get("template");
-    if (template === "screenshots" || template === "experiment") {
+    if (params.get("from") === "frames") {
+      setTab("preview");
+    } else if (template === "screenshots" || template === "experiment") {
       setTab("planning");
       setNotice(template === "screenshots" ? "Screenshot planning is ready." : "The experiment log is ready.");
     } else if (platform === "google-play") {

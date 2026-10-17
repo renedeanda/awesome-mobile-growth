@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { duplicates, keywordTokens, utf8Bytes, warnings } from "@/lib/workbench";
@@ -8,6 +9,9 @@ import { LIMITS } from "@/lib/platform";
 import { packKeywords } from "@/lib/keywords";
 import type { ToolSlug } from "@/lib/tools";
 import { appleScreenshotClasses, appleScreenshotRules, appleScreenshotSource, formatSize, type ScreenshotClass } from "@/lib/storeSpecs";
+
+// The studio is the heaviest tool; only its own page loads it.
+const FrameStudio = dynamic(() => import("./FrameStudio").then((module) => module.FrameStudio), { ssr: false, loading: () => <p className="tool-caveat">Loading the studio…</p> });
 
 const appleLines = (device: ScreenshotClass["device"]) => appleScreenshotClasses.filter((item) => item.device === device && item.required).map((item) => `${item.name}: ${item.sizes.map(formatSize).join(" or ")} (portrait; landscape swaps them). Required: ${item.required}.`);
 const appleCommon = [`${appleScreenshotRules.count}.`, "JPEG, JPG or PNG; no transparency."];
@@ -31,6 +35,7 @@ function ToolBody({ tool }: { tool: ToolSlug }) {
   if (tool === "app-store-keyword-field") return <KeywordTool/>;
   if (tool === "metadata-validator") return <MetadataTool/>;
   if (tool === "app-store-screenshot-sizes") return <ScreenshotTool/>;
+  if (tool === "screenshot-frames") return <FrameStudio/>;
   return <ExperimentTool/>;
 }
 
@@ -69,7 +74,7 @@ function ScreenshotTool() {
   const update=(index:number,key:keyof Frame,value:string)=>{ if (!frames.some(frame=>Object.values(frame).some(Boolean)) && value) trackEvent("tool_started", { tool_id:"app-store-screenshot-sizes", platform:choice }); setFrames(items=>items.map((item,i)=>i===index?{...item,[key]:value}:item)); };
   const brief=`# ${group.label} screenshot storyboard\n\n${frames.map((frame,index)=>`## Frame ${index+1}\n- Message: ${frame.message}\n- Product proof: ${frame.proof}\n- Capture needed: ${frame.capture}\n- Locale or crop risk: ${frame.risk}`).join("\n\n")}`;
   const copy=async()=>{await navigator.clipboard.writeText(brief);trackEvent("tool_completed",{tool_id:"app-store-screenshot-sizes",format:"markdown"});};
-  return <div className="tool-panel"><label className="field"><span className="field-label">Placement</span><select value={choice} onChange={event=>setChoice(event.target.value as keyof typeof screenshotGroups)}>{Object.entries(screenshotGroups).map(([key,value])=><option value={key} key={key}>{value.label}</option>)}</select></label><Result tone="neutral" title={`${group.label} delivery check`}>{group.lines.map(line=><p key={line}>{line}</p>)}<p><Link href="/screenshot-sizes/">Every size, one page per device</Link> · <a href={group.href}>Official specification ↗</a></p></Result><div className="storyboard"><div className="storyboard-head"><div><p className="eyebrow">Storyboard</p><h2>Give every frame a job.</h2></div><button onClick={()=>setFrames(items=>[...items,emptyFrame()])}>Add frame</button></div>{frames.map((frame,index)=><fieldset key={index}><legend>Frame {index+1}</legend><label>Message<input value={frame.message} onChange={event=>update(index,"message",event.target.value)} placeholder="The one idea someone should understand"/></label><label>Visible product proof<input value={frame.proof} onChange={event=>update(index,"proof",event.target.value)} placeholder="The real screen or state that proves it"/></label><label>Capture needed<input value={frame.capture} onChange={event=>update(index,"capture",event.target.value)} placeholder="Device, state, data, or interaction"/></label><label>Locale or crop risk<input value={frame.risk} onChange={event=>update(index,"risk",event.target.value)} placeholder="Text expansion, safe area, or edge content"/></label></fieldset>)}</div><button className="button" onClick={copy}>Copy storyboard</button><p className="tool-caveat">Specifications change and store consoles can show additional compatible sizes. Confirm the live requirement before delivery.</p></div>;
+  return <div className="tool-panel"><label className="field"><span className="field-label">Placement</span><select value={choice} onChange={event=>setChoice(event.target.value as keyof typeof screenshotGroups)}>{Object.entries(screenshotGroups).map(([key,value])=><option value={key} key={key}>{value.label}</option>)}</select></label><Result tone="neutral" title={`${group.label} delivery check`}>{group.lines.map(line=><p key={line}>{line}</p>)}<p><Link href="/screenshot-sizes/">Every size, one page per device</Link> · <a href={group.href}>Official specification ↗</a></p></Result><div className="storyboard"><div className="storyboard-head"><div><p className="eyebrow">Storyboard</p><h2>Give every frame a job.</h2></div><button onClick={()=>setFrames(items=>[...items,emptyFrame()])}>Add frame</button></div>{frames.map((frame,index)=><fieldset key={index}><legend>Frame {index+1}</legend><label>Message<input value={frame.message} onChange={event=>update(index,"message",event.target.value)} placeholder="The one idea someone should understand"/></label><label>Visible product proof<input value={frame.proof} onChange={event=>update(index,"proof",event.target.value)} placeholder="The real screen or state that proves it"/></label><label>Capture needed<input value={frame.capture} onChange={event=>update(index,"capture",event.target.value)} placeholder="Device, state, data, or interaction"/></label><label>Locale or crop risk<input value={frame.risk} onChange={event=>update(index,"risk",event.target.value)} placeholder="Text expansion, safe area, or edge content"/></label></fieldset>)}</div><button className="button" onClick={copy}>Copy storyboard</button><p className="tool-caveat">Captures ready? Put them in device frames with these messages in the <Link href="/tools/screenshot-frames/">screenshot frame studio</Link>.</p><p className="tool-caveat">Specifications change and store consoles can show additional compatible sizes. Confirm the live requirement before delivery.</p></div>;
 }
 
 function ExperimentTool() {
