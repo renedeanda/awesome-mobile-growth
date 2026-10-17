@@ -10,7 +10,7 @@ import { checklistPhases, keywordExample } from "@/lib/socialData";
 import { getMetric, metricsReviewed } from "@/lib/metrics";
 import { cardImage } from "@/lib/socialImage";
 import { platformRules } from "@/lib/platform";
-import { appleScreenshotClasses, appPreviewRules, formatSize, googlePlayIcon } from "@/lib/storeSpecs";
+import { appleScreenshotClasses, appPreviewRules, formatSize, googlePlayIcon, specsChecked } from "@/lib/storeSpecs";
 import { getTool, type ToolSlug } from "@/lib/tools";
 
 export const cardSize = { width: 1200, height: 630 };
@@ -42,6 +42,18 @@ export function metricCard(slug: string) {
 
 const iphoneRequired = appleScreenshotClasses.find((spec) => spec.id === "iphone-dynamic-island-medium")!;
 const { appleName, appleSubtitle, appleKeywords, applePromotional } = platformRules;
+const newest = (...dates: string[]) => dates.sort().at(-1)!;
+
+// The "checked" date on each card is the date the facts it shows were last verified.
+const toolChecked: Record<ToolSlug, string> = {
+  "app-store-keyword-field": appleKeywords.verified,
+  "metadata-validator": newest(appleName.verified, appleSubtitle.verified, appleKeywords.verified, applePromotional.verified),
+  "app-store-screenshot-sizes": specsChecked,
+  "screenshot-frames": specsChecked,
+  "app-preview-checker": specsChecked,
+  "play-asset-checker": specsChecked,
+  "experiment-brief": specsChecked,
+};
 
 // Each tool's card shows what that tool checks, drawn from the same data the tool uses.
 const toolArt: Record<ToolSlug, () => ReactElement> = {
@@ -70,9 +82,9 @@ const toolArt: Record<ToolSlug, () => ReactElement> = {
 export function toolCard(slug: string) {
   const tool = getTool(slug);
   if (!tool) throw new Error(`No tool ${slug}`);
-  return cardImage(<SocialCard desk="FREE BROWSER TOOL" title={tool.title} description={shorten(tool.description)} trail={[tool.label, "Runs in your browser", "Private"]} art={toolArt[tool.slug]()}/>);
+  return cardImage(<SocialCard desk="FREE BROWSER TOOL" title={tool.title} description={shorten(tool.description)} trail={[tool.label, "Runs in your browser", "Private"]} checked={toolChecked[tool.slug]} art={toolArt[tool.slug]()}/>);
 }
 
 export function skillCard() {
-  return cardImage(<SocialCard desk="AGENT SKILL" title="App Store Growth skill for AI agents" description="An open skill with current store limits, a review checklist and a validator, with rules against invented data." trail={["App Store", "Google Play", "Open source"]} art={<StepsArt heading="IN THE SKILL" steps={["Current App Store and Google Play limits", "A listing review checklist", "A validator, with rules against invented data"]}/>}/>);
+  return cardImage(<SocialCard desk="AGENT SKILL" title="App Store Growth skill for AI agents" description="An open skill with current store limits, a review checklist and a validator, with rules against invented data." trail={["App Store", "Google Play", "Open source"]} checked={specsChecked} art={<StepsArt heading="IN THE SKILL" steps={["Current App Store and Google Play limits", "A listing review checklist", "A validator, with rules against invented data"]}/>}/>);
 }

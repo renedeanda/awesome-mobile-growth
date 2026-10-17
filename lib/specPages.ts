@@ -17,9 +17,6 @@ const short: Record<string, string> = {
   "watch": "Apple Watch",
 };
 
-
-// Search results show about 160 characters of a description; add the closing phrase only when it fits.
-const withTail = (text: string, tail: string) => (text.length + tail.length <= 160 ? text + tail : text);
 export type Orientation = "both" | "landscape" | "fixed";
 export type SpecPage = {
   slug: string;
@@ -36,6 +33,9 @@ export type SpecPage = {
 
 const orientationOf = (spec: ScreenshotClass): Orientation => spec.device === "iPhone" || spec.device === "iPad" ? "both" : spec.device === "Apple Watch" ? "fixed" : "landscape";
 const list = (sizes: string[]) => sizes.length <= 2 ? sizes.join(" or ") : `${sizes.slice(0, -1).join(", ")} or ${sizes.at(-1)}`;
+
+// Search results show about 160 characters of a description; add the closing phrase only when it fits.
+const withTail = (text: string, tail: string) => (text.length + tail.length <= 160 ? text + tail : text);
 
 function applePage(spec: ScreenshotClass): SpecPage {
   const name = short[spec.id];

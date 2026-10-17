@@ -47,7 +47,7 @@ export function useInstallPrompt() {
 /** Confirms the install. Chromium opens the installed app on its own, so the message names where to find it later.
  * The live region stays mounted so screen readers announce the text when it appears. */
 export function InstallToast({ installed }: { installed: boolean }) {
-  return <p className="install-toast" role="status">{installed ? "Installed. Open Mobile Growth from your home screen or app list." : ""}</p>;
+  return <p className="install-toast" role="status">{installed ? "Installed. Open it from your home screen or app list." : ""}</p>;
 }
 
 export function InstallRow({ mode, install }: Pick<ReturnType<typeof useInstallPrompt>, "mode" | "install">) {
