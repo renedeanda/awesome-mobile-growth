@@ -69,8 +69,16 @@ export function cropShare(imageAspect: number, screen: Rect) {
   return 1 - Math.min(imageAspect, screenAspect) / Math.max(imageAspect, screenAspect);
 }
 
-/** Words in a caption; the screenshots guide aims for seven or fewer. */
-export const wordCount = (text: string) => text.split(/\s+/).filter(Boolean).length;
+/** Words in a caption; the screenshots guide aims for seven or fewer. Uses the browser's word segmenter, so
+ * Japanese and Chinese captions, which have no spaces, count words rather than reading as one. */
+export function wordCount(text: string) {
+  if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
+    let count = 0;
+    for (const part of new Intl.Segmenter(undefined, { granularity: "word" }).segment(text)) if (part.isWordLike) count++;
+    return count;
+  }
+  return text.split(/\s+/).filter(Boolean).length;
+}
 
 export type Measure = (text: string, fontSize: number) => number;
 
@@ -81,7 +89,16 @@ export function wrapCaption(text: string, maxWidth: number, fontSize: number, me
     let line = "";
     for (const word of paragraph.split(/\s+/).filter(Boolean)) {
       const next = line ? `${line} ${word}` : word;
-      if (line && measure(next, fontSize) > maxWidth) { lines.push(line); line = word; } else line = next;
+      if (!line || measure(next, fontSize) <= maxWidth) line = next;
+      else { lines.push(line); line = word; }
+      // A run with no spaces (Japanese, Chinese, a long URL) wider than the line breaks between characters.
+      while (measure(line, fontSize) > maxWidth) {
+        const chars = Array.from(line);
+        let fit = 1;
+        while (fit < chars.length && measure(chars.slice(0, fit + 1).join(""), fontSize) <= maxWidth) fit++;
+        lines.push(chars.slice(0, fit).join(""));
+        line = chars.slice(fit).join("");
+      }
     }
     if (line) lines.push(line);
   }
@@ -99,7 +116,9 @@ export function fitCaption(text: string, [w, h]: Size, measure: Measure) {
     fontSize = Math.round(fontSize * 0.92);
     lines = wrapCaption(text, maxWidth, fontSize, measure);
   }
-  return { lines: lines.slice(0, 3), fontSize, lineHeight: Math.round(fontSize * 1.15) };
+  // Past the smallest size, cut to three lines and mark the cut rather than dropping text silently.
+  const shown = lines.length > 3 ? [...lines.slice(0, 2), `${Array.from(lines[2]).slice(0, -1).join("").trimEnd()}…`] : lines;
+  return { lines: shown, fontSize, lineHeight: Math.round(fontSize * 1.15), truncated: lines.length > 3 };
 }
 
 type Shape = { aspect: number; inset: [number, number, number, number]; body: number; screen: number };

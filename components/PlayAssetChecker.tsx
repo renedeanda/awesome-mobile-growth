@@ -16,7 +16,7 @@ async function readImage(file: File): Promise<Omit<Checked, "id" | "kind">> {
     width = bitmap.width; height = bitmap.height;
     bitmap.close();
   }
-  return { name: file.name, url: URL.createObjectURL(file), facts: { width, height, format: head.format, alpha: head.alpha, bitDepth: head.bitDepth, bytes: file.size } };
+  return { name: file.name, url: URL.createObjectURL(file), facts: { width, height, format: head.format, alpha: head.alpha, bitDepth: head.bitDepth, colorType: head.colorType, bytes: file.size } };
 }
 
 /** Checks Google Play icons, feature graphics and screenshots in the browser. Nothing is uploaded. */

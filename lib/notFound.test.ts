@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { suggestPages, wordsFromPath } from "./notFound.ts";
+import { searchableQuery, suggestPages, wordsFromPath } from "./notFound.ts";
 import type { SearchEntry } from "./search.ts";
 
 const page = (path: string, title: string, text = ""): SearchEntry => ({ path, title, kind: "Guide", summary: "", text });
@@ -25,6 +25,11 @@ describe("404 suggestions", () => {
 
   it("falls back to the rarer words when no page matches every word", () => {
     assert.deepEqual(suggestPages(index, "/aso/keywords-guide/").map((entry) => entry.path), ["/store-page/keywords/"]);
+  });
+
+  it("searches only for words that still find a page", () => {
+    assert.equal(searchableQuery(index, "/aso/keywords-guide/"), "keywords guide");
+    assert.equal(searchableQuery(index, "/zzz/qqq/"), "");
   });
 
   it("returns nothing for a path with no usable words", () => {

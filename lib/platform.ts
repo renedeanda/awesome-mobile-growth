@@ -1,4 +1,7 @@
 export type PlatformRule = { id: string; platform: "Apple App Store" | "Google Play"; label: string; limit: number; unit: "characters" | "UTF-8 bytes"; status: "current" | "upcoming"; source: string; verified: string; note: string };
+// "characters" limits are counted with JavaScript string length (UTF-16 code units), on purpose: an emoji or
+// other symbol outside the Basic Multilingual Plane counts as 2. Neither store documents how it counts those, so the
+// count here can run high but never low, and a field that passes here won't be cut off in the store.
 export const platformRules = {
   appleName: { id: "apple-name", platform: "Apple App Store", label: "App name", limit: 30, unit: "characters", status: "current", source: "https://developer.apple.com/help/app-store-connect/reference/app-information/app-information", verified: "2026-10-12", note: "Localized and editable only when the app version status permits it." },
   appleSubtitle: { id: "apple-subtitle", platform: "Apple App Store", label: "Subtitle", limit: 30, unit: "characters", status: "current", source: "https://developer.apple.com/help/app-store-connect/reference/app-information/app-information", verified: "2026-10-12", note: "A concise summary shown beneath the app name." },

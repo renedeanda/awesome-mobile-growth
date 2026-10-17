@@ -9,6 +9,11 @@ describe("keyword packer", () => {
     assert.equal(packed.field, "mood,tracker");
     assert.deepEqual(packed.skipped, [{ word: "journal", reason: "in-name" }]);
   });
+  it("skips plurals of words it has, and the word app", () => {
+    const packed = packKeywords("photo photos app apps boxes box glass", "");
+    assert.deepEqual(packed.used, ["photo", "boxes", "box", "glass"]);
+    assert.deepEqual(packed.skipped.map(({ word, reason }) => `${word}:${reason}`), ["photos:plural", "app:filler", "apps:filler"]);
+  });
   it("drops repeats", () => assert.deepEqual(packKeywords("focus, focus timer", "").skipped, [{ word: "focus", reason: "repeat" }]));
   it("never exceeds the byte limit and keeps trying shorter words", () => {
     const packed = packKeywords("abcdefgh, abcdefghijkl, ab", "", 12);

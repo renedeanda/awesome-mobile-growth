@@ -14,7 +14,7 @@ const png = (width: number, height: number, colorType: number) => {
 
 describe("Google Play asset checker", () => {
   it("reads PNG size, bit depth and alpha, and recognizes JPEG", () => {
-    assert.deepEqual(imageFormat(png(512, 512, 6)), { format: "png", width: 512, height: 512, bitDepth: 8, alpha: true });
+    assert.deepEqual(imageFormat(png(512, 512, 6)), { format: "png", width: 512, height: 512, bitDepth: 8, colorType: 6, alpha: true });
     assert.equal(imageFormat(png(1024, 500, 2)).alpha, false);
     assert.deepEqual(imageFormat(new Uint8Array([0xff, 0xd8, 0xff])), { format: "jpeg", alpha: false });
   });
@@ -26,7 +26,9 @@ describe("Google Play asset checker", () => {
   });
 
   it("passes a 512 × 512 32-bit icon and rejects a JPEG or oversize one", () => {
-    assert.deepEqual(status(checkPlayAsset("icon", { width: 512, height: 512, format: "png", alpha: true, bitDepth: 8, bytes: 200_000 })), { Size: "pass", Format: "pass", "File size": "pass", "Shape and color": "check" });
+    assert.deepEqual(status(checkPlayAsset("icon", { width: 512, height: 512, format: "png", alpha: true, bitDepth: 8, colorType: 6, bytes: 200_000 })), { Size: "pass", Format: "pass", "File size": "pass", "Shape and color": "check" });
+    // Palette and grayscale PNGs can be transparent but aren't 32-bit.
+    for (const colorType of [3, 4]) assert.equal(status(checkPlayAsset("icon", { width: 512, height: 512, format: "png", alpha: true, bitDepth: 8, colorType, bytes: 1 })).Format, "fail");
     assert.deepEqual(status(checkPlayAsset("icon", { width: 1024, height: 1024, format: "jpeg", alpha: false, bytes: 2_000_000 })), { Size: "fail", Format: "fail", "File size": "fail", "Shape and color": "check" });
   });
 

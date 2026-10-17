@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useMemo, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { EventDraft } from "./EventDraft";
 import { StorePreview } from "./StorePreview";
@@ -42,8 +42,8 @@ export function Workbench() {
     } else if (template === "screenshots" || template === "experiment") {
       setTab("planning");
       setNotice(template === "screenshots" ? "Screenshot planning is ready." : "The experiment log is ready.");
-    } else if (params.get("tab") === "event") {
-      setTab("event");
+    } else if (tabs.some(([id]) => id === params.get("tab")?.toLowerCase())) {
+      setTab(params.get("tab")!.toLowerCase() as Tab);
     } else if (platform === "google-play") {
       setTab("google");
       setNotice("Google Play metadata is ready.");
@@ -55,15 +55,25 @@ export function Workbench() {
   const markStarted = () => { if (!started) { setStarted(true); trackEvent("workbench_started"); } };
   const updateField = (key: keyof WorkbenchData["fields"], value: string) => { markStarted(); setData(d => ({ ...d, fields: { ...d.fields, [key]: value }, updatedAt: new Date().toISOString() })); };
   const allWarnings = useMemo(() => [...new Set(Object.values(data.fields).flatMap(warnings))], [data.fields]);
-  const handleImport = async (e: ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0]; if (!file) return; try { const parsed = JSON.parse(await file.text()); if ([1, 2, 3].includes(parsed.version) && parsed.fields) setData(migrateWorkbench(parsed)); else setData(d => ({ ...d, fields: { ...d.fields, ...parseLocaleBundle(parsed) } })); markStarted(); trackEvent("workbench_imported"); setNotice("Imported into this browser. Nothing was published."); } catch (error) { setNotice(error instanceof Error ? error.message : "Could not read that file."); } e.target.value = ""; };
+  const handleImport = async (e: ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0]; if (!file) return; try { let parsed: unknown; try { parsed = JSON.parse(await file.text()); } catch { throw new Error("That file isn't valid JSON. Export it again from the workbench or your metadata tool."); } const saved = parsed as { version?: number; fields?: unknown } | null; if (saved && [1, 2, 3].includes(saved.version ?? 0) && saved.fields) setData(migrateWorkbench(saved)); else { const imported = parseLocaleBundle(parsed); setData(d => ({ ...d, fields: { ...d.fields, ...imported } })); } markStarted(); trackEvent("workbench_imported"); setNotice("Imported into this browser. Nothing was published."); } catch (error) { setNotice(error instanceof Error ? error.message : "Could not read that file."); } e.target.value = ""; };
   const toggleSave = () => { if (saveLocal) { localStorage.removeItem(STORAGE); setSaveLocal(false); trackEvent("workbench_save_changed", { enabled: false }); setNotice("Local saving is off and the saved draft was deleted."); } else { setSaveLocal(true); trackEvent("workbench_save_changed", { enabled: true }); setNotice("Draft saving is on for this browser."); } };
   const reset = () => { if (!confirm("Clear every field in this browser?")) return; localStorage.removeItem(STORAGE); setData(emptyWorkbench()); setSaveLocal(false); setStarted(false); trackEvent("workbench_reset"); setNotice("Workbench cleared."); };
+  // Arrow keys, Home and End move between tabs, as the tab pattern expects.
+  const moveTab = (event: KeyboardEvent<HTMLDivElement>) => {
+    const index = tabs.findIndex(([id]) => id === tab);
+    const next = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: tabs.length - 1 }[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    const target = tabs[(next + tabs.length) % tabs.length][0];
+    setTab(target);
+    (event.currentTarget.children[tabs.findIndex(([id]) => id === target)] as HTMLElement | undefined)?.focus();
+  };
   const selectTask = (next: Tab, task: string) => { setTab(next); trackEvent("workbench_section_viewed", { section_id: task }); };
   const exportFile = (format: "json" | "markdown") => { trackEvent("workbench_exported", { format }); if (format === "json") download("aso-workbench.json", JSON.stringify(data, null, 2), "application/json"); else download("aso-brief.md", toMarkdown(data), "text/markdown"); };
   return <div className="workbench-shell" data-testid="workbench" data-ready={hydrated}>
     <nav className="workbench-tasks" aria-label="Choose a workflow"><span>What are you doing today?</span><button onClick={() => selectTask("preview", "preview")}>Previewing my store page</button><button onClick={() => selectTask("brief", "launch")}>Planning a launch</button><button onClick={() => selectTask("apple", "metadata")}>Writing metadata</button><button onClick={() => selectTask("planning", "screenshots")}>Storyboarding screenshots</button><button onClick={() => selectTask("planning", "experiment")}>Planning a test</button><button onClick={() => selectTask("planning", "monthly_review")}>Monthly review</button></nav>
     <div className="workbench-toolbar">
-      <div className="tabs" role="tablist" aria-label="Workbench sections">{tabs.map(([t, label]) => <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}>{label}</button>)}</div>
+      <div className="tabs" role="tablist" aria-label="Workbench sections" onKeyDown={moveTab}>{tabs.map(([t, label]) => <button key={t} role="tab" aria-selected={tab === t} tabIndex={tab === t ? 0 : -1} onClick={() => setTab(t)}>{label}</button>)}</div>
       <div className="tool-actions"><label className="file-button">Import JSON<input type="file" accept="application/json,.json" onChange={handleImport}/></label><button onClick={() => exportFile("json")}>Export JSON</button><button onClick={() => exportFile("markdown")}>Export Markdown</button></div>
     </div>
     <div className="privacy-strip"><label className="switch"><input type="checkbox" checked={saveLocal} onChange={toggleSave}/><span>Save draft in this browser</span></label><span>Private by default. Your copy never leaves this page.</span><button className="text-button" onClick={reset}>Reset</button></div>

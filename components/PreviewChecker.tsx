@@ -45,9 +45,10 @@ export function PreviewChecker() {
 
   const open = (file: File | undefined) => {
     if (!file) return;
-    if (!file.type.startsWith("video/") && !/\.(mov|m4v|mp4)$/i.test(file.name)) { setStatus("That isn't a video file."); return; }
-    pending.current = file;
+    // Clear the last video's results first, so a rejected file never sits above another file's checks.
     setFacts(null);
+    if (!file.type.startsWith("video/") && !/\.(mov|m4v|mp4)$/i.test(file.name)) { setUrl(""); setStatus("That isn't a video file."); return; }
+    pending.current = file;
     setStatus("Reading the video…");
     setUrl(URL.createObjectURL(file));
   };

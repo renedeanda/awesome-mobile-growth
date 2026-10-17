@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { suggestPages, wordsFromPath } from "@/lib/notFound";
+import { searchableQuery, suggestPages, wordsFromPath } from "@/lib/notFound";
 import type { SearchEntry } from "@/lib/search";
 import { loadIndex, openSearchEvent } from "./SearchDialog";
 
@@ -14,7 +14,7 @@ export function NotFoundSuggestions() {
     const words = wordsFromPath(location.pathname);
     setQuery(words.join(" "));
     if (!words.length) { setSuggestions([]); return; }
-    loadIndex().then((index) => setSuggestions(suggestPages(index, location.pathname)), () => setSuggestions([]));
+    loadIndex().then((index) => { setSuggestions(suggestPages(index, location.pathname)); setQuery(searchableQuery(index, location.pathname)); }, () => setSuggestions([]));
   }, []);
 
   return <section className="not-found" aria-label="Pages you might have meant" data-ready={suggestions ? "" : undefined}>

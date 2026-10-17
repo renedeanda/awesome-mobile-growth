@@ -164,6 +164,10 @@ p { text-wrap: pretty; }
 .prose li + li { margin-top: .45rem; }
 .prose blockquote { margin: 2rem 0; padding: 1.2rem 1.4rem; border-left: 3px solid var(--coral); background: var(--sheet); }
 .prose code { font-family: var(--mono); font-size: .9em; }
+/* Code samples wrap instead of widening the page on phones (long manifest attributes did). */
+.prose pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+/* Tool output echoes what people type; one long unbroken word must not widen the page. */
+.tool-panel, .packer { overflow-wrap: anywhere; }
 .prose img { max-width: 100%; height: auto; }
 .table-scroll { max-width: 100%; overflow-x: auto; margin: 2rem 0; border: 1px solid var(--line); }
 .prose table { width: 100%; border-collapse: collapse; background: var(--sheet); }

@@ -28,8 +28,12 @@ export function parseLocaleBundle(input: unknown): Partial<ListingFields> {
   if (!input || typeof input !== "object") throw new Error("That file does not contain a metadata object.");
   const root = input as Record<string, unknown>;
   const candidate = (root.localizations && typeof root.localizations === "object" ? Object.values(root.localizations as Record<string, unknown>)[0] : root) as Record<string, unknown>;
-  const value = (...keys: string[]) => { for (const key of keys) if (typeof candidate[key] === "string") return candidate[key] as string; return ""; };
-  return { appleName: value("name", "appName"), appleSubtitle: value("subtitle"), applePromotional: value("promotionalText", "promotional_text"), appleDescription: value("description"), appleKeywords: value("keywords"), appleWhatsNew: value("whatsNew", "whats_new") };
+  const keys: Array<[keyof ListingFields, string[]]> = [["appleName", ["name", "appName"]], ["appleSubtitle", ["subtitle"]], ["applePromotional", ["promotionalText", "promotional_text"]], ["appleDescription", ["description"]], ["appleKeywords", ["keywords"]], ["appleWhatsNew", ["whatsNew", "whats_new"]]];
+  // Only the fields the file actually has, so importing a partial bundle never blanks the others.
+  const found: Partial<ListingFields> = {};
+  for (const [field, names] of keys) { const name = names.find((key) => typeof candidate?.[key] === "string"); if (name) found[field] = candidate[name] as string; }
+  if (!Object.keys(found).length) throw new Error("That file has no App Store metadata the workbench recognizes. Import a workbench export or a JSON file with name, subtitle, keywords or description.");
+  return found;
 }
 export function toMarkdown(data: WorkbenchData) {
   const f = data.fields;

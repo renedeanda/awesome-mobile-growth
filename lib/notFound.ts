@@ -33,3 +33,11 @@ export function suggestPages(index: SearchEntry[], pathname: string, limit = 3) 
   }
   return [...picks.values()];
 }
+
+/** The broken URL's words that still find something together, so "Search for …" never opens on an empty result.
+ * Search needs every word to match, so a word with no match anywhere ("tools" in "/tools/frame-studio") is dropped. */
+export function searchableQuery(index: SearchEntry[], pathname: string) {
+  const kept: string[] = [];
+  for (const word of wordsFromPath(pathname)) if (search(index, [...kept, word].join(" "), 1).length) kept.push(word);
+  return kept.join(" ");
+}
