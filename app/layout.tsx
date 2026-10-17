@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { ServiceWorker } from "@/components/ServiceWorker";
 import { site, absolute } from "@/lib/site";
+import { PLATFORM_SCRIPT } from "@/lib/platformDetect";
 import "./globals.css";
 
 const image = {
@@ -38,7 +39,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     { "@context": "https://schema.org", "@type": "WebSite", name: site.name, url: site.origin, description: site.description, publisher: { "@id": `${site.origin}/#publisher` } },
     { "@context": "https://schema.org", "@type": "Person", "@id": `${site.origin}/#publisher`, name: site.author, url: "https://productbuilder.net", sameAs: [site.github] },
   ];
-  return <html lang="en" data-scroll-behavior="smooth"><body>
+  // The pre-paint script sets data-platform on <html>, so React must not treat it as a mismatch.
+  return <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: PLATFORM_SCRIPT }}/></head><body>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
     <a className="skip" href="#main">Skip to content</a><SiteHeader/><main id="main" className="page">{children}</main><SiteFooter/><GoogleAnalytics/><ServiceWorker/>
   </body></html>;
