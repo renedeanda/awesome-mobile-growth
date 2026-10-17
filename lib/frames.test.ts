@@ -30,7 +30,7 @@ describe("frame studio targets", () => {
 
 describe("caption fitting", () => {
   it("wraps on words and keeps explicit line breaks", () => {
-    assert.deepEqual(wrapCaption("Track every habit in one tap", 100, 10, measure), ["Track every habit", "in one tap"]);
+    assert.deepEqual(wrapCaption("Log each frame in one tap", 100, 10, measure), ["Log each frame in", "one tap"]);
     assert.deepEqual(wrapCaption("One\nTwo", 1000, 10, measure), ["One", "Two"]);
   });
   it("shrinks a long caption to at most three lines that fit the width", () => {
@@ -65,6 +65,6 @@ describe("frame layout", () => {
     assert.ok(cropShare(1206 / 2622, landscape) > 0.5);
     assert.ok(cropShare(1206 / 2622, layoutFrame([1320, 2868], "dynamic-island", null).screen) < 0.01);
   });
-  it("counts caption words", () => { assert.equal(wordCount("  Check off habits\nwith one tap "), 6); assert.equal(wordCount(""), 0); });
+  it("counts caption words", () => { assert.equal(wordCount("  Log each\nframe in one tap "), 6); assert.equal(wordCount(""), 0); });
   it("offers at least one style for every target", () => assert.ok(frameTargets.every((target) => target.styles.length > 0)));
 });

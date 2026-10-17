@@ -217,11 +217,11 @@ test("frame studio exports exact-size RGB frames and hands them to the store pre
   await expect(page.getByLabel("Export size")).toHaveValue("1320 × 2868");
   await studio.locator(".frame-drop input").setInputFiles(shots);
   await expect(page.getByRole("status")).toContainText("Added 3 screenshots");
-  await page.getByLabel("Frame 1 caption").fill("Plan the week in one view");
+  await page.getByLabel("Frame 1 caption").fill("Know what worked on every roll");
   await page.getByText("Paste captions, one per line").click();
-  await page.getByLabel("Captions", { exact: true }).fill("Plan the week in one view\nShare a list in two taps\nWorks offline");
+  await page.getByLabel("Captions", { exact: true }).fill("Know what worked on every roll\nLog each frame in one tap\nMeter light with your phone camera");
   await page.getByRole("button", { name: "Apply to frames in order" }).click();
-  await expect(page.getByLabel("Frame 3 caption")).toHaveValue("Works offline");
+  await expect(page.getByLabel("Frame 3 caption")).toHaveValue("Meter light with your phone camera");
   const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Export 3 frames" }).click()]);
   expect(download.suggestedFilename()).toBe("iphone-dynamic-island-large-1320x2868.zip");
   const entries = unzipStored(new Uint8Array(fs.readFileSync(await download.path())));
@@ -331,6 +331,6 @@ test("frame studio warns about cropped captures and long captions", async ({ pag
   await page.getByRole("button", { name: "Landscape" }).click();
   await page.getByTestId("frame-studio").locator(".frame-drop input").setInputFiles(shots[0]);
   await expect(page.locator(".frame-card__crop")).toContainText("of this capture is cropped. Use a landscape capture");
-  await page.getByLabel("Frame 1 caption").fill("Track every single habit you have in one simple place");
+  await page.getByLabel("Frame 1 caption").fill("Log aperture, shutter, lens and notes for every single frame");
   await expect(page.getByText("10 words · aim for 7 or fewer")).toBeVisible();
 });
