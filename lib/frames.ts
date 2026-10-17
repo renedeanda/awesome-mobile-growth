@@ -58,6 +58,20 @@ export function playRuleCheck([w, h]: Size) {
   return problems;
 }
 
+const contain = (box: Rect, aspect: number): Rect => {
+  const w = Math.min(box.w, box.h * aspect), h = w / aspect;
+  return { x: box.x + (box.w - w) / 2, y: box.y + (box.h - h) / 2, w, h };
+};
+
+/** Share of a capture cut off when it is drawn to cover a screen of another shape (0 to 1). */
+export function cropShare(imageAspect: number, screen: Rect) {
+  const screenAspect = screen.w / screen.h;
+  return 1 - Math.min(imageAspect, screenAspect) / Math.max(imageAspect, screenAspect);
+}
+
+/** Words in a caption; the screenshots guide aims for seven or fewer. */
+export const wordCount = (text: string) => text.split(/\s+/).filter(Boolean).length;
+
 export type Measure = (text: string, fontSize: number) => number;
 
 /** Greedy word wrap; an explicit line break always starts a new line. */
@@ -119,8 +133,13 @@ export function layoutFrame(size: Size, style: FrameStyle, caption: ReturnType<t
   const box: Rect = { x: pad, y: top, w: w - pad * 2, h: h - top - pad };
 
   if (style === "none") {
-    // With no caption either, the screenshot fills the canvas: a plain resize to the store size.
-    if (!placedCaption) return { caption: null, body: null, bodyRadius: 0, screen: { x: 0, y: 0, w, h }, screenRadius: 0, rotated: false };
+    // With no caption either, this is a plain resize to the store size. A capture that is a different
+    // shape (a 1080 × 2400 phone capture for Play's 1080 × 1920) is padded, never silently cropped.
+    if (!placedCaption) {
+      const fill = { x: 0, y: 0, w, h };
+      const screen = imageAspect && Math.abs(imageAspect / (w / h) - 1) > 0.02 ? contain(fill, imageAspect) : fill;
+      return { caption: null, body: null, bodyRadius: 0, screen, screenRadius: 0, rotated: false };
+    }
     const aspect = imageAspect ?? box.w / box.h;
     const sw = Math.min(box.w, box.h * aspect), sh = sw / aspect;
     return { caption: placedCaption, body: null, bodyRadius: 0, screen: { x: box.x + (box.w - sw) / 2, y: box.y + (box.h - sh) / 2, w: sw, h: sh }, screenRadius: Math.round(sw * 0.04), rotated: false };

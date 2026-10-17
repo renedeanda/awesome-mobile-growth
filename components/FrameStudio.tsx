@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { DragEvent, useEffect, useRef, useState } from "react";
+import { DragEvent, useEffect, useMemo, useRef, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
-import { frameFileName, frameTargets, getTarget, largestSize, playRuleCheck, styleLabels, type FrameStyle, type Size } from "@/lib/frames";
+import { cropShare, frameFileName, frameTargets, getTarget, largestSize, layoutFrame, playRuleCheck, styleLabels, wordCount, type FrameStyle, type Size } from "@/lib/frames";
 import { drawFrame, type Background, type DeviceTone, type FrameImage, type FrameSettings } from "@/lib/frameCanvas";
 import { setHandoffFrames } from "@/lib/frameHandoff";
 import { encodeRgbPng } from "@/lib/png";
@@ -36,9 +36,10 @@ function FramePreview({ settings, caption, image, label }: { settings: FrameSett
   return <canvas ref={ref} className="frame-canvas" role="img" aria-label={label}/>;
 }
 
-async function renderFull(settings: FrameSettings, caption: string, image: FrameImage, format: Format) {
+// One canvas is reused for every frame in an export and released afterwards: iOS Safari caps total
+// canvas memory, and ten 13-inch iPad frames on separate canvases would exceed it.
+async function renderFull(canvas: HTMLCanvasElement, settings: FrameSettings, caption: string, image: FrameImage, format: Format) {
   const [w, h] = settings.size;
-  const canvas = document.createElement("canvas");
   canvas.width = w;
   canvas.height = h;
   const ctx = canvas.getContext("2d", { alpha: false });
@@ -77,7 +78,8 @@ export function FrameStudio() {
   const [bulk, setBulk] = useState("");
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
-  const [exported, setExported] = useState(0);
+  // The settings and frame list an export was made from; the handoff button shows only while both still match.
+  const [exportedFrom, setExportedFrom] = useState<{ settings: FrameSettings; shots: Shot[] } | null>(null);
   const [dragging, setDragging] = useState(false);
 
   const chooseTarget = (id: string) => {
@@ -101,8 +103,10 @@ export function FrameStudio() {
   useEffect(() => () => shotsRef.current.forEach((shot) => shot.image.close()), []);
 
   const base = target.sizes.find((size) => formatSize(size) === sizeKey) ?? largestSize(target);
-  const size: Size = landscape ? [base[1], base[0]] : base;
-  const settings: FrameSettings = { size, style, background, textColor, tone };
+  const [width, height] = landscape ? [base[1], base[0]] : base;
+  const size: Size = useMemo(() => [width, height], [width, height]);
+  // Stable unless a setting changes, so editing one caption redraws only that frame's preview.
+  const settings: FrameSettings = useMemo(() => ({ size, style, background, textColor, tone }), [size, style, background, textColor, tone]);
   const playProblems = target.store === "google-play" ? playRuleCheck(size) : [];
 
   const addFiles = async (files: File[]) => {
@@ -123,7 +127,7 @@ export function FrameStudio() {
   };
 
   const updateShot = (id: number, caption: string) => setShots((current) => current.map((shot) => shot.id === id ? { ...shot, caption } : shot));
-  const removeShot = (id: number) => setShots((current) => { current.find((shot) => shot.id === id)?.image.close(); return current.filter((shot) => shot.id !== id); });
+  const removeShot = (id: number) => { shots.find((shot) => shot.id === id)?.image.close(); setShots((current) => current.filter((shot) => shot.id !== id)); };
   const moveShot = (index: number, by: number) => setShots((current) => {
     const next = [...current];
     const [item] = next.splice(index, 1);
@@ -145,12 +149,17 @@ export function FrameStudio() {
     setStatus(`Exporting ${list.length} frame${list.length === 1 ? "" : "s"} at ${formatSize(size)}…`);
     try {
       const blobs: Blob[] = [];
-      for (const shot of list) blobs.push(await renderFull(settings, shot.caption, shot.image, format));
+      const canvas = document.createElement("canvas");
+      try {
+        for (const shot of list) blobs.push(await renderFull(canvas, settings, shot.caption, shot.image, format));
+      } finally {
+        canvas.width = canvas.height = 0;
+      }
       const names = blobs.map((_, index) => frameFileName(target.id, size, index, format));
       if (blobs.length === 1) save(blobs[0], names[0]);
       else save(zip(await Promise.all(blobs.map(async (blob, index) => ({ name: names[index], data: new Uint8Array(await blob.arrayBuffer()) })))), `${target.id}-${size[0]}x${size[1]}.zip`);
       setHandoffFrames(blobs);
-      setExported(blobs.length);
+      setExportedFrom({ settings, shots });
       trackEvent("tool_completed", { tool_id: "screenshot-frames", format, platform: target.store });
       setStatus(`Saved ${blobs.length} frame${blobs.length === 1 ? "" : "s"} at ${formatSize(size)} pixels, ${format === "png" ? "24-bit PNG" : "JPEG"} with no transparency.`);
     } catch (error) {
@@ -207,7 +216,8 @@ export function FrameStudio() {
       {shots.map((shot, index) => <figure className="frame-card" key={shot.id}>
         <FramePreview settings={settings} caption={shot.caption} image={shot.image} label={`Frame ${index + 1}${shot.caption ? `: ${shot.caption}` : ""}`}/>
         <figcaption>
-          <label className="field"><span className="field-label">Frame {index + 1} caption{index >= target.maxFrames && <small className="over">not exported</small>}</span><textarea rows={2} value={shot.caption} onChange={(event) => updateShot(shot.id, event.target.value)} placeholder="One idea, a few words"/></label>
+          <label className="field"><span className="field-label">Frame {index + 1} caption{index >= target.maxFrames && <small className="over">not exported</small>}</span><textarea rows={2} value={shot.caption} onChange={(event) => updateShot(shot.id, event.target.value)} placeholder="One idea, a few words"/><CaptionLength text={shot.caption}/></label>
+          <CropNote settings={settings} image={shot.image}/>
           <div className="frame-card__actions">
             <button type="button" onClick={() => moveShot(index, -1)} disabled={index === 0} aria-label={`Move frame ${index + 1} earlier`}>←</button>
             <button type="button" onClick={() => moveShot(index, 1)} disabled={index === shots.length - 1} aria-label={`Move frame ${index + 1} later`}>→</button>
@@ -226,8 +236,22 @@ export function FrameStudio() {
     <div className="frame-studio__export">
       <div className="segmented" role="group" aria-label="File format"><button type="button" aria-pressed={format === "png"} onClick={() => setFormat("png")}>PNG</button><button type="button" aria-pressed={format === "jpg"} onClick={() => setFormat("jpg")}>JPEG</button></div>
       <button type="button" className="button" onClick={exportAll} disabled={!shots.length || busy || playProblems.length > 0}>{busy ? "Exporting…" : exportCount ? `Export ${exportCount} frame${exportCount === 1 ? "" : "s"}` : "Export frames"}</button>
-      {exported > 0 && <button type="button" className="button-secondary" onClick={() => router.push("/workbench/?from=frames")}>See them in the Store preview</button>}
+      {exportedFrom?.settings === settings && exportedFrom.shots === shots && <button type="button" className="button-secondary" onClick={() => router.push("/workbench/?from=frames")}>See them in the Store preview</button>}
     </div>
     <p className="tool-caveat">Frames are generic device shapes drawn in code, not replicas of any model. Apple’s App Review Guidelines (2.3.3) ask for screenshots that show the app in use, so put real screens inside them.</p>
   </div>;
+}
+
+function CaptionLength({ text }: { text: string }) {
+  const words = wordCount(text);
+  if (!words) return null;
+  return <small className={`frame-card__words${words > 7 ? " over" : ""}`}>{words} word{words === 1 ? "" : "s"}{words > 7 ? " · aim for 7 or fewer so it reads at thumbnail size" : ""}</small>;
+}
+
+function CropNote({ settings, image }: { settings: FrameSettings; image: FrameImage }) {
+  const screen = layoutFrame(settings.size, settings.style, null, image.width / image.height).screen;
+  const share = cropShare(image.width / image.height, screen);
+  if (share <= 0.12) return null;
+  const shape = screen.w > screen.h ? "landscape" : "portrait";
+  return <p className="frame-card__crop" role="note">About {Math.round(share * 100)}% of this capture is cropped. Use a {shape} capture{settings.style === "none" ? "" : ", or pick No device frame to pad it"}.</p>;
 }

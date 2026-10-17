@@ -654,6 +654,8 @@ p { text-wrap: pretty; }
 .frame-card figcaption { color: var(--muted); font-size: .85rem; }
 .frame-card .field { margin-bottom: .5rem; }
 .frame-canvas { display: block; width: 100%; height: auto; border: 1px solid var(--line); background: var(--paper); }
+.frame-card__words { display: block; margin-top: .3rem; color: var(--muted); font: 650 .72rem var(--mono); }
+.frame-card__crop { margin: 0; padding: .5rem .65rem; border-left: 3px solid var(--coral); background: var(--paper); color: var(--ink); font-size: .82rem; }
 .frame-card__actions { display: flex; gap: .35rem; }
 .frame-card__actions button, .frame-studio .button-secondary { min-height: 44px; padding: .45rem .75rem; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; font-weight: 730; }
 .frame-card__actions button:disabled, .frame-studio button:disabled { cursor: not-allowed; opacity: .45; }
