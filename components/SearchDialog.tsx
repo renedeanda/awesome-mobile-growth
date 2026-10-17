@@ -6,7 +6,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { search, type SearchEntry } from "@/lib/search";
 
 let indexRequest: Promise<SearchEntry[]> | undefined;
-const loadIndex = () => indexRequest ??= fetch("/search-index.json").then((response) => response.ok ? response.json() : Promise.reject(new Error(String(response.status)))).catch((error) => { indexRequest = undefined; throw error; });
+export const loadIndex = () => indexRequest ??= fetch("/search-index.json").then((response) => response.ok ? response.json() : Promise.reject(new Error(String(response.status)))).catch((error) => { indexRequest = undefined; throw error; });
+
+export const openSearchEvent = "amg:open-search";
 
 const typing = (target: EventTarget | null) => target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
 
@@ -20,9 +22,10 @@ export function SearchDialog() {
   const [active, setActive] = useState(0);
   const results = useMemo(() => index ? search(index, query) : [], [index, query]);
 
-  const open = () => {
+  const open = (prefill?: string) => {
     const dialog = dialogRef.current;
     if (!dialog || dialog.open) return;
+    if (prefill !== undefined) setQuery(prefill);
     dialog.showModal();
     inputRef.current?.select();
     if (!index) loadIndex().then(setIndex, () => setFailed(true));
@@ -33,8 +36,11 @@ export function SearchDialog() {
     const onKey = (event: KeyboardEvent) => {
       if ((event.key === "k" && (event.metaKey || event.ctrlKey)) || (event.key === "/" && !typing(event.target))) { event.preventDefault(); open(); }
     };
+    // Other components (the 404 page) open search with a query: dispatch openSearchEvent with the query as detail.
+    const onRequest = (event: Event) => open((event as CustomEvent<string | undefined>).detail);
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    document.addEventListener(openSearchEvent, onRequest);
+    return () => { document.removeEventListener("keydown", onKey); document.removeEventListener(openSearchEvent, onRequest); };
   });
 
   useEffect(() => setActive(0), [query]);
@@ -47,7 +53,7 @@ export function SearchDialog() {
   };
 
   return <>
-    <button type="button" className="search-toggle" onClick={open} aria-haspopup="dialog" aria-label="Search the site">
+    <button type="button" className="search-toggle" onClick={() => open()} aria-haspopup="dialog" aria-label="Search the site">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15zM16 16l5 5"/></svg>
       <span className="search-toggle__label" aria-hidden="true">Search</span><kbd aria-hidden="true">⌘K</kbd>
     </button>
