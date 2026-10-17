@@ -10,7 +10,7 @@ const icons: Record<string, { size: number; radius: number; inset: number }> = {
   "apple-touch-icon.png": { size: 180, radius: 0, inset: 0.06 },
   "192.png": { size: 192, radius: 0.22, inset: 0 },
   "512.png": { size: 512, radius: 0.22, inset: 0 },
-  "maskable-512.png": { size: 512, radius: 0, inset: 0.12 },
+  "maskable-512.png": { size: 512, radius: 0, inset: 0.16 },
 };
 
 export function generateStaticParams() {

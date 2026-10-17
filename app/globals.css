@@ -791,6 +791,7 @@ p { text-wrap: pretty; }
 .share-button svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .share-button:hover, .share-button:focus-visible { border-color: var(--blue); color: var(--blue); }
 .share__status { color: var(--green); font-size: .85rem; font-weight: 700; }
+.share__status[data-error] { color: var(--coral); }
 .article-meta .share { margin-top: 0; }
 
 /* Checklist finish moment */

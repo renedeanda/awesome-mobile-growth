@@ -37,6 +37,8 @@ jobs:
         run: npm run audit:seo
       - name: Audit internal links
         run: npm run audit:links
+      - name: Audit the AI skill package
+        run: npm run audit:skills
       - name: Audit official documentation links
         run: npm run audit:external
       - name: Run browser tests
