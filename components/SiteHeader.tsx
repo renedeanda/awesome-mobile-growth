@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { tools } from "@/lib/tools";
 import { SearchDialog } from "./SearchDialog";
 import { BrandMark } from "./BrandMark";
-import { InstallRow, useInstallPrompt } from "./InstallRow";
+import { InstallRow, InstallToast, useInstallPrompt } from "./InstallRow";
 
 type NavLink = { href: string; label: string; note?: string };
 type NavGroup = { title: string; links: NavLink[] };
@@ -223,7 +223,7 @@ export function SiteHeader() {
             </li>)}</ul>
           </section>)}
         </nav>
-        <InstallRow {...installPrompt}/>
+        <InstallRow mode={installPrompt.mode} install={installPrompt.install}/>
       </div>
     </div>
 
@@ -233,5 +233,6 @@ export function SiteHeader() {
         return <Link key={tab.href} href={tab.href} aria-current={active ? "page" : undefined} onClick={(event) => onTab(event, tab.href)}><TabIcon name={tab.label}/><span>{tab.label}</span></Link>;
       })}
     </nav>
+    <InstallToast installed={installPrompt.installed}/>
   </>;
 }

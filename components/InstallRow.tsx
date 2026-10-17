@@ -15,15 +15,21 @@ const isIOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.p
 export function useInstallPrompt() {
   const [event, setEvent] = useState<InstallPrompt | null>(null);
   const [mode, setMode] = useState<Mode>("hidden");
+  const [installed, setInstalled] = useState(false);
   useEffect(() => {
     if (standalone()) return;
     if (isIOS()) setMode("ios");
     const onPrompt = (prompt: Event) => { prompt.preventDefault(); setEvent(prompt as InstallPrompt); setMode("prompt"); };
-    const onInstalled = () => { setEvent(null); setMode("hidden"); };
+    const onInstalled = () => { setEvent(null); setMode("hidden"); setInstalled(true); };
     addEventListener("beforeinstallprompt", onPrompt);
     addEventListener("appinstalled", onInstalled);
     return () => { removeEventListener("beforeinstallprompt", onPrompt); removeEventListener("appinstalled", onInstalled); };
   }, []);
+  useEffect(() => {
+    if (!installed) return;
+    const timer = setTimeout(() => setInstalled(false), 6000);
+    return () => clearTimeout(timer);
+  }, [installed]);
   const install = async () => {
     if (!event) return;
     // A prompt can only be shown once, so the row goes away whatever the answer.
@@ -35,10 +41,16 @@ export function useInstallPrompt() {
       trackEvent("install_prompt", { outcome });
     } catch { /* the browser refused to show it */ }
   };
-  return { mode, install };
+  return { mode, install, installed };
 }
 
-export function InstallRow({ mode, install }: ReturnType<typeof useInstallPrompt>) {
+/** Confirms the install. Chromium opens the installed app on its own, so the message names where to find it later.
+ * The live region stays mounted so screen readers announce the text when it appears. */
+export function InstallToast({ installed }: { installed: boolean }) {
+  return <p className="install-toast" role="status">{installed ? "Installed. Open Mobile Growth from your home screen or app list." : ""}</p>;
+}
+
+export function InstallRow({ mode, install }: Pick<ReturnType<typeof useInstallPrompt>, "mode" | "install">) {
   if (mode === "hidden") return null;
   return <div className="menu-install">
     <BrandMark size={44}/>

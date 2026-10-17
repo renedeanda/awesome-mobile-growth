@@ -530,6 +530,16 @@ test.describe("app-like polish", () => {
       await expect(page.locator(".menu-install")).toHaveCount(0);
     });
 
+    test("confirms the install, then clears the message", async ({ page }) => {
+      await page.clock.install();
+      await page.goto("/");
+      await expect(page.locator(".install-toast")).toBeHidden();
+      await expect.poll(() => page.evaluate(() => { dispatchEvent(new Event("appinstalled")); return document.querySelector(".install-toast")?.textContent ?? ""; })).toContain("Installed");
+      await expect(page.getByRole("status").filter({ hasText: "Installed" })).toBeVisible();
+      await page.clock.runFor(6500);
+      await expect(page.locator(".install-toast")).toBeHidden();
+    });
+
     test.describe("on iPhone", () => {
       test.use({ userAgent: phoneUA.apple });
 
