@@ -47,7 +47,7 @@ export function AppPreviewTable() {
   const sizes = (list: Array<[number, number]>) => list.length ? list.map(formatSize).join(" or ") : "Landscape only";
   return <div className="table-scroll" role="region" aria-label="App preview resolutions" tabIndex={0}>
     <table><thead><tr><th scope="col">Display class</th><th scope="col">Portrait</th><th scope="col">Landscape</th><th scope="col">If missing</th></tr></thead>
-      <tbody>{appPreviewClasses.map((row) => <tr key={row.id}><th scope="row">{row.name}</th><td className="size-cell">{sizes(row.portrait)}</td><td className="size-cell">{sizes(row.landscape)}</td><td>{row.fallback ? `Scaled from ${row.fallback}` : "No preview shown"}</td></tr>)}</tbody></table>
+      <tbody>{appPreviewClasses.map((row) => <tr key={row.id}><th scope="row">{row.name}</th><td className="size-cell">{sizes(row.portrait)}</td><td className="size-cell">{sizes(row.landscape)}</td><td>{row.fallback ? `Scaled from ${row.fallback}` : "No fallback listed"}</td></tr>)}</tbody></table>
     <p className="table-source">Source: <a href={appPreviewSource}>Apple app preview specifications</a>. Use the accepted resolution, not the device resolution.</p>
   </div>;
 }
