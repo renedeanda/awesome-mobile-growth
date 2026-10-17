@@ -84,6 +84,7 @@ export default async function SpecDetail({ params }: { params: Promise<{ slug: s
       <section className="do-today" aria-label="Next steps"><p className="micro-label">Next steps</p><ol>
         <li>Plan what the first three frames say in the <Link href="/store-page/screenshots/">screenshots guide</Link>.</li>
         <li>Storyboard each frame with the <Link href="/tools/app-store-screenshot-sizes/">screenshot planner</Link>.</li>
+        {page.device !== "Apple Watch" && <li>Put your captures in device frames and export them at these sizes with the <Link href={`/tools/screenshot-frames/?class=${page.slug}`}>screenshot frame studio</Link>.</li>}
         <li>See your icon and screenshots in a search result with the <Link href="/workbench/">Workbench store preview</Link>.</li>
       </ol></section>
       <h2 id="sources">Official sources</h2>

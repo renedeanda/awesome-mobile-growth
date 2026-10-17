@@ -2,6 +2,7 @@
 
 import { ChangeEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { ListingFields } from "@/lib/workbench";
+import { getHandoffFrames } from "@/lib/frameHandoff";
 
 type Store = "apple" | "google";
 
@@ -9,12 +10,12 @@ type Store = "apple" | "google";
 function useImages() {
   const [urls, setUrls] = useState<string[]>([]);
   useEffect(() => () => urls.forEach((url) => URL.revokeObjectURL(url)), [urls]);
+  const fromBlobs = (blobs: Blob[]) => { if (blobs.length) setUrls(blobs.map((blob) => URL.createObjectURL(blob))); };
   const pick = (event: ChangeEvent<HTMLInputElement>, max: number) => {
-    const files = [...(event.target.files ?? [])].filter((file) => file.type.startsWith("image/")).slice(0, max);
-    if (files.length) setUrls(files.map((file) => URL.createObjectURL(file)));
+    fromBlobs([...(event.target.files ?? [])].filter((file) => file.type.startsWith("image/")).slice(0, max));
     event.target.value = "";
   };
-  return [urls, pick] as const;
+  return [urls, pick, fromBlobs] as const;
 }
 
 // Reports whether a one-line element is cut off at the frame's width.
@@ -46,7 +47,15 @@ function Shots({ urls, count, className }: { urls: string[]; count: number; clas
 export function StorePreview({ fields }: { fields: ListingFields }) {
   const [store, setStore] = useState<Store>("apple");
   const [icon, pickIcon] = useImages();
-  const [shots, pickShots] = useImages();
+  const [shots, pickShots, showBlobs] = useImages();
+  const [fromStudio, setFromStudio] = useState<number | null>(null);
+  // Frames exported from the studio in this tab arrive through memory, never storage.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("from") !== "frames") return;
+    const frames = getHandoffFrames();
+    showBlobs(frames.slice(0, 8));
+    setFromStudio(frames.length);
+  }, []);
   const name = (store === "apple" ? fields.appleName : fields.googleName) || "Your app name";
   const subtitle = (store === "apple" ? fields.appleSubtitle : fields.googleShort) || (store === "apple" ? "Your subtitle" : "Your short description");
   const description = (store === "apple" ? fields.appleDescription : fields.googleFull) || "The first lines of your description show here. Most people never tap more, so say what the app does and who it is for.";
@@ -60,6 +69,7 @@ export function StorePreview({ fields }: { fields: ListingFields }) {
       <label className="file-button">Add screenshots<input type="file" accept="image/*" multiple onChange={(event) => pickShots(event, 8)}/></label>
     </div>
     <p className="store-preview__note">Uses the text from the Apple and Google Play tabs. Images stay in this tab and are not saved.</p>
+    {fromStudio !== null && <p className="notice" role="status">{fromStudio ? `Showing ${Math.min(fromStudio, 8)} frame${fromStudio === 1 ? "" : "s"} from the screenshot frame studio.` : "The studio frames are gone after a reload. Export them again from the screenshot frame studio."}</p>}
     <div className="store-preview__frames">
       <figure>
         <figcaption>Search result</figcaption>
