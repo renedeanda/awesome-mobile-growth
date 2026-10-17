@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "build:assets": "node scripts/build-skill-package.mjs",
-    "build": "npm run build:assets && next build --webpack",
+    "build": "node scripts/check-analytics.mjs && npm run build:assets && next build --webpack",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "node --experimental-strip-types --test lib/*.test.ts",
