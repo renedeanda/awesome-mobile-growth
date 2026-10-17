@@ -166,7 +166,9 @@ p { text-wrap: pretty; }
 .prose code { font-family: var(--mono); font-size: .9em; }
 .prose img { max-width: 100%; height: auto; }
 .table-scroll { max-width: 100%; overflow-x: auto; margin: 2rem 0; border: 1px solid var(--line); }
-.prose table { width: 100%; min-width: 620px; border-collapse: collapse; background: var(--sheet); }
+.prose table { width: 100%; border-collapse: collapse; background: var(--sheet); }
+/* Only wide tables scroll on phones; two- and three-column tables wrap so their values stay on screen. */
+.prose table:has(th:nth-child(4)) { min-width: 620px; }
 .prose th, .prose td { padding: .8rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
 .prose th { font-size: .8rem; }
 .toc { position: sticky; top: 96px; align-self: start; padding-top: 1rem; border-top: 3px solid var(--blue); color: var(--muted); }
@@ -339,7 +341,7 @@ p { text-wrap: pretty; }
 @media (max-width: 920px) {
   .desktop-nav { display: none; }
   .menu-toggle { display: grid; }
-  .tab-bar { position: fixed; inset: auto 0 0; z-index: 60; display: grid; grid-template-columns: repeat(4, 1fr); padding: .3rem max(.5rem, env(safe-area-inset-right)) calc(.3rem + env(safe-area-inset-bottom)) max(.5rem, env(safe-area-inset-left)); border-top: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(18px); }
+  .tab-bar { position: fixed; inset: auto 0 0; z-index: 60; display: grid; grid-template-columns: repeat(4, 1fr); padding: .3rem max(.5rem, env(safe-area-inset-right)) calc(.3rem + env(safe-area-inset-bottom)) max(.5rem, env(safe-area-inset-left)); border-top: 1px solid var(--line); background: var(--paper); }
   .tab-bar a { display: grid; justify-items: center; align-content: center; gap: .15rem; min-height: 52px; color: var(--muted); font-size: .7rem; font-weight: 700; text-decoration: none; }
   .tab-bar a[aria-current="page"] { color: var(--blue); }
   body { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
@@ -565,7 +567,7 @@ p { text-wrap: pretty; }
 .checklist__now { margin-left: .5rem; padding: .1rem .45rem; border-radius: 99px; background: var(--green); color: var(--paper); letter-spacing: .06em; }
 
 /* Store preview (workbench) */
-.store-preview { display: grid; gap: 1rem; }
+.store-preview { display: grid; gap: 1rem; padding: 1rem; }
 .store-preview__controls { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
 .store-preview__controls .segmented { margin: 0; }
 .store-preview__note { margin: 0; color: var(--muted); font-size: .9rem; }

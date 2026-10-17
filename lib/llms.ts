@@ -23,6 +23,9 @@ export function buildLlmsIndex() {
 
 > Practical, sourced guides for launching and growing apps on the App Store and Google Play, free browser tools, and an open AI agent skill.
 
+## Start here
+- [What is App Store Optimization (ASO)?](${url("/app-store-optimization/")}): what ASO includes, how App Store and Google Play search differ, and the order to work in.
+
 ${bySection}
 
 ## Tools
@@ -35,9 +38,17 @@ Accepted pixel sizes per device class, checked against Apple and Google on ${spe
 
 ${sizeLinks.join("\n")}
 
+## Metrics glossary
+- [App Store and Google Play metrics glossary](${url("/learn/metrics/")})
+${metrics.map((metric) => `- [${metric.title}](${url(`/learn/metrics/${metric.slug}/`)}): ${metric.description}`).join("\n")}
+
+## Platform changes
+- [All dated platform changes](${url("/changes/")})
+${changes.map((change) => `- [${change.title}](${url(`/changes/${change.slug}/`)}): ${change.summary}`).join("\n")}
+
 ## More
-- [Platform changes](${url("/changes/")})
-- [App Store metrics glossary](${url("/learn/metrics/")})
+- [Mobile growth podcasts](${url("/learn/podcasts/")})
+- [ASO and mobile growth tools: an independent list](${url("/learn/resources/")})
 - [Answers index](${url("/llms-full.txt")})
 
 ## Data
