@@ -7,6 +7,7 @@ type MdxModule = { default: ComponentType };
 export const articleLoaders: Record<string, () => Promise<MdxModule>> = {
   "launch/checklist": () => import("@/content/launch/checklist.mdx"),
   "launch/google-play": () => import("@/content/launch/google-play.mdx"),
+  "launch/large-screens": () => import("@/content/launch/large-screens.mdx"),
   "launch/ipad": () => import("@/content/launch/ipad.mdx"),
   "launch/iphone": () => import("@/content/launch/iphone.mdx"),
   "launch/mac": () => import("@/content/launch/mac.mdx"),

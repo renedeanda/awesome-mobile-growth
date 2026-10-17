@@ -4,6 +4,7 @@ export const tools = [
   { slug: "app-store-screenshot-sizes", label: "Creative", title: "App Store screenshot size reference", description: "Choose a platform and get the current upload constraints, recommendation thresholds, and official source.", action: "Check screenshot sizes", guide: "/store-page/screenshots/" },
   { slug: "screenshot-frames", label: "Creative", title: "Screenshot frame studio", description: "Put raw captures in a device frame with a caption and export them at the exact App Store or Google Play size, without uploading anything.", action: "Frame screenshots", guide: "/store-page/screenshots/" },
   { slug: "app-preview-checker", label: "Creative", title: "App preview video checker", description: "Check an app preview's resolution, length, frame rate, file size and type against Apple's specification, without uploading the video.", action: "Check a preview video", guide: "/store-page/app-previews/" },
+  { slug: "play-asset-checker", label: "Google Play", title: "Google Play icon and graphics checker", description: "Check a Play app icon, feature graphic or screenshots for size, transparency and file size, without uploading them.", action: "Check Play images", guide: "/launch/google-play/" },
   { slug: "experiment-brief", label: "Growth", title: "Store listing experiment brief", description: "Turn a test idea into a hypothesis, one primary measure, a guardrail and the decision you'll make.", action: "Write an experiment brief", guide: "/store-page/testing/" },
 ] as const;
 export type ToolSlug = typeof tools[number]["slug"];

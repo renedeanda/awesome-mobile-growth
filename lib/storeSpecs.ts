@@ -49,6 +49,9 @@ export const appleCreativeAssets = [
   { placement: "Search results", kind: "Video", ratio: "3:2", size: "1920 × 1280 to 3840 × 2560", formats: "MOV, M4V, MP4 · 5–30 s · 30 or 60 fps" },
 ] as const;
 
+// Read from developer.android.com on 2026-10-17 (Google Play icon design specifications).
+export const googlePlayIcon = { size: 512, maxKilobytes: 1024, format: "32-bit PNG", colorSpace: "sRGB", source: "https://developer.android.com/distribute/google-play/resources/icon-design-specifications" } as const;
+
 // Read from App Store Connect Help on 2026-10-17. Apple asks for the accepted resolution, not the device resolution.
 export const appPreviewSource = "https://developer.apple.com/help/app-store-connect/reference/app-information/app-preview-specifications";
 export type PreviewClass = {

@@ -597,3 +597,29 @@ test.describe("app preview checker", () => {
     await expect(page.getByRole("link", { name: "Check a preview video for this class" })).toHaveAttribute("href", "/tools/app-preview-checker/?class=ipad-13");
   });
 });
+
+test.describe("Google Play", () => {
+  test("the asset checker passes a 32-bit icon and catches a transparent feature graphic", async ({ page }) => {
+    await page.goto("/tools/play-asset-checker/");
+    await expect(page.getByTestId("browser-tool")).toHaveAttribute("data-ready", "true");
+    await page.locator('.preview-checker input[type="file"]').setInputFiles(["tests/fixtures/play-icon-512.png", "tests/fixtures/play-feature-alpha.png"]);
+    const icon = page.getByRole("region", { name: "Checks for play-icon-512.png" });
+    await expect(icon.getByRole("combobox")).toHaveValue("icon");
+    await expect(icon).toContainText("Pass · Size");
+    await expect(icon).toContainText("Pass · Format");
+    const feature = page.getByRole("region", { name: "Checks for play-feature-alpha.png" });
+    await expect(feature.getByRole("combobox")).toHaveValue("feature-graphic");
+    await expect(feature).toContainText("Fix · Format");
+    await feature.getByRole("combobox").selectOption("screenshot");
+    await expect(feature).toContainText("The long side can be at most twice the short side.");
+  });
+
+  test("the glossary separates Apple metrics from Android vitals", async ({ page }) => {
+    await page.goto("/learn/metrics/");
+    const vitals = page.getByRole("region", { name: "Google Play: Android vitals" });
+    await expect(vitals).toContainText("1.09%");
+    await vitals.getByRole("link", { name: "User-perceived ANR rate" }).click();
+    await expect(page.getByText("Google Play Console metric")).toBeVisible();
+    await expect(page.locator(".direct-answer")).toContainText("0.47%");
+  });
+});
