@@ -53,7 +53,7 @@ export const metrics: Metric[] = [
   {
     slug: "conversion-rate", term: "Conversion rate", title: "App Store conversion rate",
     seoTitle: "App Store conversion rate: Apple's formula explained",
-    description: "Apple's conversion rate is downloads and pre-orders divided by unique device impressions. Here's what that means and why third-party benchmarks often don't compare.",
+    description: "Apple's conversion rate is downloads and pre-orders divided by unique device impressions: what it means, and why third-party benchmarks often don't compare.",
     definition: "Total downloads and pre-orders divided by unique device impressions. A pre-order counts once, when it's made, not again when it downloads.",
     formula: "(Total downloads + pre-orders) ÷ unique device impressions",
     where,

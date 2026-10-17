@@ -67,7 +67,7 @@ export const changes: PlatformChange[] = [
   {
     slug: "google-play-listing-metrics-unique-clicks", date: "2026-07-01", dateLabel: "Mid-2026", store: "Google Play", status: "In effect",
     title: "Google Play store listing reports now count install clicks",
-    summary: "In mid-2026, Play Console's store listing reports switched from acquisitions and conversion rate to unique Install, Open or Pre-register taps and a click-through rate.",
+    summary: "In mid-2026, Play Console store listing reports moved from acquisitions and conversion rate to unique Install, Open or Pre-register taps and click-through rate.",
     details: [
       "Google describes the change as measuring user intent (clicks) instead of successful outcomes (acquisitions).",
       "The previous metrics (store listing acquisitions, visitors, conversion rate) remain available in the Statistics section with full history.",

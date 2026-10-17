@@ -8,7 +8,7 @@ export const storePageArticles: ArticleSource[] = [
     section: "store-page", slug: "metadata", label: "Name, subtitle and description",
     title: "App name, subtitle and description that get the install",
     seoTitle: "App Store and Google Play metadata: limits and examples",
-    description: "Every text field on both stores with its limit and its job, plus before-and-after examples for the name, subtitle, description, promotional text and release notes.",
+    description: "Every text field on both stores, its limit and its job, with before-and-after examples for the name, subtitle, description, promotional text and release notes.",
     answer: "Write the subtitle (Apple, 30 characters) or short description (Google Play, 80 characters) first: one line that says what the app does. Apple's search reads the name, subtitle, keywords and category; promotional text and the description don't affect ranking, so write those for people. Google Play's search reads all visible text.",
     platforms: ["apple", "google-play"], evidence: ["official", "observed"], published: "2026-10-12", reviewed,
     sources: [apple.productPage, apple.search, apple.appInformation, apple.versionInformation, google.listing, google.metadataPolicy],
