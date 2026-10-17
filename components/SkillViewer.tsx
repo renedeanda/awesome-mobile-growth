@@ -1,7 +1,8 @@
-"use client";
-import { useState } from "react";
-export function SkillViewer({source}:{source:string}){
-  const [notice,setNotice]=useState("");
-  const copy=async()=>{await navigator.clipboard.writeText(source);setNotice("Copied the complete SKILL.md.");};
-  return <div className="skill-source"><div><div><p className="eyebrow">Canonical source</p><h2>The complete skill file</h2></div><button className="button-secondary" onClick={copy}>Copy SKILL.md</button></div>{notice&&<p role="status" className="notice">{notice}</p>}<details><summary>Read the raw SKILL.md</summary><pre><code>{source}</code></pre></details></div>
+import { CodeFile } from "./CodeFile";
+
+export function SkillViewer({ source }: { source: string }) {
+  return <div className="skill-source">
+    <div><p className="eyebrow">Canonical source</p><h2>The complete skill file</h2><p>Copy it into your agent's skills folder, or read it here first. Nothing in it calls a network service.</p></div>
+    <CodeFile label="SKILL.md" text={source} collapseAfter={28} copyLabel="Copy SKILL.md"/>
+  </div>;
 }
