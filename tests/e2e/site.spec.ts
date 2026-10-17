@@ -462,6 +462,7 @@ test.describe("app-like polish", () => {
       expect(response.headers()["content-type"]).toContain("image/png");
       expect(readPngHeader(new Uint8Array(await response.body()))).toMatchObject({ width: size, height: size });
     }
+    await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute("href", /\/icon\.svg/);
     const appleHref = await page.locator('link[rel="apple-touch-icon"]').getAttribute("href");
     expect(appleHref).toBe("/icons/apple-touch-icon.png");
     expect(readPngHeader(new Uint8Array(await (await request.get(appleHref ?? "")).body()))).toMatchObject({ width: 180, height: 180 });
@@ -493,8 +494,8 @@ test.describe("app-like polish", () => {
   test.describe("install row", () => {
     test.use({ viewport: { width: 390, height: 844 } });
 
-    test("Chromium offers the native install prompt from the menu", async ({ page }) => {
-      await page.addInitScript(() => {
+    for (const outcome of ["accepted", "dismissed"] as const) test(`Chromium offers the native install prompt from the menu (${outcome})`, async ({ page }) => {
+      await page.addInitScript((outcome) => {
         // Hand the page a fake beforeinstallprompt as soon as it starts listening for one.
         const add = window.addEventListener.bind(window);
         window.addEventListener = ((type: string, listener: EventListener, options?: AddEventListenerOptions) => {
@@ -502,11 +503,11 @@ test.describe("app-like polish", () => {
           if (type !== "beforeinstallprompt") return;
           const event = Object.assign(new Event("beforeinstallprompt", { cancelable: true }), {
             prompt: async () => { (window as unknown as { __prompted: boolean }).__prompted = true; },
-            userChoice: Promise.resolve({ outcome: "accepted" }),
+            userChoice: Promise.resolve({ outcome }),
           });
           setTimeout(() => listener(event), 0);
         }) as typeof window.addEventListener;
-      });
+      }, outcome);
       await page.goto("/");
       await page.getByRole("button", { name: "Open menu" }).click();
       await page.getByRole("dialog", { name: "Site menu" }).getByRole("button", { name: "Install" }).click();

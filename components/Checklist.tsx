@@ -37,7 +37,7 @@ export function Checklist({ groups }: { groups: ChecklistGroup[] }) {
     const group = groups.find((candidate) => candidate.items.some((item) => item.id === id));
     setFinished(next[id] && group?.items.every((item) => next[item.id]) ? group.title : "");
   };
-  const reset = () => { setDone({}); write(STORAGE_KEY, null); };
+  const reset = () => { setDone({}); setFinished(""); write(STORAGE_KEY, null); };
   const changeLaunch = (value: string) => { setLaunch(value); write(DATE_KEY, isIsoDate(value) ? value : null); };
 
   const phases = groups.filter((group) => group.startDaysBefore !== undefined).map((group) => ({ title: group.title, startDaysBefore: group.startDaysBefore! }));

@@ -27,7 +27,8 @@ export function SearchDialog() {
     if (!dialog || dialog.open) return;
     if (prefill !== undefined) setQuery(prefill);
     dialog.showModal();
-    inputRef.current?.select();
+    // After React commits a prefilled query, so the selection covers it.
+    requestAnimationFrame(() => inputRef.current?.select());
     if (!index) loadIndex().then(setIndex, () => setFailed(true));
   };
   const close = () => dialogRef.current?.close();

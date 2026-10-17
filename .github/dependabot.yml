@@ -10,6 +10,10 @@ updates:
       development-dependencies:
         dependency-type: development
     open-pull-requests-limit: 5
+    # Major versions (TypeScript 7, @types/node majors) get a dedicated upgrade PR instead.
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
