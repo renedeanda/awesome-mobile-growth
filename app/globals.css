@@ -9,6 +9,17 @@
   --green: #1e7453;
   --line: #d3d0c8;
   --shadow: 0 24px 64px rgb(28 33 45 / 10%);
+  /* Platform chrome. Glass tints stay opaque enough that labels pass WCAG AA over pure black or white
+     content (lib/contrast.test.ts checks it); Material surfaces are solid. */
+  --glass-tint: rgb(251 250 246 / 90%);
+  --glass-tint-strong: rgb(251 250 246 / 94%);
+  --glass-label: #3d4148;
+  --glass-rim: rgb(255 255 255 / 75%);
+  --glass-sheen: rgb(255 255 255 / 55%);
+  --glass-lens: rgb(255 255 255 / 70%);
+  --m3-surface: #edf0f8;
+  --m3-surface-high: #e5e9f4;
+  --m3-indicator: #cfdbf7;
   --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   color-scheme: light;
@@ -26,6 +37,15 @@
     --green: #76c7a4;
     --line: #32353c;
     --shadow: 0 24px 64px rgb(0 0 0 / 28%);
+    --glass-tint: rgb(24 26 31 / 88%);
+    --glass-tint-strong: rgb(24 26 31 / 94%);
+    --glass-label: #c9ced7;
+    --glass-rim: rgb(255 255 255 / 14%);
+    --glass-sheen: rgb(255 255 255 / 9%);
+    --glass-lens: rgb(255 255 255 / 12%);
+    --m3-surface: #1d2129;
+    --m3-surface-high: #232834;
+    --m3-indicator: #2c3d63;
     color-scheme: dark;
   }
 }
@@ -643,3 +663,69 @@ p { text-wrap: pretty; }
 .frame-studio__export { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
 .frame-studio__export .segmented { margin: 0; }
 @media (max-width: 640px) { .frame-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; } .frame-grid--landscape { grid-template-columns: 1fr; } .frame-card__actions { flex-wrap: wrap; } }
+
+/* Platform-native chrome. An inline script in app/layout.tsx sets data-platform on <html> before
+   first paint. Without it (or on "other") the default design above applies. Chrome only: tab bar,
+   menu sheet and search dialog. */
+
+/* Apple: a Liquid Glass approximation using blur, saturation, a light rim and a specular sheen. */
+[data-platform="apple"] .menu-sheet,
+[data-platform="apple"] .search-dialog { border: 1px solid var(--glass-rim); background: var(--glass-tint-strong); -webkit-backdrop-filter: blur(30px) saturate(180%); backdrop-filter: blur(30px) saturate(180%); }
+[data-platform="apple"] .menu-sheet { border-bottom: 0; border-radius: 28px 28px 0 0; box-shadow: 0 -12px 40px rgb(0 0 0 / 18%), inset 0 1px 0 var(--glass-sheen); }
+[data-platform="apple"] .menu-scrim { background: rgb(10 12 16 / 22%); }
+[data-platform="apple"] .menu-groups a[aria-current="page"] { background: var(--glass-lens); box-shadow: inset 0 1px 0 var(--glass-sheen); }
+[data-platform="apple"] .menu-close { background: var(--glass-lens); }
+[data-platform="apple"] .search-dialog { border-radius: 24px; box-shadow: 0 24px 70px rgb(0 0 0 / 24%), inset 0 1px 0 var(--glass-sheen); }
+[data-platform="apple"] .search-dialog::backdrop { background: rgb(0 0 0 / 18%); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+[data-platform="apple"] .search-dialog__bar { border-bottom-color: var(--glass-rim); }
+[data-platform="apple"] .search-results [aria-selected="true"] a { background: var(--glass-lens); }
+
+/* Android: Material 3 navigation bar, bottom sheet and dialog on solid tonal surfaces. No backdrop
+   blur, which can drop frames on mid-range phones. */
+[data-platform="android"] .menu-sheet { border-radius: 28px 28px 0 0; background: var(--m3-surface); }
+[data-platform="android"] .menu-sheet__grabber { top: 10px; width: 32px; height: 4px; background: var(--muted); opacity: .45; }
+[data-platform="android"] .menu-groups a { border-radius: 99px; }
+[data-platform="android"] .menu-groups a[aria-current="page"] { background: var(--m3-indicator); color: var(--ink); }
+[data-platform="android"] .menu-close { background: var(--m3-surface-high); }
+[data-platform="android"] .search-dialog { border: 0; border-radius: 28px; background: var(--m3-surface-high); }
+[data-platform="android"] .search-dialog::backdrop { background: rgb(0 0 0 / 32%); }
+[data-platform="android"] .search-results a { border-radius: 99px; }
+[data-platform="android"] .search-results [aria-selected="true"] a { background: var(--m3-indicator); }
+
+@media (max-width: 920px) {
+  [data-platform="apple"] body { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+  [data-platform="apple"] .tab-bar { inset: auto max(12px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); isolation: isolate; padding: 4px; border: 1px solid var(--glass-rim); border-radius: 999px; background: var(--glass-tint); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); box-shadow: 0 10px 30px rgb(0 0 0 / 16%), inset 0 1px 0 var(--glass-sheen); }
+  [data-platform="apple"] .tab-bar::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: linear-gradient(180deg, var(--glass-sheen), transparent 60%); pointer-events: none; }
+  [data-platform="apple"] .tab-bar a { min-height: 54px; border-radius: 999px; color: var(--glass-label); transition: background-color .25s ease, color .25s ease, box-shadow .25s ease; }
+  [data-platform="apple"] .tab-bar a[aria-current="page"] { background: var(--glass-lens); box-shadow: inset 0 1px 0 var(--glass-sheen), 0 1px 4px rgb(0 0 0 / 10%); color: var(--blue); }
+
+  [data-platform="android"] body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  [data-platform="android"] .tab-bar { min-height: calc(80px + env(safe-area-inset-bottom)); padding-top: 12px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); border-top: 0; background: var(--m3-surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  [data-platform="android"] .tab-bar a { position: relative; align-content: start; gap: 4px; min-height: 56px; color: var(--muted); font-size: .75rem; font-weight: 600; letter-spacing: .02em; }
+  [data-platform="android"] .tab-bar svg { box-sizing: content-box; width: 24px; height: 24px; padding: 4px 20px; border-radius: 16px; transition: background-color .2s ease; }
+  [data-platform="android"] .tab-bar a[aria-current="page"] { color: var(--ink); font-weight: 700; }
+  [data-platform="android"] .tab-bar a[aria-current="page"] svg { background: var(--m3-indicator); }
+  /* Press state layer over the indicator, the Material 3 ripple's resting shape. */
+  [data-platform="android"] .tab-bar a::after { content: ""; position: absolute; top: 0; left: 50%; width: 64px; height: 32px; border-radius: 16px; background: currentColor; opacity: 0; transform: translateX(-50%) scale(.6); transition: opacity .3s ease, transform .3s ease; pointer-events: none; }
+  [data-platform="android"] .tab-bar a:active::after { opacity: .12; transform: translateX(-50%) scale(1); transition-duration: .1s; }
+}
+
+/* Solid fallbacks: no blur support, Reduce Transparency, Increase Contrast and forced colors. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  [data-platform="apple"] .tab-bar, [data-platform="apple"] .menu-sheet, [data-platform="apple"] .search-dialog { background: var(--sheet); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  [data-platform="apple"] .tab-bar, [data-platform="apple"] .menu-sheet, [data-platform="apple"] .search-dialog { background: var(--sheet); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  [data-platform="apple"] .tab-bar::before { display: none; }
+  [data-platform="apple"] .search-dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(0 0 0 / 40%); }
+}
+@media (prefers-contrast: more) {
+  [data-platform] .tab-bar, [data-platform] .menu-sheet, [data-platform] .search-dialog { border: 1px solid var(--ink); background: var(--sheet); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  [data-platform] .tab-bar::before { display: none; }
+  [data-platform] .tab-bar a { color: var(--ink); }
+  [data-platform] .tab-bar a[aria-current="page"] { color: var(--blue); text-decoration: underline; text-underline-offset: .2em; }
+}
+@media (forced-colors: active) {
+  [data-platform] .tab-bar, [data-platform] .menu-sheet, [data-platform] .search-dialog { border: 1px solid CanvasText; background: Canvas; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  [data-platform] .tab-bar::before, [data-platform] .tab-bar a::after { display: none; }
+}

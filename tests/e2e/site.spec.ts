@@ -248,3 +248,48 @@ test("frame studio exports a Google Play JPEG and size pages preselect their slo
   const bytes = fs.readFileSync(await download.path());
   expect([...bytes.subarray(0, 2)]).toEqual([0xff, 0xd8]);
 });
+
+const phoneUA = {
+  apple: "Mozilla/5.0 (iPhone; CPU iPhone OS 19_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1",
+  android: "Mozilla/5.0 (Linux; Android 16; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36",
+  other: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+};
+const chrome = (page: import("@playwright/test").Page) => page.locator(".tab-bar").evaluate((el) => {
+  const style = getComputedStyle(el);
+  const blur = style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter");
+  return { blur, radius: parseFloat(style.borderTopLeftRadius), height: el.getBoundingClientRect().height, bottom: innerHeight - el.getBoundingClientRect().bottom };
+});
+
+for (const platform of ["apple", "android", "other"] as const) test.describe(`${platform} navigation chrome`, () => {
+  test.use({ userAgent: phoneUA[platform], viewport: { width: 390, height: 844 } });
+  test(`marks the page and styles the tab bar for ${platform}`, async ({ page }) => {
+    await page.goto("/store-page/");
+    await expect(page.locator("html")).toHaveAttribute("data-platform", platform);
+    const bar = await chrome(page);
+    if (platform === "apple") { expect(bar.blur).toContain("blur"); expect(bar.radius).toBeGreaterThan(20); expect(bar.bottom).toBeGreaterThanOrEqual(8); }
+    if (platform === "android") { expect(bar.blur === "" || bar.blur === "none").toBe(true); expect(bar.height).toBeGreaterThanOrEqual(80); }
+    if (platform === "other") expect(bar.radius).toBe(0);
+    await page.locator(".tab-bar").screenshot({ path: test.info().outputPath(`tab-bar-${platform}.png`) });
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await expect(page.getByRole("dialog", { name: "Site menu" })).toBeVisible();
+    await page.screenshot({ path: test.info().outputPath(`menu-${platform}.png`) });
+    await page.getByRole("button", { name: "Close", exact: true }).click();
+    await page.getByRole("button", { name: "Search the site" }).click();
+    await page.getByRole("searchbox").fill("iPhone");
+    await page.screenshot({ path: test.info().outputPath(`search-${platform}.png`) });
+  });
+});
+
+test.describe("glass falls back to solid surfaces", () => {
+  test.use({ userAgent: phoneUA.apple, viewport: { width: 390, height: 844 } });
+  test("under Increase Contrast and Reduce Transparency", async ({ page, browserName }) => {
+    await page.emulateMedia({ contrast: "more" });
+    await page.goto("/store-page/");
+    expect((await chrome(page)).blur).not.toContain("blur");
+    test.skip(browserName !== "chromium", "Only Chromium can emulate prefers-reduced-transparency.");
+    await page.emulateMedia({ contrast: "no-preference" });
+    const session = await page.context().newCDPSession(page);
+    await session.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-transparency", value: "reduce" }] });
+    expect((await chrome(page)).blur).not.toContain("blur");
+  });
+});
