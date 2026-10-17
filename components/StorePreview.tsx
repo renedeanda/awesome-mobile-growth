@@ -38,8 +38,9 @@ const Icon = ({ src, name, className }: { src?: string; name: string; className:
   ? <img className={className} src={src} alt=""/>
   : <span className={`${className} store-icon--empty`} aria-hidden="true">{(name.trim()[0] ?? "A").toUpperCase()}</span>;
 
-function Shots({ urls, count, className }: { urls: string[]; count: number; className: string }) {
-  return <div className={className}>{Array.from({ length: count }, (_, index) => urls[index]
+function Shots({ urls, count, className, label }: { urls: string[]; count: number; className: string; label?: string }) {
+  // A scrolling strip must be reachable by keyboard, so it gets focus and a name when it scrolls.
+  return <div className={className} {...(label ? { role: "region", "aria-label": label, tabIndex: 0 } : {})}>{Array.from({ length: count }, (_, index) => urls[index]
     ? <img key={index} src={urls[index]} alt={`Screenshot ${index + 1}`}/>
     : <span key={index} className="store-shot--empty">Screenshot {index + 1}</span>)}</div>;
 }
@@ -90,7 +91,7 @@ export function StorePreview({ fields }: { fields: ListingFields }) {
             <div><strong className="store-head__name">{name}</strong>{store === "apple" && <><p>{subtitle}</p><span className="store-get" aria-hidden="true">Get</span></>}</div>
           </div>
           {store === "google" && <span className="store-install" aria-hidden="true">Install</span>}
-          <Shots urls={shots} count={Math.max(3, Math.min(shots.length, 8))} className="store-shots store-shots--page"/>
+          <Shots urls={shots} count={Math.max(3, Math.min(shots.length, 8))} className="store-shots store-shots--page" label="Product page screenshots"/>
           {store === "apple" && fields.applePromotional && <p className="store-promo">{fields.applePromotional}</p>}
           {store === "google" && <><p className="store-about">About this app</p><p className="store-short">{subtitle}</p></>}
           <p className="store-description">{description}</p>

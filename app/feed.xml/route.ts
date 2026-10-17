@@ -12,7 +12,7 @@ const entry = (title: string, path: string, updated: string, summary: string) =>
 
 export function GET() {
   const items: Array<{ title: string; path: string; updated: string; published?: string; summary: string }> = [
-    ...changes.map((change) => ({ title: `${change.store}: ${change.title}`, path: `/changes/${change.slug}/`, updated: change.reviewed, published: change.date, summary: change.summary })),
+    ...changes.map((change) => ({ title: change.title.startsWith(change.store) ? change.title : `${change.store}: ${change.title}`, path: `/changes/${change.slug}/`, updated: change.reviewed, published: change.date, summary: change.summary })),
     ...articles.map((article) => ({ title: article.title, path: article.path, updated: article.reviewed, published: article.published, summary: article.description })),
     ...specPages.map((page) => ({ title: page.title, path: specPath(page.slug), updated: specsChecked, summary: page.description })),
     { title: "Rebuilding Awesome Mobile Growth: a field note", path: "/field-notes/rebuilding-awesome-mobile-growth/", updated: "2026-10-12", summary: "A transparent account of turning an old link collection into a sourced ASO field guide and private workbench." },

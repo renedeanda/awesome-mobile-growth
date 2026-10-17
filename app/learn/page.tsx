@@ -19,6 +19,6 @@ export default function LearnHub() {
   ];
   return <>
     <header className="index-head"><p className="eyebrow">Learn</p><h1>The ideas and numbers behind app growth.</h1><p>Definitions, background and reading for when you're not shipping something today.</p></header>
-    <section className="section"><div className="hub-grid">{cards.map((card) => <Link key={card.href} href={card.href} className="hub-card"><span>{card.label}</span><h3>{card.title}</h3><p>{card.text}</p></Link>)}</div></section>
+    <section className="section" aria-labelledby="learn-topics"><h2 id="learn-topics" className="sr-only">Topics</h2><div className="hub-grid">{cards.map((card) => <Link key={card.href} href={card.href} className="hub-card"><span>{card.label}</span><h3>{card.title}</h3><p>{card.text}</p></Link>)}</div></section>
   </>;
 }
