@@ -95,16 +95,17 @@ export const appPreviewRules = {
 export const appleInAppEventMediaSource = "https://developer.apple.com/help/app-store-connect/reference/in-app-events/in-app-event-media-and-audio-specifications";
 export const appleInAppEventMedia = [
   { placement: "Event card", kind: "Image", ratio: "16:9", size: "1920 × 1080 to 3840 × 2160", formats: "JPEG, JPG, PNG · up to 500 MB" },
-  { placement: "Event card", kind: "Video", ratio: "16:9", size: "1920 × 1080 to 3840 × 2160", formats: "MOV, M4V, MP4 · 30 or 60 fps · up to 500 MB" },
+  { placement: "Event card", kind: "Video", ratio: "16:9", size: "1920 × 1080 to 3840 × 2160", formats: "MOV, M4V, MP4 · 15–30 s · 30 or 60 fps · up to 500 MB" },
   { placement: "Event details page", kind: "Image", ratio: "9:16", size: "1080 × 1920 to 2160 × 3840", formats: "JPEG, JPG, PNG · up to 500 MB" },
-  { placement: "Event details page", kind: "Video", ratio: "9:16", size: "1080 × 1920 to 2160 × 3840", formats: "MOV, M4V, MP4 · 30 or 60 fps · up to 500 MB" },
+  { placement: "Event details page", kind: "Video", ratio: "9:16", size: "1080 × 1920 to 2160 × 3840", formats: "MOV, M4V, MP4 · 15–30 s · 30 or 60 fps · up to 500 MB" },
 ] as const;
 
 /** The badges Apple lets an event carry. */
 export const appleInAppEventBadges = ["Live Event", "Premiere", "Challenge", "Competition", "New Season", "Major Update", "Special Event"] as const;
 
-// Google's help pages were not reachable from the verification environment; these figures match
-// the Play Console upload rules as reported consistently by multiple 2026 sources. CI checks the link.
+// UNVERIFIED: Google's Play Console Help pages weren't reachable when these were last checked, so only the
+// 512 px, 32-bit PNG, 1024 KB icon figures are confirmed (developer.android.com). Confirm the rest on
+// googleGraphicsSource before relying on them; the pages that show them tell readers to do the same.
 export const googlePlayGraphics = [
   { asset: "App icon", spec: "512 × 512 px, 32-bit PNG with alpha, up to 1 MB" },
   { asset: "Feature graphic", spec: "1024 × 500 px, JPEG or 24-bit PNG, no alpha. Required to publish." },
