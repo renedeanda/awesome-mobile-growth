@@ -27,5 +27,8 @@ export const articleLoaders: Record<string, () => Promise<MdxModule>> = {
   "grow/subscriptions": () => import("@/content/grow/subscriptions.mdx"),
   "grow/tool-stack": () => import("@/content/grow/tool-stack.mdx"),
   "grow/web-to-app": () => import("@/content/grow/web-to-app.mdx"),
+  "grow/in-app-events": () => import("@/content/grow/in-app-events.mdx"),
+  "grow/featuring": () => import("@/content/grow/featuring.mdx"),
+  "grow/pricing": () => import("@/content/grow/pricing.mdx"),
   "learn/ai-for-aso": () => import("@/content/learn/ai-for-aso.mdx"),
 };
