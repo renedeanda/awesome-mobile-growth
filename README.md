@@ -47,12 +47,12 @@ Guides are MDX files in `content/<section>/`, registered in `lib/articles/`. Cre
 
 ## Analytics
 
-The production site reports to its own Google Analytics 4 property, separate from productbuilder.net's, so its traffic and events don't mix with another site's. Analytics loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` holds a `G-` ID and the build is a Vercel production build. Advertising and Google signals are off, and events never carry workbench text, keywords, filenames or URL queries (see `lib/analytics.ts` and the privacy page).
+The production site reports to its own Google Analytics 4 property, separate from productbuilder.net's, so its traffic and events don't mix with another site's. Analytics loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` holds a `G-` ID and the build is a production build: preview builds on Vercel or Cloudflare ship without it. Advertising and Google signals are off, and events never carry workbench text, keywords, filenames or URL queries (see `lib/analytics.ts` and the privacy page).
 
 To connect a property:
 
 1. In Google Analytics, create a property for Mobile Growth and a web data stream for `https://mobile.productbuilder.net`. Turn off Enhanced measurement's page views on history changes: the site sends its own `page_view` on each route change.
-2. In Vercel, set `NEXT_PUBLIC_GA_MEASUREMENT_ID` to the stream's measurement ID for the **Production** environment only, then redeploy. `NEXT_PUBLIC_` values are inlined at build time, so a deploy is required.
+2. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` to the stream's measurement ID as a build variable (Cloudflare: the Worker's Settings → Build → Variables and secrets; Vercel: the **Production** environment only), then redeploy. `NEXT_PUBLIC_` values are inlined at build time, so a deploy is required.
 3. The build log prints the ID it used, or warns when it is missing or malformed.
 4. Register these event parameters as event-scoped custom dimensions so they appear in reports: `content_area`, `tool_id`, `platform`, `format`, `section_id`, `placement`, `destination_host`, `method`, `outcome`, `class_id`.
 
@@ -69,6 +69,17 @@ To connect a property:
 | `outbound_clicked` | A link to another site | `destination_host`, `destination_path`, `placement` |
 
 Good key events to mark: `tool_completed` and `workbench_exported`.
+
+## Deploying
+
+The site is a static export, served by Cloudflare Workers static assets. `wrangler.jsonc` points Wrangler at `out/` with no Worker code; keep it committed, or `wrangler deploy` tries to set the site up as a server app and fails.
+
+- Build: `npm run build`
+- Deploy the production branch: `npm run deploy:cloudflare`. This translates the redirects and headers in `vercel.json` into Cloudflare's `_redirects` and `_headers`, then runs `wrangler deploy`.
+- Deploy any other branch as a preview: `npm run preview:cloudflare`. Preview pages are sent `X-Robots-Tag: noindex`.
+- Check locally: `npx wrangler dev` serves the built `out/` the way Cloudflare will.
+
+`vercel.json` stays the source of truth for redirects and headers. It sets `git.deploymentEnabled: false`, so Vercel never builds from Git pushes.
 
 ## Contributing
 
