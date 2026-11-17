@@ -35,3 +35,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Cloudflare
+.wrangler
+.dev.vars*
