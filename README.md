@@ -2,7 +2,7 @@
 
 **Practical, sourced guides for launching and growing apps on the App Store and Google Play, with free private tools and an open AI agent skill.**
 
-[Visit the site](https://mobile.productbuilder.net) · [Launch](https://mobile.productbuilder.net/launch/) · [Store page](https://mobile.productbuilder.net/store-page/) · [Grow](https://mobile.productbuilder.net/grow/) · [Tools](https://mobile.productbuilder.net/tools/) · [Changes](https://mobile.productbuilder.net/changes/)
+> **The public site is offline** (mobile.productbuilder.net was shut down in November 2026). The guides, tools and agent skill stay here as open source; `npm run build` and `npx wrangler dev` serve the full site locally.
 
 Awesome Mobile Growth began as a link collection. It is now a maintained set of guides, specs and tools for people shipping mobile apps.
 
@@ -75,11 +75,11 @@ Good key events to mark: `tool_completed` and `workbench_exported`.
 The site is a static export, served by Cloudflare Workers static assets. `wrangler.jsonc` points Wrangler at `out/` with no Worker code; keep it committed, or `wrangler deploy` tries to set the site up as a server app and fails.
 
 - Build: `npm run build`
-- Deploy the production branch: `npm run deploy:cloudflare`. This translates the redirects and headers in `vercel.json` into Cloudflare's `_redirects` and `_headers`, then runs `wrangler deploy`.
+- Deploy the production branch: `npm run deploy:cloudflare` (`wrangler deploy`).
 - Deploy any other branch as a preview: `npm run preview:cloudflare`. Preview pages are sent `X-Robots-Tag: noindex`.
 - Check locally: `npx wrangler dev` serves the built `out/` the way Cloudflare will.
 
-`vercel.json` stays the source of truth for redirects and headers. It sets `git.deploymentEnabled: false`, so Vercel never builds from Git pushes.
+Redirects and headers live in `public/_redirects` and `public/_headers`, Cloudflare's native format; the build copies them into `out/`.
 
 ## Contributing
 
@@ -89,7 +89,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the [Co
 
 ## About the maintainer
 
-Awesome Mobile Growth is built and edited by [René DeAnda](https://www.linkedin.com/in/renedeanda/). The site’s [About page](https://mobile.productbuilder.net/about/) explains the editorial model and discloses related first-party publishing projects without inserting them into unrelated recommendations.
+Awesome Mobile Growth is built and edited by [René DeAnda](https://www.linkedin.com/in/renedeanda/). The site’s About page (`app/about/`) explains the editorial model and discloses related first-party publishing projects without inserting them into unrelated recommendations.
 
 ## License
 

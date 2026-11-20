@@ -1,4 +1,4 @@
-// Internal link audit: every internal href in the export resolves, and every redirect in vercel.json
+// Internal link audit: every internal href in the export resolves, and every redirect in public/_redirects
 // points at a page that exists without chaining through another redirect.
 import fs from "node:fs";
 import path from "node:path";
@@ -17,12 +17,12 @@ for (const file of files) {
   }
 }
 
-const { redirects = [] } = JSON.parse(fs.readFileSync("vercel.json", "utf8"));
+const redirects = fs.readFileSync("public/_redirects", "utf8").split("\n").filter((line) => line.trim() && !line.startsWith("#")).map((line) => { const [source, destination] = line.trim().split(/\s+/); return { source, destination }; });
 const sources = new Set(redirects.map(({ source }) => source));
 for (const { source, destination } of redirects) {
-  if (!exists(destination)) missing.push(`vercel.json: ${source} → ${destination} (destination missing)`);
-  if (sources.has(destination) || sources.has(destination.replace(/\/$/, ""))) missing.push(`vercel.json: ${source} → ${destination} (chains into another redirect)`);
-  if (exists(source.endsWith("/") ? source : `${source}/`)) missing.push(`vercel.json: ${source} still exists as a page, so the redirect hides it`);
+  if (!exists(destination)) missing.push(`_redirects: ${source} → ${destination} (destination missing)`);
+  if (sources.has(destination) || sources.has(destination.replace(/\/$/, ""))) missing.push(`_redirects: ${source} → ${destination} (chains into another redirect)`);
+  if (exists(source.endsWith("/") ? source : `${source}/`)) missing.push(`_redirects: ${source} still exists as a page, so the redirect hides it`);
 }
 
 if (missing.length) { console.error(missing.join("\n")); process.exit(1); }
