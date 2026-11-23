@@ -37,11 +37,11 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.55.1",
+    "@playwright/test": "^1.65.1",
     "@types/node": "^24.7.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "typescript": "^7.0.2",
-    "wrangler": "4.162.0"
+    "wrangler": "4.165.0"
   }
 }
